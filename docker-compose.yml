@@ -21,9 +21,7 @@ services:
       - "4455:4455"
     volumes:
       - .:/app
-      - /app/node_modules
-    links:
-      - redis
+      # - /app/node_modules
     depends_on:
       - db
     restart: on-failure
