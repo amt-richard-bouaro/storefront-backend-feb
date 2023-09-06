@@ -1,11 +1,12 @@
 export const SERVER_CONFIG = {
 	PORT: process.env.PORT || 4455,
 	NODE_ENV: process.env.NODE_ENV || "development",
-	JWT_SECRET: process.env.JWT_SECRET || null,
-	SALT_VALUE: process.env.SALT_VALUE|| 10,
+	SALT_VALUE: process.env.SALT_VALUE || 10,
+	JWT_SECRET: process.env.JWT_SECRET || "secret",
+	SESSION_SECRET: process.env.SESSION_SECRET || "secret",
 	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
-	EMAILING_ADDRESS: process.env.EMAILING_ADDRESS || null,
-	EMAILING_PASSWORD: process.env.EMAILING_PASSWORD || null,
+	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS || "access002granted@gmail.com",
+	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD || "bqwznjwtnkfbykqz",
 };
 
 export const S3_BUCKET = {

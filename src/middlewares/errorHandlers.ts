@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { RESPONSE } from "../services/generalTypes";
-import { STATUS } from "../config/main";
+import { SERVER_CONFIG, STATUS } from "../config/main";
 import { z } from 'zod'
 
 
@@ -20,7 +20,8 @@ export const errorHandler = (err:Error, req:Request, res:Response, next:NextFunc
     let errorResponse = { 
         code: 'ERROR',
         message: err.message,
-        type: 'error'
+        type: 'error',
+        stack: err.stack
     }
 
 

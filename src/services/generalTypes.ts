@@ -8,4 +8,15 @@ export interface RESPONSE {
     error?: any;
 }
 
+export interface MAIL_OPTIONS {
+	from?: {
+		name: string;
+		address: string;
+	};
+	to: string;
+	subject: string;
+	text?: string;
+	html?: string;
+}
+
 
