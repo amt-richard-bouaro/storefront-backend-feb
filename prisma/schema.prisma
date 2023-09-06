@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -11,4 +9,43 @@ datasource db {
 }
 
 
+enum Type {
+  Business
+  Customer
+}
 
+enum Provider {
+  local
+  google
+  facebook
+}
+
+model Account {
+  id String @id @default(uuid())
+  email String @unique
+  password String
+  name String
+  type Type
+  provider Provider
+  verificationToken String?
+  verified Boolean @default(false)
+
+  customer Customer? 
+  business Business? 
+}
+
+
+model Customer {
+  id String @id @default(uuid())
+  phone String
+  account String @unique
+  customerAccount Account @relation(fields: [account], references: [id])
+}
+
+model Business {
+  id String @id @default(uuid())
+  contact String?
+  location String?
+  account String @unique
+  businessAccount Account @relation(fields: [account], references: [id])
+}

@@ -2,6 +2,7 @@ import express from 'express';
 
 import swaggerDocs from './services/documentation/swagger'
 import cors from 'cors'
+import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
 import { SERVER_CONFIG } from './config/main';
 
@@ -18,6 +19,7 @@ app.use(cors({
     credentials: true
 }));
 
+app.use(helmet())
 app.use(express.json());
 app.use(cookieParser());
 
@@ -26,10 +28,18 @@ app.get('/', (req, res) => {
     return res.redirect('/api/v1/docs');
 });
 
+import accountEndpoints from './endpoints/account/root'
+
+app.use('/api/account', accountEndpoints)
 
 
 
-swaggerDocs(app, PORT)
+
+swaggerDocs(app, PORT);
+
+import { notFoundError, errorHandler } from './middlewares/errorHandlers';
+app.use(notFoundError);
+app.use(errorHandler)
 
 app.listen(PORT, () => {
     console.log('app listening on port ' + PORT);

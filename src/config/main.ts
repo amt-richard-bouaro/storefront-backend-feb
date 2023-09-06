@@ -1,11 +1,12 @@
 export const SERVER_CONFIG = {
-    PORT: process.env.PORT || 4455,
-    NODE_ENV: process.env.NODE_ENV || 'development',
-    JWT_SECRET: process.env.JWT_SECRET || null,
-    CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
-    EMAILING_ADDRESS: process.env.EMAILING_ADDRESS || null,
-    EMAILING_PASSWORD: process.env.EMAILING_PASSWORD || null
-}
+	PORT: process.env.PORT || 4455,
+	NODE_ENV: process.env.NODE_ENV || "development",
+	JWT_SECRET: process.env.JWT_SECRET || null,
+	SALT_VALUE: process.env.SALT_VALUE|| 10,
+	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
+	EMAILING_ADDRESS: process.env.EMAILING_ADDRESS || null,
+	EMAILING_PASSWORD: process.env.EMAILING_PASSWORD || null,
+};
 
 export const S3_BUCKET = {
     REGION: process.env.AWS_BUCKET_REGION || null,
