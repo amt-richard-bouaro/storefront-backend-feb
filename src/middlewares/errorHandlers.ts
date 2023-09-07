@@ -10,7 +10,7 @@ export const notFoundError = (
 ) => {
 	return res.status(STATUS.NOT_FOUND).json({
 		code: "NOT_FOUND",
-		message: "The specified route does not exist",
+		message: "The specified route does not exist at " + req.originalUrl,
 		type: "error",
 	});
 };
@@ -47,6 +47,9 @@ export const errorHandler = (
 			code: "TOKEN_EXPIRED",
 		};
 	}
+
+	
+	
 
 	return res.status(status).json(errorResponse);
 };

@@ -22,7 +22,6 @@ model Account {
   id                 String   @id @default(uuid())
   email              String   @unique
   password           String
-  name               String
   type               Type
   provider           Provider
   verificationToken  String?
@@ -31,22 +30,25 @@ model Account {
   mustChangePassword Boolean  @default(false)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-
-  customer Customer?
-  business Business?
+  customer Customer? @relation("customerAccount")
+  business Business? @relation("businessAccount")
 }
 
 model Customer {
-  id              String  @id @default(uuid())
-  phone           String
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String
+  phone     String?
   account         String  @unique
-  customerAccount Account @relation(fields: [account], references: [id])
+  customerAccount Account @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
 }
 
 model Business {
-  id              String  @id @default(uuid())
-  contact         String?
-  location        String?
+  id           String  @id @default(uuid())
+  businessName String
+  contact      String?
+  location     String?
+  businessType String?
   account         String  @unique
-  businessAccount Account @relation(fields: [account], references: [id])
+  businessAccount Account @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
 }

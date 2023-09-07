@@ -8,7 +8,7 @@ import { accountVerification } from "./controller/verifyAccount";
 
 app.post("/register/local", localRegistration);
 
-app.put("/verify/:token", accountVerification);
+app.put("/verify", accountVerification);
 
 
 export default app;

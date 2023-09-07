@@ -5,17 +5,18 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import { SERVER_CONFIG } from "./config/main";
-
 import dotenv from "dotenv";
 dotenv.config();
+
+import { SERVER_CONFIG } from "./config/main";
+
 
 require("./services/passportStrategies")
 
 
 const app = express();
 
-const PORT: number = SERVER_CONFIG.PORT as number;
+const PORT: number = SERVER_CONFIG.PORT;
 
 
 app.use(
@@ -33,7 +34,7 @@ app.use(express.json());
 app.use(session({
 	secret: SERVER_CONFIG.SESSION_SECRET,
 	resave: true,
-	saveUninitialized: true
+	saveUninitialized: true,
 }))
 
 app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));

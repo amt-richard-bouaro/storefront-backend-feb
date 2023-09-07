@@ -1,32 +1,26 @@
 import { Request, Response, NextFunction } from "express";
-import { NEW_ACCOUNT } from "../types";
 import { RESPONSE } from "../../../services/generalTypes";
 import {
 	findAccountByEmail,
-	createAccount,
 	sendMail,
 	mailOptions,
 	extractJwtPayload,
-	findAccountById,
-	verifyAccount
+	verifyAccount,
 } from "../../utils/reusableFunctions";
 import { STATUS } from "../../../config/main";
 import { authenticate } from "../../../services/passportStrategies";
 
 export const accountVerification = async (
-	req: Request,
+	req: Request<{}, {}, { code: string; email: string }>,
 	res: Response<RESPONSE>,
 	next: NextFunction
 ) => {
-	const token = req.params.token;
+	const data = req.body;
 
-    try {
-        
-        const verificationToken = extractJwtPayload(token);
+	try {
+		const User = await findAccountByEmail(data.email);
 
-		const userExist = await findAccountByEmail(verificationToken.email);
-
-		if (!userExist) {
+		if (!User) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: "INVALID_REQUEST",
 				message:
@@ -35,12 +29,17 @@ export const accountVerification = async (
 			});
 		}
 
-        const user = await findAccountById(userExist.id);
-        
-        const userVerificationToken = extractJwtPayload(user.verificationToken);
+		if (User.verified) {
+			return res.status(STATUS.OK).json({
+				code: "ACCOUNT_VERIFIED",
+				message: "Account is verified",
+				type: "success",
+			});
+		}
 
+		const userVerificationToken = extractJwtPayload(User.verificationToken);
 
-		if (userVerificationToken.code !== verificationToken.code) {
+		if (userVerificationToken.code !== data.code) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: "INVALID_REQUEST",
 				message:
@@ -49,19 +48,24 @@ export const accountVerification = async (
 			});
 		}
 
-		await verifyAccount(user.id)
+		const verifiedUser = await verifyAccount(User.id);
 
 		await sendMail(
 			mailOptions({
-				to: user.email,
+				to: verifiedUser.email,
 				subject: "Email Verified",
 				html: `<h1>Your email has been verified</h1>`,
-            })
+			})
 		);
 
-        authenticate("local", req, res);
-        
+		authenticate("local", req, res);
 
+		return res.status(STATUS.OK).json({
+			code: "ACCOUNT_VERIFIED",
+			message: "Account is verified",
+			type: "success",
+			data: verifiedUser,
+		});
 	} catch (error) {
 		const err = error as Error;
 

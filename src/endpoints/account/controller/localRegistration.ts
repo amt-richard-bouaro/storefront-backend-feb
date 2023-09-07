@@ -10,6 +10,7 @@ import {
 import { STATUS } from "../../../config/main";
 import { authenticate } from "../../../services/passportStrategies";
 
+
 export const localRegistration = async (
 	req: Request<any, any, NEW_ACCOUNT>,
 	res: Response<RESPONSE>,
@@ -32,15 +33,17 @@ export const localRegistration = async (
 		}
 
 		const data = {
-			name: requestBody.name,
 			email: requestBody.email,
 			password: requestBody.password,
 			provider: requestBody.provider,
 			type: requestBody.type,
-			verified: requestBody.provider !== "local",
+			verified: false,
+			firstName: requestBody?.firstName,
+			lastName: requestBody?.lastName,
+			businessName: requestBody?.businessName,
 		};
 
-		const User = await createAccount(data);
+		const {user:User, email, code} = await createAccount(data);
 
 		if (!User) {
 			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
@@ -52,13 +55,24 @@ export const localRegistration = async (
 
 		sendMail(
 			mailOptions({
-				to: User.email,
+				to: email,
 				subject: "Email Verification",
-				html: `<h1>${User.verificationToken}</h1>`,
-			})
+				html: `<h1>${code}</h1>`,
+			}),
+			(err, info) => {
+				// network will be logged to a file/database
+			}
 		);
 
 		authenticate("local", req, res);
+		
+		return res.status(STATUS.CREATED).json({
+			code: "REGISTRATION_SUCCESS",
+			message: "Account has been successfully created.",
+			type: "success",
+			data: User,
+		});
+
 	} catch (error) {
 		const err = error as Error;
 

@@ -6,7 +6,8 @@ import {
 	passwordValidator,
 } from "../endpoints/utils/reusableFunctions";
 
-import { Request, Response, response } from "express";
+import { Request, Response } from "express";
+import { SERVER_CONFIG, STATUS } from "../config/main";
 
 const localStrategy = passportLocal.Strategy;
 
@@ -38,19 +39,15 @@ passport.use(
 	)
 );
 
-export const authenticate = (strategy: string, req: Request, res: Response) => {
-
-	let respnseData = {
-		success: false,
-		reason: "error",
-		user: null
-	}
-	return passport.authenticate(strategy, (err, user, info) => {
+export const authenticate =  (strategy: string, req: Request, res: Response) => {
+	passport.authenticate(strategy, (err, user, info) => {
 		if (err) {
-			return res.status(403).json({
-				code: "USER_CREATED",
-				message: "Could not authenticate the account",
-				type: "success",
+			return res.status(STATUS.UNAUTHORIZED).json({
+				code: "AUTH_ERROR",
+				message:
+					"Authentication failed. Error occurred while trying to authenticate account",
+				type: "error",
+				stack: SERVER_CONFIG.NODE_ENV !== "production" && err,
 			});
 		}
 
@@ -63,42 +60,39 @@ export const authenticate = (strategy: string, req: Request, res: Response) => {
 
 			req.session.cookie.maxAge = 0;
 
-			return res.status(403).json({
-				code: "USER_CREATED",
-				message: "Could not authenticate the account",
-				type: "success",
-			});
+			// return res.status(STATUS.UNAUTHORIZED).json({
+			// 	code: "UNAUTHORIZED",
+			// 	message: "Invalid credentials",
+			// 	type: "error",
+			// });
 		}
 
-		return req.logIn(user, err => {
+		req.logIn(user, err => {
 			if (err) {
-				return res.status(403).json({
-					code: "USER_CREATED",
-					message: "Could not authenticate the account",
-					type: "success",
+				return res.status(STATUS.UNAUTHORIZED).json({
+					code: "AUTH_ERROR",
+					message: "Authentication attempt failed.",
+					type: "error",
 				});
 			}
-
-			return res.status(200).json({
-				code: "USER_CREATED",
-				message:
-					"User created successfully. Please check your email and verify your account",
-				type: "success",
-				data: user,
-			});
 		});
-	})(req, res);
 
-	
+		
+	})(req, res);
 };
 
 interface user {
 	id: string;
 	type: string;
+	verified: boolean;
+	isActive: boolean;
+	mustChangePassword: boolean;
 }
 
 passport.serializeUser((user: user, callback) => {
-	return callback(null, { id: user.id, type: user.type });
+	return callback(null, {
+		id: user.id,
+	});
 });
 
 passport.deserializeUser(async (user: user, callback) => {
@@ -109,5 +103,11 @@ passport.deserializeUser(async (user: user, callback) => {
 		return callback(null, err);
 	}
 
-	return callback(null, User);
+	return callback(null, {
+		id: user.id,
+		type: user.type,
+		verified: user.verified,
+		isActive: user.isActive,
+		mustChangePassword: user.mustChangePassword,
+	});
 });

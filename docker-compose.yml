@@ -9,24 +9,26 @@ services:
       POSTGRES_PASSWORD: superadmin
       POSTGRES_DB: storefrontdb
     ports:
-      - "5435:5435"
+      - "5435:5432"
     restart: on-failure
 
-  # api:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   container_name: api
-  #   ports:
-  #     - "4455:4455"
-  #   environment:
-  #     DATABASE_URL: postgresql://storefront:superadmin@db:5432/storefrontdb
-  #   volumes:
-  #     - .:/app
-  #     - /app/node_modules
-  #   depends_on:
-  #     - db
-  #   restart: on-failure
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api
+    ports:
+      - "4455:4455"
+    environment:
+      DATABASE_URL: postgresql://storefront:superadmin@db:5435/storefrontdb
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    restart: on-failure
+    env_file:
+      - .env
  
 
-    
+  
