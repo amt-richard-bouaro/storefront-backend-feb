@@ -6,7 +6,7 @@ import {
 	passwordValidator,
 } from "../endpoints/utils/reusableFunctions";
 
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 
 const localStrategy = passportLocal.Strategy;
 
@@ -39,7 +39,13 @@ passport.use(
 );
 
 export const authenticate = (strategy: string, req: Request, res: Response) => {
-	passport.authenticate(strategy, (err, user, info) => {
+
+	let respnseData = {
+		success: false,
+		reason: "error",
+		user: null
+	}
+	return passport.authenticate(strategy, (err, user, info) => {
 		if (err) {
 			return res.status(403).json({
 				code: "USER_CREATED",
@@ -82,6 +88,8 @@ export const authenticate = (strategy: string, req: Request, res: Response) => {
 			});
 		});
 	})(req, res);
+
+	
 };
 
 interface user {

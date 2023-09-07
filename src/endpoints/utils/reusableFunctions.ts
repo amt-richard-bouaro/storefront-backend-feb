@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { NEW_ACCOUNT } from "../account/types";
 import { SERVER_CONFIG } from "../../config/main";
 import { v4 as uuidV4 } from "uuid";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import nodemailer, { SentMessageInfo } from "nodemailer";
 
 export const findAccountByEmail = async (email: string) => {
@@ -17,6 +17,17 @@ export const findAccountByEmail = async (email: string) => {
 	return user;
 };
 
+export const verifyAccount = async (id: string) => {
+	const user = await Database.account.update({
+		where: {
+			id
+		}, data: {
+			verified: true
+		}
+	})
+
+	return user;
+};
 export const findAccountById = async (id: string) => {
 	const user = await Database.account.findUnique({
 		where: {
@@ -34,7 +45,7 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 
 	const code = await shortCodeGenerator(8);
 
-	const verificationToken = jwtGenerator(code);
+	const verificationToken = jwtGenerator({email:data.email, code});
 
 	const user = await Database.account.create({
 		data: {
@@ -48,13 +59,13 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 		},
 		select: {
 			id: true,
-			password: false,
 			name: true,
 			email: true,
 			type: true,
 			provider: true,
 			verified: true,
 			verificationToken: true,
+			password: false
 		},
 	});
 
@@ -76,13 +87,32 @@ export const shortCodeGenerator = async (length: number): Promise<string> => {
 };
 
 export const jwtGenerator = <T extends {}>(data: T): string => {
-	const token = jwt.sign(data, SERVER_CONFIG.JWT_SECRET);
+	const token = jwt.sign(data, SERVER_CONFIG.JWT_SECRET, {
+		expiresIn: '1h'
+	});
 
 	return token;
 };
+interface JWT_PAYLOAD extends JwtPayload {
+	email: string;
+	code: string;
+}
+export const extractJwtPayload = (token:string) => {
+	const payload: JWT_PAYLOAD = jwt.verify(
+		token,
+		SERVER_CONFIG.JWT_SECRET
+	) as JWT_PAYLOAD;
+
+	return payload
+}
+
+
 
 const transport = nodemailer.createTransport({
 	service: "gmail",
+	host: "smtp.gmail.com",
+	port: 587,
+	secure: true,
 	auth: {
 		user: SERVER_CONFIG?.EMAIL_ADDRESS,
 		pass: SERVER_CONFIG?.EMAIL_PASSWORD,
@@ -109,10 +139,12 @@ export const sendMail = async (
 ) => {
 	try {
 
-		transport.sendMail(mailOptions, callback)
-		
-	} catch (error) {
+		const info = transport.sendMail(mailOptions, callback)
 
-		throw new Error(error)
+		return info
+		
+	} catch (err) {
+		
+			return err;
 	}
 };

@@ -1,14 +1,23 @@
 -- CreateEnum
 CREATE TYPE "Type" AS ENUM ('Business', 'Customer');
 
+-- CreateEnum
+CREATE TYPE "Provider" AS ENUM ('local', 'google', 'facebook');
+
 -- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "type" "Type" NOT NULL,
-    "verificationToken" TEXT NOT NULL,
+    "provider" "Provider" NOT NULL,
+    "verificationToken" TEXT,
     "verified" BOOLEAN NOT NULL DEFAULT false,
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "mustChangePassword" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
 );
@@ -16,8 +25,7 @@ CREATE TABLE "Account" (
 -- CreateTable
 CREATE TABLE "Customer" (
     "id" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
     "account" TEXT NOT NULL,
 
     CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
@@ -26,9 +34,8 @@ CREATE TABLE "Customer" (
 -- CreateTable
 CREATE TABLE "Business" (
     "id" TEXT NOT NULL,
-    "businessName" TEXT NOT NULL,
-    "contact" TEXT NOT NULL,
-    "location" TEXT NOT NULL,
+    "contact" TEXT,
+    "location" TEXT,
     "account" TEXT NOT NULL,
 
     CONSTRAINT "Business_pkey" PRIMARY KEY ("id")

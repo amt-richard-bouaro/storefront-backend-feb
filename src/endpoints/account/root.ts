@@ -1,9 +1,14 @@
-import express from 'express';
+import express from "express";
 
 const app = express.Router();
 
-import {localRegistration} from './controller/localRegistration'
-app.post('/register/local', localRegistration)
+import { localRegistration } from "./controller/localRegistration";
+import { accountVerification } from "./controller/verifyAccount";
 
 
-export default app
+app.post("/register/local", localRegistration);
+
+app.put("/verify/:token", accountVerification);
+
+
+export default app;
