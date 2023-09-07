@@ -10,14 +10,13 @@ dotenv.config();
 
 import { SERVER_CONFIG } from "./config/main";
 
-
-require("./services/passportStrategies")
-
+require("./services/passport-local");
+require("./services/passport-google");
+require("./services/passport-facebook");
 
 const app = express();
 
 const PORT: number = SERVER_CONFIG.PORT;
-
 
 app.use(
 	cors({
@@ -31,18 +30,21 @@ app.use(helmet());
 
 app.use(express.json());
 
-app.use(session({
-	secret: SERVER_CONFIG.SESSION_SECRET,
-	resave: true,
-	saveUninitialized: true,
-}))
+app.use(
+	session({
+		secret: SERVER_CONFIG.SESSION_SECRET,
+		resave: true,
+		saveUninitialized: true,
+		cookie: {
+			secure: true,
+			maxAge: 1000 * 60 * 60 * 24,
+		},
+	})
+);
 
 app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-
 
 app.get("/", (req, res) => {
 	return res.redirect("/api/v1/docs");

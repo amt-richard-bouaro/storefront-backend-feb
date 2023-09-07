@@ -81,7 +81,7 @@
           "id": {
             "type": "string"
           },
-          "name": {
+          "businessName": {
             "type": "string"
           },
           "email": {
@@ -126,7 +126,7 @@
              "id": {
             "type": "string"
           },
-          "name": {
+          "businessName": {
             "type": "string"
           },
           "email": {
@@ -183,9 +183,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": {
+                  "businessName": {
                     "type": "string",
-                    "default": "Michael Owusu"
+                    "default": "Menvrick Corporation"
                   },
                   "email": {
                     "type": "string",
@@ -193,7 +193,7 @@
                   },
                   "type": {
                     "type": "string",
-                    "default": "msmith@example.com",
+                    "default": "Customer",
                     "enum": ["Business", "Customer"]
                   },
                   "provider": {
@@ -213,7 +213,7 @@
                   }
                 },
                 "required": [
-                  "name",
+                  "BusinessName",
                   "provider",
                   "email",
                   "type",
@@ -242,7 +242,9 @@
                       "type": "string",
                       "default": "success"
                     },
-                    "data": {}
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
                   }
                 }
               }
@@ -251,19 +253,25 @@
           "400": {
             "description": "BAD REQUEST",
             "content": {
-              "application/json": {}
+              "application/json": {
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+              }
             }
           },
           "409": {
             "description": "CONFLICT",
             "content": {
-              "application/json": {}
+              "application/json": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+              }
             }
           },
           "500": {
             "description": "INTERNAL SERVER ERROR",
             "content": {
-              "application/json": {}
+              "application/json": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+              }
             }
           }
         }

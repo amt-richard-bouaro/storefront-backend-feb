@@ -8,8 +8,7 @@ import {
 	mailOptions,
 } from "../../utils/reusableFunctions";
 import { STATUS } from "../../../config/main";
-import { authenticate } from "../../../services/passportStrategies";
-
+import { authenticate } from "../../../services/passport-local";
 
 export const localRegistration = async (
 	req: Request<any, any, NEW_ACCOUNT>,
@@ -43,7 +42,7 @@ export const localRegistration = async (
 			businessName: requestBody?.businessName,
 		};
 
-		const {user:User, email, code} = await createAccount(data);
+		const { user: User, email, code } = await createAccount(data);
 
 		if (!User) {
 			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
@@ -65,14 +64,13 @@ export const localRegistration = async (
 		);
 
 		authenticate("local", req, res);
-		
+
 		return res.status(STATUS.CREATED).json({
 			code: "REGISTRATION_SUCCESS",
 			message: "Account has been successfully created.",
 			type: "success",
 			data: User,
 		});
-
 	} catch (error) {
 		const err = error as Error;
 

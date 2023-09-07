@@ -20,3 +20,11 @@ export interface MAIL_OPTIONS {
 }
 
 
+export interface userSerialization {
+	id: string;
+	type: string;
+	verified: boolean;
+	isActive: boolean;
+	mustChangePassword: boolean;
+}
+

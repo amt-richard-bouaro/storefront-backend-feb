@@ -8,6 +8,7 @@ import {
 
 import { Request, Response } from "express";
 import { SERVER_CONFIG, STATUS } from "../config/main";
+import { userSerialization } from "./generalTypes";
 
 const localStrategy = passportLocal.Strategy;
 
@@ -81,21 +82,15 @@ export const authenticate =  (strategy: string, req: Request, res: Response) => 
 	})(req, res);
 };
 
-interface user {
-	id: string;
-	type: string;
-	verified: boolean;
-	isActive: boolean;
-	mustChangePassword: boolean;
-}
 
-passport.serializeUser((user: user, callback) => {
+
+passport.serializeUser((user: userSerialization, callback) => {
 	return callback(null, {
 		id: user.id,
 	});
 });
 
-passport.deserializeUser(async (user: user, callback) => {
+passport.deserializeUser(async (user: userSerialization, callback) => {
 	const User = await findAccountById(user.id);
 
 	if (!User) {
