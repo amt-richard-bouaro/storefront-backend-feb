@@ -1,255 +1,274 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-        "title": "Store Front API Documentation",
-        "version": "1.0.0",
-        "contact": {
-            "name": "Store Front API",
-            "url": "",
-            "email": ""
-        }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Store Front API Documentation",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Store Front API",
+      "url": "",
+      "email": ""
+    }
+  },
+  "servers": [
+    {
+      "url": "https://localhost:4455",
+      "description": "Store Front API"
+    }
+  ],
+  "components": {
+    "securitySchemas": {
+      "bearerAuth": {
+        "type": "https",
+        "schema": "bearerAuth",
+        "bearerFormat": "cookie"
+      }
     },
-    "servers": [
-        {
-            "url": "https://localhost:4455",
-            "description": "Store Front API "
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "default": "error"
+          }
         }
-    ],
-    "components": {
-        "securitySchemas": {
-            "bearerAuth": {
-                "type": "https",
-                "schema": "bearerAuth",
-                "bearerFormat": "jwt"
+      },
+      "ValidationErrorResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "default": "error"
+          },
+          "error": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "validation": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
             }
+          }
+        }
+      },
+    
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Business", "Customer"]
+          },
+            "provider": {
+            "type": "string",
+            "enum": ["local", "google", "facebook"]
+          },
+          "verificationToken": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean",
+            "default": false
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": false
+          },
+          "mustChangePassword": {
+            "type": "boolean",
+            "default": false
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+      "Accounts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+             "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Business", "Customer"]
+          },
+            "provider": {
+            "type": "string",
+            "enum": ["local", "google", "facebook"]
+          },
+          "verificationToken": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean",
+            "default": false
+          },
+          "isActive": {
+            "type": "boolean",
+            "default": false
+          },
+          "mustChangePassword": {
+            "type": "boolean",
+            "default": false
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/account/register/local": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "Register a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "default": "Michael Owusu"
+                  },
+                  "email": {
+                    "type": "string",
+                    "default": "msmith@example.com"
+                  },
+                  "type": {
+                    "type": "string",
+                    "default": "msmith@example.com",
+                    "enum": ["Business", "Customer"]
+                  },
+                  "provider": {
+                    "type": "string",
+                    "default": "local",
+                    "enum": ["local", "google", "facebook"]
+                  },
+                  "password": {
+                    "type": "string",
+                    "default": "oWusu247",
+                    "format": "password"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "default": "oWusu247",
+                    "format": "password"
+                  }
+                },
+                "required": [
+                  "name",
+                  "provider",
+                  "email",
+                  "type",
+                  "password",
+                  "confirmPassword"
+                ]
+              }
+            }
+          }
         },
-        "schemas": {
-            "Error_Response": {
-                "type": "object",
-                "properties": {
+        "responses": {
+          "201": {
+            "description": "CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
                     "code": {
-                        "type": "string"
+                      "type": "string"
                     },
                     "message": {
-                        "type": "string"
+                      "type": "string"
                     },
                     "type": {
-                        "type": "string",
-                        "default": "error"
-                    }
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {}
+                  }
                 }
-            },
-            "Validation_Error_Response": {
-                "type": "object",
-                "properties": {
-                    "code": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "type": {
-                        "type": "string",
-                        "default": "error"
-                    },
-                    "error": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "validation": {
-                                    "type": "string"
-                                },
-                                "message": {
-                                    "type": "string"
-                                },
-                                "path": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "Document_Stats": {
-                "type": "object",
-                "properties": {
-                    "folders": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "ext": {
-                                    "type": "string"
-                                },
-                                "count": {
-                                    "type": "number"
-                                },
-                                "total_count": {
-                                    "type": "number"
-                                }
-                            }
-                        }
-                    },
-                    "performing": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "_id": {
-                                    "type": "string"
-                                },
-                                "title": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "downloaded_count": {
-                                    "type": "number"
-                                },
-                                "emailed_count": {
-                                    "type": "number"
-                                },
-                                "size": {
-                                    "type": "number"
-                                },
-                                "ext": {
-                                    "type": "string"
-                                },
-                                "created_at": {
-                                    "type": "string"
-                                },
-                                "updated_at": {
-                                    "type": "string"
-                                },
-                                "downloaded_emailed": {
-                                    "type": "number"
-                                }
-                            }
-                        }
-                    },
-                    "avg_file_size": {
-                        "type": "number"
-                    }
-                }
-            },
-            "Document": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string"
-                    },
-                    "title": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "downloaded_count": {
-                        "type": "number"
-                    },
-                    "emailed_count": {
-                        "type": "number"
-                    },
-                    "size": {
-                        "type": "number"
-                    },
-                    "ext": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
-                        "type": "string"
-                    }
-                }
-            },
-            "Documents": {
-                "type": "array",
-                "items": {
-                    "$ref": "#/components/schemas/Document"
-                }
-            },
-            "User": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string"
-                    },
-                    "surname": {
-                        "type": "string"
-                    },
-                    "other_names": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "role": {
-                        "type": "string"
-                    },
-                    "must_change_password": {
-                        "type": "boolean",
-                        "default": false
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
-                        "type": "string"
-                    }
-                }
-            },
-            "Users": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "_id": {
-                            "type": "string"
-                        },
-                        "surname": {
-                            "type": "string"
-                        },
-                        "other_names": {
-                            "type": "string"
-                        },
-                        "email": {
-                            "type": "string"
-                        },
-                        "role": {
-                            "type": "string"
-                        },
-                        "must_change_password": {
-                            "type": "boolean"
-                        },
-                        "created_at": {
-                            "type": "string"
-                        }
-                    }
-                }
+              }
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {}
+            }
+          }
         }
-    },
-    "security": [
-        {
-            "bearerAuth": []
-        }
-    ],
-    "paths": {
-        
-
-    },
-    "tags": []
+      }
+    }
+  },
+  "tags": []
 }
