@@ -4,11 +4,14 @@ import passport from "passport";
 const app = express.Router();
 
 import { localRegistration } from "./controller/localRegistration";
-// import { googleRegisterCustomer } from "./controller/googleRegisterCustomer";
+import { handleFailure } from "./controller/handleFailure";
+import { handleLogout } from "./controller/handleLogout";
 import { accountVerification } from "./controller/verifyAccount";
 import { SERVER_CONFIG } from "../../config/main";
 
 app.post("/register/local", localRegistration);
+app.get("/login/failure", handleFailure);
+app.get("/logout", handleLogout);
 
 app.get(
 	"/register/google/customer",
@@ -18,8 +21,8 @@ app.get(
 app.get(
 	"/google/customer/callback",
 	passport.authenticate("google-customer", {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN,
-		failureRedirect: "/login/failure",
+		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
+		failureRedirect: "/api/account/login/failure",
 	})
 );
 
@@ -31,8 +34,8 @@ app.get(
 app.get(
 	"/google/business/callback",
 	passport.authenticate("google-business", {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN,
-		failureRedirect: "/login/failure",
+		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
+		failureRedirect: "/api/account/login/failure",
 	})
 );
 

@@ -1,8 +1,12 @@
 import passport from "passport";
 import OAuth2Strategy from "passport-google-oauth2";
 import { GOOGLE_API } from "../config/main";
-import { findAccountById } from "../endpoints/utils/reusableFunctions";
-import { userSerialization } from "./generalTypes";
+import {
+	createAccount,
+	findAccountByEmail,
+} from "../endpoints/utils/reusableFunctions";
+
+import { NEW_ACCOUNT } from "../endpoints/account/types";
 
 const GoogleStrategy = OAuth2Strategy.Strategy;
 
@@ -14,10 +18,26 @@ passport.use(
 			clientSecret: GOOGLE_API.CLIENT_SECRET,
 			callbackURL: GOOGLE_API.CALLBACKURL_BUSINESS,
 		},
-		function (accessToken, refreshToken, profile, done) {
-			console.log("Business:", profile);
+		async function (accessToken, refreshToken, user, done) {
+			const data: NEW_ACCOUNT = {
+				email: user.email,
+				password: user.id,
+				provider: "google",
+				type: "Business",
+				verified: user.verified,
+				isActive: true,
+				businessName: user.name.familyName + " Business",
+			};
 
-			done(null, profile);
+			const userExist = await findAccountByEmail(data.email);
+
+			if (userExist) {
+				return done(null, user);
+			}
+
+			await createAccount(data);
+
+			done(null, user);
 		}
 	)
 );
@@ -30,33 +50,27 @@ passport.use(
 			clientSecret: GOOGLE_API.CLIENT_SECRET,
 			callbackURL: GOOGLE_API.CALLBACKURL_CUSTPMER,
 		},
-		function (accessToken, refreshToken, profile, done) {
-			console.log("Individual:", profile);
+		async function (accessToken, refreshToken, user, done) {
+				const data: NEW_ACCOUNT = {
+					email: user.email,
+					password: user.id,
+					provider: "google",
+					type: "Customer",
+					verified: user.verified,
+					isActive: true,
+					firstName: user.name.givenName,
+					lastName: user.name.familyName,
+				};
 
-			done(null, profile);
+				const userExist = await findAccountByEmail(data.email);
+
+				if (userExist) {
+					return done(null, user);
+				}
+
+				await createAccount(data);
+
+				done(null, user);
 		}
 	)
 );
-
-passport.serializeUser((user: userSerialization, callback) => {
-	return callback(null, {
-		id: user.id,
-	});
-});
-
-passport.deserializeUser(async (user: userSerialization, callback) => {
-	const User = await findAccountById(user.id);
-
-	if (!User) {
-		let err = new Error();
-		return callback(null, err);
-	}
-
-	return callback(null, {
-		id: user.id,
-		type: user.type,
-		verified: user.verified,
-		isActive: user.isActive,
-		mustChangePassword: user.mustChangePassword,
-	});
-});

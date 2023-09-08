@@ -84,25 +84,4 @@ export const authenticate =  (strategy: string, req: Request, res: Response) => 
 
 
 
-passport.serializeUser((user: userSerialization, callback) => {
-	return callback(null, {
-		id: user.id,
-	});
-});
 
-passport.deserializeUser(async (user: userSerialization, callback) => {
-	const User = await findAccountById(user.id);
-
-	if (!User) {
-		let err = new Error();
-		return callback(null, err);
-	}
-
-	return callback(null, {
-		id: user.id,
-		type: user.type,
-		verified: user.verified,
-		isActive: user.isActive,
-		mustChangePassword: user.mustChangePassword,
-	});
-});

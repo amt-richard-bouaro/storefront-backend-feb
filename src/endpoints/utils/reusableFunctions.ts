@@ -95,12 +95,13 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 
 	const verificationToken = jwtGenerator({ email: data.email, code });
 
-	const user = data.type === "Customer"
+	const user =
+		data.type === "Customer"
 			? await Database.customer.create({
 					data: {
 						firstName: data.firstName,
-					lastName: data.lastName,
-					
+						lastName: data.lastName,
+
 						customerAccount: {
 							create: {
 								email: data.email,
@@ -108,11 +109,10 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: data.type,
 								provider: data.provider,
 								verified: data.verified,
+								isActive: data.isActive,
 								verificationToken: verificationToken,
 							},
-							
-					},
-						
+						},
 					},
 					select: {
 						firstName: true,
@@ -126,6 +126,7 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								verified: true,
 								verificationToken: true,
 								mustChangePassword: true,
+								isActive: true,
 								password: false,
 								createdAt: true,
 								updatedAt: true,
@@ -143,6 +144,7 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: data.type,
 								provider: data.provider,
 								verified: data.verified,
+								isActive: data.isActive,
 								verificationToken: verificationToken,
 							},
 						},
@@ -158,6 +160,7 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								verified: true,
 								verificationToken: true,
 								mustChangePassword: true,
+								isActive: true,
 								password: false,
 								createdAt: true,
 								updatedAt: true,

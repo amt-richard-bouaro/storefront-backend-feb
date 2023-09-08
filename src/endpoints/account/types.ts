@@ -21,6 +21,7 @@ const NEW_ACCOUNT = z
 		businessName: z.string().optional(),
 		verificationToken: z.string().optional(),
 		verified: z.boolean().optional(),
+		isActive: z.boolean().optional(),
 	})
 	.refine(val => val.password === val.confirmPassword, {
 		message: `Passwords don't match`,
