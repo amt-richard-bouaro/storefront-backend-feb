@@ -49,6 +49,7 @@ export const verifyAccount = async (id: string) => {
 			verified: true,
 			verificationToken: true,
 			isActive: true,
+			providerId: true,
 			mustChangePassword: true,
 			createdAt: true,
 			updatedAt: true,
@@ -61,32 +62,63 @@ export const verifyAccount = async (id: string) => {
 	return user;
 };
 export const findAccountById = async (id: string) => {
-	const user = await Database.account.findUnique({
-		where: {
-			id,
-		},
-		select: {
-			id: true,
-			email: true,
-			type: true,
-			provider: true,
-			verified: true,
-			verificationToken: true,
-			isActive: true,
-			mustChangePassword: true,
-			createdAt: true,
-			updatedAt: true,
-			password: false,
-			customer: true,
-			business:true
-		},
-	});
-
-	return user;
+	try {
+		const user = await Database.account.findUnique({
+			where: {
+				id,
+			},
+			select: {
+				id: true,
+				email: true,
+				type: true,
+				provider: true,
+				verified: true,
+				verificationToken: true,
+				isActive: true,
+				providerId: true,
+				mustChangePassword: true,
+				createdAt: true,
+				updatedAt: true,
+				password: false,
+				customer: true,
+				business: true,
+			},
+		});
+		return user;
+	} catch (error) {
+		return error;
+	}
+};
+export const findAccountByProviderId = async (id: string) => {
+	try {
+		const user = await Database.account.findFirst({
+			where: {
+				providerId: id,
+			},
+			select: {
+				id: true,
+				email: false,
+				type: false,
+				provider: false,
+				verified: false,
+				providerId: true,
+				verificationToken: false,
+				isActive: false,
+				mustChangePassword: false,
+				createdAt: false,
+				updatedAt: false,
+				password: false,
+				customer: false,
+				business: false,
+			},
+		});
+		return user;
+	} catch (error) {
+		return error;
+	}
 };
 
 export const createAccount = async (data: NEW_ACCOUNT) => {
-	
 	const salt = await bcrypt.genSalt(SERVER_CONFIG.SALT_VALUE);
 
 	const hashedPassword = await bcrypt.hash(data.password, salt);
@@ -95,12 +127,13 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 
 	const verificationToken = jwtGenerator({ email: data.email, code });
 
-	const user = data.type === "Customer"
+	const user =
+		data.type === "Customer"
 			? await Database.customer.create({
 					data: {
 						firstName: data.firstName,
-					lastName: data.lastName,
-					
+						lastName: data.lastName,
+
 						customerAccount: {
 							create: {
 								email: data.email,
@@ -108,11 +141,14 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: data.type,
 								provider: data.provider,
 								verified: data.verified,
+								isActive: data.isActive,
+								providerId:
+									data.provider !== "local"
+										? data.providerId
+										: undefined,
 								verificationToken: verificationToken,
 							},
-							
-					},
-						
+						},
 					},
 					select: {
 						firstName: true,
@@ -124,8 +160,10 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: true,
 								provider: true,
 								verified: true,
+								providerId: true,
 								verificationToken: true,
 								mustChangePassword: true,
+								isActive: true,
 								password: false,
 								createdAt: true,
 								updatedAt: true,
@@ -143,6 +181,11 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: data.type,
 								provider: data.provider,
 								verified: data.verified,
+								isActive: data.isActive,
+								providerId:
+									data.provider !== "local"
+										? data.providerId
+										: undefined,
 								verificationToken: verificationToken,
 							},
 						},
@@ -156,8 +199,10 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: true,
 								provider: true,
 								verified: true,
+								providerId: true,
 								verificationToken: true,
 								mustChangePassword: true,
+								isActive: true,
 								password: false,
 								createdAt: true,
 								updatedAt: true,
@@ -165,10 +210,8 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 						},
 					},
 			  });
-	
-	
 
-	return {user, email: data.email, code };
+	return { user, email: data.email, code };
 };
 
 export const passwordValidator = async (
@@ -259,4 +302,3 @@ export const sendMail = async (
 		}
 	}
 };
-

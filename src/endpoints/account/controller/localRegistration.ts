@@ -8,11 +8,10 @@ import {
 	mailOptions,
 } from "../../utils/reusableFunctions";
 import { STATUS } from "../../../config/main";
-import { authenticate } from "../../../services/passportStrategies";
-
+import { authenticate } from "../../../services/passport-local";
 
 export const localRegistration = async (
-	req: Request<any, any, NEW_ACCOUNT>,
+	req: Request<{}, {}, NEW_ACCOUNT>,
 	res: Response<RESPONSE>,
 	next: NextFunction
 ) => {
@@ -32,18 +31,19 @@ export const localRegistration = async (
 			});
 		}
 
-		const data = {
+		const data:NEW_ACCOUNT = {
 			email: requestBody.email,
 			password: requestBody.password,
-			provider: requestBody.provider,
+			provider:'local',
 			type: requestBody.type,
 			verified: false,
+			isActive:false,
 			firstName: requestBody?.firstName,
 			lastName: requestBody?.lastName,
 			businessName: requestBody?.businessName,
 		};
 
-		const {user:User, email, code} = await createAccount(data);
+		const { user: User, email, code } = await createAccount(data);
 
 		if (!User) {
 			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
@@ -60,7 +60,7 @@ export const localRegistration = async (
 				html: `<h1>${code}</h1>`,
 			}),
 			(err, info) => {
-				// network will be logged to a file/database
+				// network err will be logged to a file/database
 			}
 		);
 
@@ -68,11 +68,10 @@ export const localRegistration = async (
 		
 		return res.status(STATUS.CREATED).json({
 			code: "REGISTRATION_SUCCESS",
-			message: "Account has been successfully created.",
+			message: "Account has been successfully created. A mail has already been sent to your email address with instructions to verify your account.",
 			type: "success",
 			data: User,
 		});
-
 	} catch (error) {
 		const err = error as Error;
 
