@@ -15,11 +15,12 @@ const NEW_ACCOUNT = z
 			),
 		confirmPassword: z.string().nonempty("Please confirm your password"),
 		type: z.enum(ACOUNT_TYPES),
-		provider: z.enum(ACCOUNT_PROVIDERS),
+		provider: z.enum(ACCOUNT_PROVIDERS).optional(),
 		firstName: z.string().optional(),
 		lastName: z.string().optional(),
 		businessName: z.string().optional(),
 		verificationToken: z.string().optional(),
+		providerId: z.string().optional(),
 		verified: z.boolean().optional(),
 		isActive: z.boolean().optional(),
 	})
@@ -37,7 +38,8 @@ const NEW_ACCOUNT = z
 			return true;
 		},
 		{
-			message: "Business account type must have a businessName property while Customer account type must have firstName and lastName properties",
+			message:
+				"Business account type must have a businessName property while Customer account type must have firstName and lastName properties",
 		}
 	);
 

@@ -5,13 +5,17 @@ const app = express.Router();
 
 import { localRegistration } from "./controller/localRegistration";
 import { handleFailure } from "./controller/handleFailure";
+import { authenticatedUser } from "./controller/authenticatedUser";
 import { handleLogout } from "./controller/handleLogout";
 import { accountVerification } from "./controller/verifyAccount";
 import { SERVER_CONFIG } from "../../config/main";
 
+
 app.post("/register/local", localRegistration);
 app.get("/login/failure", handleFailure);
+app.get("/auth/user", authenticatedUser);
 app.get("/logout", handleLogout);
+
 
 app.get(
 	"/register/google/customer",

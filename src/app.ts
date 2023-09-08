@@ -11,35 +11,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { SERVER_CONFIG } from "./config/main";
-import { findAccountById } from "./endpoints/utils/reusableFunctions";
-import { userSerialization } from "./services/generalTypes";
 
-require("./services/passport-google");
-require("./services/passport-facebook");
 require("./services/passport-local");
+require("./services/passport-facebook");
+require("./services/passport-google");
 
-passport.serializeUser((user: userSerialization, callback) => {
-	return callback(null, {
-		id: user.id,
-	});
-});
 
-passport.deserializeUser(async (user: userSerialization, callback) => {
-	const User = await findAccountById(user.id);
-
-	if (!User) {
-		let err = new Error();
-		return callback(null, err);
-	}
-
-	return callback(null, {
-		id: user.id,
-		type: user.type,
-		verified: user.verified,
-		isActive: user.isActive,
-		mustChangePassword: user.mustChangePassword,
-	});
-});
 
 const app = express();
 

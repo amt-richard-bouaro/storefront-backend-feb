@@ -11,10 +11,12 @@ CREATE TABLE "Account" (
     "password" TEXT NOT NULL,
     "type" "Type" NOT NULL,
     "provider" "Provider" NOT NULL,
+    "providerId" TEXT NOT NULL,
     "verificationToken" TEXT,
     "verified" BOOLEAN NOT NULL DEFAULT false,
     "isActive" BOOLEAN NOT NULL DEFAULT false,
     "mustChangePassword" BOOLEAN NOT NULL DEFAULT false,
+    "hasResetPassword" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

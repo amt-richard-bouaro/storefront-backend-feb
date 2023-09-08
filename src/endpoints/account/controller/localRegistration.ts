@@ -65,7 +65,7 @@ export const localRegistration = async (
 		);
 
 		authenticate("local", req, res);
-
+		
 		return res.status(STATUS.CREATED).json({
 			code: "REGISTRATION_SUCCESS",
 			message: "Account has been successfully created. A mail has already been sent to your email address with instructions to verify your account.",

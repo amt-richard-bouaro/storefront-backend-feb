@@ -19,36 +19,38 @@ enum Provider {
 }
 
 model Account {
-  id                 String   @id @default(uuid())
-  email              String   @unique
+  id                 String    @id @default(uuid())
+  email              String    @unique
   password           String
   type               Type
   provider           Provider
+  providerId         String    @default(uuid())
   verificationToken  String?
-  verified           Boolean  @default(false)
-  isActive           Boolean  @default(false)
-  mustChangePassword Boolean  @default(false)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  customer Customer? @relation("customerAccount")
-  business Business? @relation("businessAccount")
+  verified           Boolean   @default(false)
+  isActive           Boolean   @default(false)
+  mustChangePassword Boolean   @default(false)
+  hasResetPassword   Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  customer           Customer? @relation("customerAccount")
+  business           Business? @relation("businessAccount")
 }
 
 model Customer {
-  id        String  @id @default(uuid())
-  firstName String
-  lastName  String
-  phone     String?
+  id              String  @id @default(uuid())
+  firstName       String
+  lastName        String
+  phone           String?
   account         String  @unique
   customerAccount Account @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
 }
 
 model Business {
-  id           String  @id @default(uuid())
-  businessName String
-  contact      String?
-  location     String?
-  businessType String?
+  id              String  @id @default(uuid())
+  businessName    String
+  contact         String?
+  location        String?
+  businessType    String?
   account         String  @unique
   businessAccount Account @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
 }
