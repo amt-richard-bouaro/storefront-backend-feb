@@ -17,10 +17,15 @@ const FacebookSignInOption = () => {
 			{
 				clientID: FACEBOOK_API.CLIENT_ID,
 				clientSecret: FACEBOOK_API.CLIENT_SECRET,
-				callbackURL: "/api/account/facebook/business/callback",
+				callbackURL: FACEBOOK_API.CALLBACKURL_BUSINESS,
 				profileFields: ["id", "name", "email"],
 			},
-			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+			async function (
+				accessToken: unknown,
+				refreshToken: unknown,
+				user,
+				done
+			) {
 				const data: NEW_ACCOUNT = {
 					email: user.emails[0].value,
 					password: user.id,
@@ -58,10 +63,15 @@ const FacebookSignInOption = () => {
 			{
 				clientID: FACEBOOK_API.CLIENT_ID,
 				clientSecret: FACEBOOK_API.CLIENT_SECRET,
-				callbackURL: "/api/account/facebook/customer/callback",
+				callbackURL: FACEBOOK_API.CALLBACKURL_CUSTPMER,
 				profileFields: ["id", "name", "email"],
 			},
-			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+			async function (
+				accessToken: unknown,
+				refreshToken: unknown,
+				user,
+				done
+			) {
 				const data: NEW_ACCOUNT = {
 					email: user.emails[0].value,
 					password: user.id,
