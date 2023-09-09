@@ -27,6 +27,11 @@ export const S3_BUCKET = {
 	SECRET_KEY: process.env.AWS_SECRET_ACCESS_KEY || null,
 };
 
+export const FACEBOOK_API = {
+	CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+	CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+};
+
 interface status {
 	OK: number;
 	CREATED: number;

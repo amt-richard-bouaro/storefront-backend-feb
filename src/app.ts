@@ -18,6 +18,7 @@ import {
 import { userSerialization } from "./services/generalTypes";
 import GoogleSignOption from "./services/passport-google";
 import LocalSignInOption from "./services/passport-local";
+import FacebookSignInOption from "./services/passport-facebook";
 import { SERVER_CONFIG } from "./config/main";
 
 import passportLocal from "passport-local";
@@ -123,7 +124,7 @@ passport.deserializeUser(async (user: userSerialization, callback) => {
 
 GoogleSignOption();
 LocalSignInOption();
-
+FacebookSignInOption()
 
 const PORT: number = SERVER_CONFIG.PORT;
 
@@ -137,6 +138,7 @@ app.use("/api/account", accountEndpoints);
 swaggerDocs(app, PORT);
 
 import { notFoundError, errorHandler } from "./middlewares/errorHandlers";
+
 
 
 app.use(notFoundError);
