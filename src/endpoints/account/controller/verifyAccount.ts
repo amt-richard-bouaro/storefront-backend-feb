@@ -8,7 +8,7 @@ import {
 	verifyAccount,
 } from "../../utils/reusableFunctions";
 import { STATUS } from "../../../config/main";
-import { authenticate } from "../../../services/passport-local";
+import { authenticate } from "../../../services/localAuth";
 
 export const accountVerification = async (
 	req: Request<{}, {}, { code: string; email: string }>,

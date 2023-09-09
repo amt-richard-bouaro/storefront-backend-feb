@@ -10,34 +10,63 @@ import session from "express-session";
 import dotenv from "dotenv";
 dotenv.config();
 
+import {
+	findAccountByEmail,
+	findAccountByProviderId,
+	passwordValidator,
+} from "./endpoints/utils/reusableFunctions";
+import { userSerialization } from "./services/generalTypes";
+import GoogleSignOption from "./services/passport-google";
+import LocalSignInOption from "./services/passport-local";
 import { SERVER_CONFIG } from "./config/main";
 
-require("./services/passport-local");
-require("./services/passport-facebook");
-require("./services/passport-google");
+import passportLocal from "passport-local";
+const localStrategy = passportLocal.Strategy;
 
+passport.use(
+	"local",
+	new localStrategy(
+		{
+			usernameField: "email",
+			passwordField: "password",
+		},
+		async (username, password, done) => {
+			const user = await findAccountByEmail(username);
 
+			if (!user) {
+				return done(null, false, {
+					message: "Incorrect username or password",
+				});
+			}
+
+			const validPassword = await passwordValidator(password, user.password);
+
+			if (!validPassword) {
+				return done(null, false, {
+					message: "Incorrect username or password",
+				});
+			}
+
+			return done(null, user);
+		}
+	)
+);
 
 const app = express();
 
-const PORT: number = SERVER_CONFIG.PORT;
-
 app.use(
 	cors({
-		origin: SERVER_CONFIG.CLIENT_ORIGIN,
-		// methods: ["GET", "POST", "PUT", "DELETE"],
+		origin: "http://localhost:5173",
 		credentials: true,
 	})
 );
 
-app.use(helmet());
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 
 const redisClient = createClient();
 redisClient.connect().catch(console.error);
-
 
 const redisStore = new RedisStore({
 	client: redisClient,
@@ -48,18 +77,55 @@ app.use(
 	session({
 		store: redisStore,
 		secret: SERVER_CONFIG.SESSION_SECRET,
-		resave: true,
-		saveUninitialized: true,
+		resave: false,
+		saveUninitialized: false,
 		cookie: {
 			secure: false,
 			maxAge: 1000 * 60 * 60 * 24,
+			// sameSite: "none",
 		},
 	})
 );
 
-app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 app.use(passport.initialize());
 app.use(passport.session());
+
+passport.serializeUser((user: userSerialization, callback) => {
+	if (user.provider === "local") {
+		return callback(null, {
+			providerId: user.providerId,
+		});
+	}
+
+	return callback(null, {
+		providerId: user.id,
+	});
+});
+
+passport.deserializeUser(async (user: userSerialization, callback) => {
+	console.log("deserialize", user);
+
+	const User = await findAccountByProviderId(user.providerId);
+
+	console.log(User);
+
+	if (!User) {
+		let err = new Error();
+		return callback(null, false);
+	}
+
+	return callback(null, {
+		id: User.id,
+		providerId: User.providerId,
+	});
+});
+
+
+GoogleSignOption();
+LocalSignInOption();
+
+
+const PORT: number = SERVER_CONFIG.PORT;
 
 app.get("/", (req, res) => {
 	return res.redirect("/api/v1/docs");

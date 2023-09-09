@@ -7,19 +7,20 @@ import { localRegistration } from "./controller/localRegistration";
 import { handleFailure } from "./controller/handleFailure";
 import { authenticatedUser } from "./controller/authenticatedUser";
 import { handleLogout } from "./controller/handleLogout";
+import { handleLoginLocal } from "./controller/loginLocal";
 import { accountVerification } from "./controller/verifyAccount";
 import { SERVER_CONFIG } from "../../config/main";
 
 
 app.post("/register/local", localRegistration);
+app.get("/login/local", handleLoginLocal);
 app.get("/login/failure", handleFailure);
 app.get("/auth/user", authenticatedUser);
 app.get("/logout", handleLogout);
 
 
 app.get(
-	"/register/google/customer",
-	passport.authenticate("google-customer", { scope: ["profile", "email"] })
+	"/google/customer", passport.authenticate("google-customer", { scope: ["profile", "email"] })
 );
 
 app.get(
@@ -31,7 +32,7 @@ app.get(
 );
 
 app.get(
-	"/register/google/business",
+	"/google/business",
 	passport.authenticate("google-business", { scope: ["profile", "email"] })
 );
 
