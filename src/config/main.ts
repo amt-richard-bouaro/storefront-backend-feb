@@ -8,8 +8,9 @@ export const SERVER_CONFIG = {
 	ORIGIN: process.env.ORIGIN,
 	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
 	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
-	
-
+	EMAIL_SERVICE: process.env.EMAIL_SERVICE,
+	EMAIL_HOST: process.env.EMAIL_HOST,
+	EMAIL_PORT: process.env.EMAIL_PORT,
 };
 
 export const GOOGLE_API = {
@@ -25,6 +26,13 @@ export const S3_BUCKET = {
 	NAME: process.env.AWS_BUCKET_NAME || null,
 	ACCESS_KEY: process.env.AWS_ACCESS_KEY_ID || null,
 	SECRET_KEY: process.env.AWS_SECRET_ACCESS_KEY || null,
+};
+
+export const FACEBOOK_API = {
+	CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+	CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
+	CALLBACKURL_CUSTPMER: process.env.FACEBOOK_CALLBACKURL_CUSTPMER,
+	CALLBACKURL_BUSINESS: process.env.FACEBOOK_CALLBACKURL_BUSINESS,
 };
 
 interface status {

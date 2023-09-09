@@ -8,7 +8,7 @@ import {
 	verifyAccount,
 } from "../../utils/reusableFunctions";
 import { STATUS } from "../../../config/main";
-import { authenticate } from "../../../services/passport-local";
+
 
 export const accountVerification = async (
 	req: Request<{}, {}, { code: string; email: string }>,
@@ -57,8 +57,6 @@ export const accountVerification = async (
 				html: `<h1>Your email has been verified</h1>`,
 			})
 		);
-
-		authenticate("local", req, res);
 
 		return res.status(STATUS.OK).json({
 			code: "ACCOUNT_VERIFIED",

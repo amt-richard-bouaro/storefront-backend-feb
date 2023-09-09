@@ -9,6 +9,9 @@ export const authenticatedUser = async (
 	next: NextFunction
 ) => {
 	const requestUser = <REQUEST_WITH_USER>req.user;
+	
+	console.log(req.isAuthenticated(), req.sessionID);
+	
 
 	if (!req.isAuthenticated() || !requestUser.id) {
 		return res.status(STATUS.UNAUTHORIZED).json({

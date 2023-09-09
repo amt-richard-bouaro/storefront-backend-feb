@@ -28,6 +28,22 @@ export interface userSerialization {
 	mustChangePassword: boolean;
 }
 
+export type USER = {
+	id: string;
+	email: string;
+	type: 'Business' | 'Customer';
+	provider: 'local' | 'google' | 'facebook';
+	providerId: string;
+	verified: boolean;
+	isActive: boolean;
+	mustChangePassword: boolean;
+	hasResetPassword: boolean;
+	createdAt: Date;
+	updatedAt: Date;
+	customer: object | null;
+	business: object | null;
+};
+
 export interface REQUEST_WITH_USER {
 	id: string;
 	providerId: string;

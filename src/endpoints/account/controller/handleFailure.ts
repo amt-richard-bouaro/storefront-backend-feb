@@ -3,9 +3,9 @@ import { RESPONSE } from "../../../services/generalTypes";
 import { STATUS } from "../../../config/main";
 
 export const handleFailure = (req: Request, res: Response<RESPONSE>, next: NextFunction) => {
-    res.status(STATUS.UNAUTHORIZED).json({
+    return res.status(STATUS.UNAUTHORIZED).json({
         code: "UNAUTHORIZED",
-        message: "Invalid credentials",
+        message: "Authentication failed! Please try again",
         type: "error"
     })
 };

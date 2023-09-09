@@ -8,6 +8,14 @@ export const handleLogout = async (
 	next: NextFunction
 ) => {
 	try {
+
+		if (!req.isAuthenticated()) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: "LOGGED_OUT_FAILED",
+				message: "User not logged in",
+				type: "error",
+			});
+		}
 		req.logout(err => {
 			if (err) {
 				throw new Error(err);

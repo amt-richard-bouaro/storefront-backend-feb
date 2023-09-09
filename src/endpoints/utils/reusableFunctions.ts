@@ -256,9 +256,9 @@ export const extractJwtPayload = (token: string) => {
 };
 
 const transport = nodemailer.createTransport({
-	service: "gmail",
-	host: "smtp.gmail.com",
-	port: 587,
+	service: SERVER_CONFIG.EMAIL_SERVICE,
+	host: SERVER_CONFIG.EMAIL_HOST,
+	port: Number(SERVER_CONFIG.EMAIL_PORT),
 	secure: true,
 	auth: {
 		user: SERVER_CONFIG?.EMAIL_ADDRESS,
