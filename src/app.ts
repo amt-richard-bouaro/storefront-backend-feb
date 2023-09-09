@@ -10,54 +10,20 @@ import session from "express-session";
 import dotenv from "dotenv";
 dotenv.config();
 
-import {
-	findAccountByEmail,
-	findAccountByProviderId,
-	passwordValidator,
-} from "./endpoints/utils/reusableFunctions";
+import { findAccountByProviderId } from "./endpoints/utils/reusableFunctions";
 import { userSerialization } from "./services/generalTypes";
 import GoogleSignOption from "./services/passport-google";
 import LocalSignInOption from "./services/passport-local";
 import FacebookSignInOption from "./services/passport-facebook";
 import { SERVER_CONFIG } from "./config/main";
 
-import passportLocal from "passport-local";
-const localStrategy = passportLocal.Strategy;
 
-passport.use(
-	"local",
-	new localStrategy(
-		{
-			usernameField: "email",
-			passwordField: "password",
-		},
-		async (username, password, done) => {
-			const user = await findAccountByEmail(username);
-
-			if (!user) {
-				return done(null, false, {
-					message: "Incorrect username or password",
-				});
-			}
-
-			const validPassword = await passwordValidator(password, user.password);
-
-			if (!validPassword) {
-				return done(null, false, {
-					message: "Incorrect username or password",
-				});
-			}
-
-			return done(null, user);
-		}
-	)
-);
 
 const app = express();
 
 app.use(
 	cors({
-		origin: "http://localhost:5173",
+		origin: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
 		credentials: true,
 	})
 );
@@ -121,10 +87,9 @@ passport.deserializeUser(async (user: userSerialization, callback) => {
 	});
 });
 
-
 GoogleSignOption();
+FacebookSignInOption();
 LocalSignInOption();
-FacebookSignInOption()
 
 const PORT: number = SERVER_CONFIG.PORT;
 
@@ -138,8 +103,6 @@ app.use("/api/account", accountEndpoints);
 swaggerDocs(app, PORT);
 
 import { notFoundError, errorHandler } from "./middlewares/errorHandlers";
-
-
 
 app.use(notFoundError);
 app.use(errorHandler);

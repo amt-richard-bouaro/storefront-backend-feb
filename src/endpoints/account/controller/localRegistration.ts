@@ -8,7 +8,6 @@ import {
 	mailOptions,
 } from "../../utils/reusableFunctions";
 import { STATUS } from "../../../config/main";
-import { authenticate } from "../../../services/localAuth";
 
 export const localRegistration = async (
 	req: Request<{}, {}, NEW_ACCOUNT>,
@@ -63,8 +62,6 @@ export const localRegistration = async (
 				// network err will be logged to a file/database
 			}
 		);
-
-		authenticate("local", req, res);
 		
 		
 		return res.status(STATUS.CREATED).json({

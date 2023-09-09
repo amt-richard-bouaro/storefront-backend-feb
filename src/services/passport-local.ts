@@ -5,13 +5,11 @@ import {
 	passwordValidator,
 } from "../endpoints/utils/reusableFunctions";
 
-
-
 const localStrategy = passportLocal.Strategy;
 
 const LocalSignInOption = () => {
 	passport.use(
-		"local",
+		"local-auth",
 		new localStrategy(
 			{
 				usernameField: "email",
@@ -19,9 +17,10 @@ const LocalSignInOption = () => {
 			},
 			async (username, password, done) => {
 				const user = await findAccountByEmail(username);
+
 				if (!user) {
 					return done(null, false, {
-						message: "Incorrect username or password",
+						message: "Incorrect email or password",
 					});
 				}
 				const validPassword = await passwordValidator(
@@ -30,16 +29,27 @@ const LocalSignInOption = () => {
 				);
 				if (!validPassword) {
 					return done(null, false, {
-						message: "Incorrect username or password",
+						message: "Incorrect email or password",
 					});
 				}
-				return done(null, user);
+				return done(null, {
+					id: user.id,
+					email: user.email,
+					type: user.type,
+					provider: user.provider,
+					providerId: user.providerId,
+					verified: user.verified,
+					isActive: user.isActive,
+					mustChangePassword: user.mustChangePassword,
+					hasResetPassword: user.hasResetPassword,
+					createdAt: user.createdAt,
+					updatedAt: user.updatedAt,
+					customer: user.customer,
+					business: user.business,
+				});
 			}
 		)
 	);
-}
-
+};
 
 export default LocalSignInOption;
-
-
