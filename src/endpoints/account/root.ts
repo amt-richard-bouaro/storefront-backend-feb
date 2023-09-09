@@ -44,6 +44,32 @@ app.get(
 	})
 );
 
+app.get(
+	"/facebook/customer",
+	passport.authenticate("facebook-customer", { scope: [] })
+);
+
+app.get(
+	"/facebook/customer/callback",
+	passport.authenticate("facebook-customer", {
+		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
+		failureRedirect: "/api/account/login/failure",
+	})
+);
+
+app.get(
+	"/facebook/business",
+	passport.authenticate("facebook-business", { scope: [] })
+);
+
+app.get(
+	"/facebook/business/callback",
+	passport.authenticate("facebook-business", {
+		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
+		failureRedirect: "/api/account/login/failure",
+	})
+);
+
 app.put("/verify", accountVerification);
 
 export default app;
