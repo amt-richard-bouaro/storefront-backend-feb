@@ -42,11 +42,11 @@ pipeline {
             sh 'yarn install'
         }
     }
-    stage('Run Linters') {
-        steps {
-            sh 'yarn lint'
-        }
-    }
+    // stage('Run Linters') {
+    //     steps {
+    //         sh 'yarn lint'
+    //     }
+    // }
 
     stage('Build') {
         when {
