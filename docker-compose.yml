@@ -25,10 +25,9 @@ services:
       - .:/app
       - /app/node_modules
     depends_on:
-      - db
+      - database
     restart: on-failure
     env_file:
       - .env
- 
 
   

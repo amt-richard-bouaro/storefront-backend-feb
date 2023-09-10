@@ -1,7 +1,7 @@
 
 import { Request, Response, NextFunction } from "express"
 import { STATUS } from "../config/main";
-import { REQUEST_WITH_USER, USER, ACCOUNT_TYPES, ACCOUNTS, RESPONSE  } from "../services/generalTypes";
+import { REQUEST_WITH_USER, USER, ACCOUNTS, RESPONSE  } from "../services/generalTypes";
 import { findAccountById } from "../endpoints/utils/reusableFunctions";
 
 
