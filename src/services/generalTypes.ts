@@ -48,3 +48,7 @@ export interface REQUEST_WITH_USER {
 	id: string;
 	providerId: string;
 }
+
+
+export const ACCOUNT_TYPES = ['Customer', 'Business'] as const
+export type ACCOUNTS = 'Customer' | 'Business'

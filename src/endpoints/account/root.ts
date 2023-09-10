@@ -11,11 +11,12 @@ import { handleLoginLocal } from "./controller/loginLocal";
 import { accountVerification } from "./controller/verifyAccount";
 import { SERVER_CONFIG, STATUS } from "../../config/main";
 import { RESPONSE, USER } from "../../services/generalTypes";
+import { ensureOnlyAuthorized } from "../../middlewares/authenticate";
 
 
 app.post("/register/local", localRegistration);
 app.get("/login/failure", handleFailure);
-app.get("/auth/user", authenticatedUser);
+app.get("/auth/user", authenticatedUser); //protected
 app.get("/logout", handleLogout);
 
 

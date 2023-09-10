@@ -8,6 +8,7 @@
 		"module": "CommonJS",
 		"moduleResolution": "node",
 		"esModuleInterop": true,
+		"resolveJsonModule": true,
 		"rootDir": "src",
 		"outDir": "dist",
 		"allowJs": true,
@@ -15,7 +16,7 @@
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "src/**/*.json"],
 	"exclude": ["node_modules"],
 	"typeRoots": ["./global.d.ts", "./node_modules/@types"]
 }
