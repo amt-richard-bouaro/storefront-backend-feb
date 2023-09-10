@@ -11,6 +11,7 @@ export const SERVER_CONFIG = {
 	EMAIL_SERVICE: process.env.EMAIL_SERVICE,
 	EMAIL_HOST: process.env.EMAIL_HOST,
 	EMAIL_PORT: process.env.EMAIL_PORT,
+	REDIS_URL: process.env.REDIS_URL,
 };
 
 export const GOOGLE_API = {
@@ -35,17 +36,17 @@ export const FACEBOOK_API = {
 	CALLBACKURL_BUSINESS: process.env.FACEBOOK_CALLBACKURL_BUSINESS,
 };
 
-interface status {
-	OK: number;
-	CREATED: number;
-	ACCEPTED: number;
-	BAD_REQUEST: number;
-	UNAUTHORIZED: number;
-	FORBIDDEN: number;
-	NOT_FOUND: number;
-	CONFLICT: number;
-	INTERNAL_SERVER_ERROR: number;
-}
+// interface status {
+// 	OK: number;
+// 	CREATED: number;
+// 	ACCEPTED: number;
+// 	BAD_REQUEST: number;
+// 	UNAUTHORIZED: number;
+// 	FORBIDDEN: number;
+// 	NOT_FOUND: number;
+// 	CONFLICT: number;
+// 	INTERNAL_SERVER_ERROR: number;
+// }
 
 export const STATUS = {
 	OK: 200,
