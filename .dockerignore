@@ -1,2 +1,4 @@
 postgres-data/
 README.md
+node_modules/
+dist/

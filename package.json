@@ -40,7 +40,10 @@
     "lint": "npx eslint --ext .ts src",
     "lint:fix": "npx eslint --ext .ts src --fix",
     "prettier": "npx prettier src --check",
-    "format": "npx prettier --write src"
+    "format": "npx prettier --write src",
+    "db:generate": "npx prisma generate",
+    "db:migrate": "npx prisma migrate dev",
+    "db:push": "npx prisma db push"
   },
   "repository": {
     "type": "git",
