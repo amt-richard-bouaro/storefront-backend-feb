@@ -8,6 +8,7 @@ import {
 	mailOptions,
 } from "../../utils/reusableFunctions";
 import { STATUS } from "../../../config/main";
+import passport from "passport";
 
 export const localRegistration = async (
 	req: Request<{}, {}, NEW_ACCOUNT>,
@@ -63,13 +64,16 @@ export const localRegistration = async (
 			}
 		);
 		
-		
-		return res.status(STATUS.CREATED).json({
+		 passport.authenticate("local-auth", { session: true })(req, res, () => {
+     return res.status(STATUS.CREATED).json({
 			code: "REGISTRATION_SUCCESS",
 			message: "Account has been successfully created. A mail has already been sent to your email address with instructions to verify your account.",
 			type: "success",
 			data: User,
 		});
+    });
+		
+		
 	} catch (error) {
 		const err = error as Error;
 

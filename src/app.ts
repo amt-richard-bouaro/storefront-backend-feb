@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import swaggerDocs from './services/documentation/swagger';
 import cors from 'cors';
-// import helmet from "helmet"
+import helmet from "helmet"
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
@@ -25,6 +25,8 @@ app.use(
 		credentials: true,
 	})
 );
+
+app.use(helmet())
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -73,7 +75,6 @@ passport.deserializeUser(async (user: userSerialization, callback) => {
 	const User = await findAccountByProviderId(user.providerId);
 
 	if (!User) {
-		// let err = new Error()
 		return callback(null, false);
 	}
 

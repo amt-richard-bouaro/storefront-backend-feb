@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import passport from "passport"
 import { RESPONSE } from "../../../services/generalTypes";
 import {
 	findAccountByEmail,
@@ -58,12 +59,16 @@ export const accountVerification = async (
 			})
 		);
 
-		return res.status(STATUS.OK).json({
+	passport.authenticate("local", { session: false })(req, res, () => {
+      return res.status(STATUS.OK).json({
 			code: "ACCOUNT_VERIFIED",
 			message: "Account is verified",
 			type: "success",
 			data: verifiedUser,
 		});
+    });
+
+		
 	} catch (error) {
 		const err = error as Error;
 
