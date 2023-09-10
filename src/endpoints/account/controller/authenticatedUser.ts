@@ -8,10 +8,7 @@ export const authenticatedUser = async (
 	res: Response<RESPONSE>,
 	next: NextFunction
 ) => {
-	const requestUser = <REQUEST_WITH_USER>req.user;
-	
-	console.log(req.isAuthenticated(), req.sessionID);
-	
+	const requestUser = <REQUEST_WITH_USER>req.user;	
 
 	if (!req.isAuthenticated() || !requestUser.id) {
 		return res.status(STATUS.UNAUTHORIZED).json({
@@ -32,9 +29,23 @@ export const authenticatedUser = async (
 	}
 
 	return res.status(STATUS.OK).json({
-		code: "LOGGED_IN",
-		message: "Success",
+		code: "USER_FOUND",
+		message: "User found",
 		type: "success",
-		data: user,
+		data: {
+			id: user.id,
+				email: user.email,
+				type: user.type,
+				provider: user.provider,
+				providerId: user.providerId,
+				verified: user.verified,
+				isActive: user.isActive,
+				mustChangePassword: user.mustChangePassword,
+				hasResetPassword: user.hasResetPassword,
+				createdAt: user.createdAt,
+				updatedAt: user.updatedAt,
+				customer: user.customer,
+				business: user.business,
+		},
 	});
 };

@@ -70,11 +70,8 @@ passport.serializeUser((user: userSerialization, callback) => {
 });
 
 passport.deserializeUser(async (user: userSerialization, callback) => {
-	console.log("deserialize", user);
 
 	const User = await findAccountByProviderId(user.providerId);
-
-	console.log(User);
 
 	if (!User) {
 		let err = new Error();
