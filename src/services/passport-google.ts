@@ -1,18 +1,15 @@
-import passport from "passport";
-import OAuth2Strategy from "passport-google-oauth2";
-import { GOOGLE_API } from "../config/main";
-import {
-	createAccount,
-	findAccountByEmail,
-} from "../endpoints/utils/reusableFunctions";
-
-import { NEW_ACCOUNT } from "../endpoints/account/types";
+import passport from 'passport';
+import OAuth2Strategy from 'passport-google-oauth2';
+import { GOOGLE_API } from '../config/main';
+import { NEW_ACCOUNT } from '../endpoints/account/types';
+import { findAccountByEmail } from '../endpoints/utils/operations/readOperations';
+import { createAccount } from '../endpoints/utils/operations/writeOperations';
 
 const GoogleStrategy = OAuth2Strategy.Strategy;
 
 const GoogleSignOption = () => {
 	passport.use(
-		"google-business",
+		'google-business',
 		new GoogleStrategy(
 			{
 				clientID: GOOGLE_API.CLIENT_ID,
@@ -23,12 +20,12 @@ const GoogleSignOption = () => {
 				const data: NEW_ACCOUNT = {
 					email: user.email,
 					password: user.id,
-					provider: "google",
-					type: "Business",
+					provider: 'google',
+					type: 'Business',
 					verified: user.verified,
 					isActive: true,
 					providerId: user.id,
-					businessName: user.name.familyName + " Business",
+					businessName: user.name.familyName + ' Business',
 				};
 
 				const userExist = await findAccountByEmail(data.email);
@@ -39,20 +36,20 @@ const GoogleSignOption = () => {
 					return done(null, user);
 				}
 
-				if (userExist && userExist.provider === "google") {
+				if (userExist && userExist.provider === 'google') {
 					return done(null, user);
 				}
 
 				return done(null, false, {
 					message:
-						"There is already a user with registered with this account. if you own this account, please login with your email and password",
+						'There is already a user with registered with this account. if you own this account, please login with your email and password',
 				});
 			}
 		)
 	);
 
 	passport.use(
-		"google-customer",
+		'google-customer',
 		new GoogleStrategy(
 			{
 				clientID: GOOGLE_API.CLIENT_ID,
@@ -63,8 +60,8 @@ const GoogleSignOption = () => {
 				const data: NEW_ACCOUNT = {
 					email: user.email,
 					password: user.id,
-					provider: "google",
-					type: "Customer",
+					provider: 'google',
+					type: 'Customer',
 					verified: user.verified,
 					isActive: true,
 					providerId: user.id,
@@ -80,13 +77,13 @@ const GoogleSignOption = () => {
 					return done(null, user);
 				}
 
-				if (userExist && userExist.provider === "google") {
+				if (userExist && userExist.provider === 'google') {
 					return done(null, user);
 				}
 
 				return done(null, false, {
 					message:
-						"There is already a user with registered with this account. if you own this account, please login with your email and password",
+						'There is already a user with registered with this account. if you own this account, please login with your email and password',
 				});
 			}
 		)

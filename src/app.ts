@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import swaggerDocs from './services/documentation/swagger';
 import cors from 'cors';
-import helmet from "helmet"
+import helmet from 'helmet';
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
@@ -10,7 +10,7 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { findAccountByProviderId } from './endpoints/utils/reusableFunctions';
+import { findAccountByProviderId } from './endpoints/utils/operations/readOperations';
 import { userSerialization } from './services/generalTypes';
 import GoogleSignOption from './services/passport-google';
 import LocalSignInOption from './services/passport-local';
@@ -26,7 +26,7 @@ app.use(
 	})
 );
 
-app.use(helmet())
+app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -35,6 +35,7 @@ app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 const redisClient = createClient({
 	url: SERVER_CONFIG.REDIS_URL,
 });
+
 redisClient.connect().catch(console.error);
 
 const redisStore = new RedisStore({

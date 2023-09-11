@@ -16,7 +16,7 @@ CREATE TABLE "Account" (
     "verified" BOOLEAN NOT NULL DEFAULT false,
     "isActive" BOOLEAN NOT NULL DEFAULT false,
     "mustChangePassword" BOOLEAN NOT NULL DEFAULT false,
-    "hasResetPassword" BOOLEAN NOT NULL DEFAULT false,
+    "canResetPassword" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

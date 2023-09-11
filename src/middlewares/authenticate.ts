@@ -1,60 +1,71 @@
+import { Request, Response, NextFunction } from 'express';
+import { STATUS } from '../config/main';
+import {
+	REQUEST_WITH_USER,
+	USER,
+	ACCOUNTS,
+	RESPONSE,
+} from '../services/generalTypes';
+import { findAccountByEmail } from '../endpoints/utils/operations/readOperations';
 
-import { Request, Response, NextFunction } from "express"
-import { STATUS } from "../config/main";
-import { REQUEST_WITH_USER, USER, ACCOUNTS, RESPONSE  } from "../services/generalTypes";
-import { findAccountById } from "../endpoints/utils/reusableFunctions";
+export const ensureOnlyAuthorized =
+	(to?: ACCOUNTS[]) =>
+	async (req: Request, res: Response<RESPONSE>, next: NextFunction) => {
+		try {
+			if (!req.isAuthenticated()) {
+				return res.status(STATUS.UNAUTHORIZED).json({
+					code: 'UNAUTHORIZED',
+					message:
+						'Permission denied. Please make sure you have permission to access this resource',
+					type: 'error',
+				});
+			}
 
+			const requestUser = <REQUEST_WITH_USER>req.user;
 
-export const restrictedTo = (to: ACCOUNTS[]) => async (req: Request, res: Response, next: NextFunction) => {
-    
-if (!req.isAuthenticated()) {
-        return res.status(STATUS.UNAUTHORIZED).json({
-            code: "UNAUTHORIZED",
-            message: "Permission denied. Please make sure you have permission to access this system",
-            type: "error",
-        });
-    }
+			const user = await findAccountByEmail(requestUser.id);
 
-    const requestUser = <REQUEST_WITH_USER>req.user;
+			if (!user) {
+				return res.status(STATUS.UNAUTHORIZED).json({
+					code: 'UNAUTHORIZED',
+					message: 'Unauthorized: Could not find any user',
+					type: 'error',
+				});
+			}
 
-    const user = await findAccountById(requestUser.id);
-    
-}
+			const foundUser = user as USER;
 
+			if (to && !to.includes(foundUser.type)) {
+				return res.status(STATUS.UNAUTHORIZED).json({
+					code: 'UNAUTHORIZED',
+					message:
+						'Restricted Access: You do not have permission to access this resource',
+					type: 'error',
+				});
+			}
 
-export const ensureOnlyAuthorized = async (req: Request, res: Response<RESPONSE>, next: NextFunction) => {
-    
-    if (!req.isAuthenticated()) {
-        return res.status(STATUS.UNAUTHORIZED).json({
-            code: "UNAUTHORIZED",
-            message: "Permission denied. Please make sure you have permission to access this system",
-            type: "error",
-        });
-    }
+			if (
+				!foundUser.isActive ||
+				!foundUser.verified ||
+				foundUser.mustChangePassword
+			) {
+				return res.status(STATUS.UNAUTHORIZED).json({
+					code: 'UNAUTHORIZED',
+					message: !foundUser.verified
+						? 'Account is not verified. You can request for verification at https://..'
+						: foundUser.mustChangePassword
+						? 'You must change your password before you can continue'
+						: !foundUser.isActive
+						? 'Account is not actived.'
+						: 'You are not authorized',
+					type: 'error',
+				});
+			}
 
-    const requestUser = <REQUEST_WITH_USER>req.user;
+			return next();
+		} catch (error) {
+			const err = error as Error;
 
-    const user = await findAccountById(requestUser.id);
-
-    if (!user) {
-        return res.status(STATUS.UNAUTHORIZED).json({
-            code: "UNAUTHORIZED",
-            message: "Unauthorized: Could not find any user",
-            type: "error",
-        });
-    }
-
-    const foundUser = user as USER
-    
-    if (!foundUser.isActive || !foundUser.verified || foundUser.mustChangePassword) {
-        return res.status(STATUS.UNAUTHORIZED).json({
-            code: "UNAUTHORIZED",
-            message: !foundUser.verified ? 'Account is not verified. You can request for verification at https://..': foundUser.mustChangePassword ? 'You must change your password before you can continue' : !foundUser.isActive ? 'Account is not actived.' :  'You are not authorized',
-            type: "error",
-        });
-    }
-
-    return next();
-
-}
-
+			next(err);
+		}
+	};

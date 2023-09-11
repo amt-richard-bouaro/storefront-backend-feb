@@ -1,18 +1,17 @@
-import { Request, Response, NextFunction } from "express";
-import passport from "passport"
-import { RESPONSE } from "../../../services/generalTypes";
+import { Request, Response, NextFunction } from 'express';
+import passport from 'passport';
+import { RESPONSE } from '../../../services/generalTypes';
+import { STATUS } from '../../../config/main';
+import { findAccountByEmail } from '../../utils/operations/readOperations';
 import {
-	findAccountByEmail,
-	sendMail,
-	mailOptions,
 	extractJwtPayload,
-	verifyAccount,
-} from "../../utils/reusableFunctions";
-import { STATUS } from "../../../config/main";
-
+	mailOptions,
+	sendMail,
+} from '../../utils/helperFunctions';
+import { verifyAccount } from '../../utils/operations/updateOperations';
 
 export const accountVerification = async (
-	req: Request<{}, {}, { code: string; email: string }>,
+	req: Request<object, object, { code: string; email: string }>,
 	res: Response<RESPONSE>,
 	next: NextFunction
 ) => {
@@ -23,18 +22,18 @@ export const accountVerification = async (
 
 		if (!User) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: "INVALID_REQUEST",
+				code: 'INVALID_REQUEST',
 				message:
-					"Could not verify the email address because the request contained invalid data.",
-				type: "error",
+					'Could not verify the email address because the request contained invalid data.',
+				type: 'error',
 			});
 		}
 
 		if (User.verified) {
 			return res.status(STATUS.OK).json({
-				code: "ACCOUNT_VERIFIED",
-				message: "Account is verified",
-				type: "success",
+				code: 'ACCOUNT_VERIFIED',
+				message: 'Account is verified',
+				type: 'success',
 			});
 		}
 
@@ -42,10 +41,10 @@ export const accountVerification = async (
 
 		if (userVerificationToken.code !== data.code) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: "INVALID_REQUEST",
+				code: 'INVALID_REQUEST',
 				message:
-					"Could not verify the email address because the request contained invalid data.",
-				type: "error",
+					'Could not verify the email address because the request contained invalid data.',
+				type: 'error',
 			});
 		}
 
@@ -54,21 +53,19 @@ export const accountVerification = async (
 		await sendMail(
 			mailOptions({
 				to: verifiedUser.email,
-				subject: "Email Verified",
+				subject: 'Email Verified',
 				html: `<h1>Your email has been verified</h1>`,
 			})
 		);
 
-	passport.authenticate("local", { session: false })(req, res, () => {
-      return res.status(STATUS.OK).json({
-			code: "ACCOUNT_VERIFIED",
-			message: "Account is verified",
-			type: "success",
-			data: verifiedUser,
+		passport.authenticate('local', { session: false })(req, res, () => {
+			return res.status(STATUS.OK).json({
+				code: 'ACCOUNT_VERIFIED',
+				message: 'Account is verified',
+				type: 'success',
+				data: verifiedUser,
+			});
 		});
-    });
-
-		
 	} catch (error) {
 		const err = error as Error;
 

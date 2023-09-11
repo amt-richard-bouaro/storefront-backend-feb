@@ -516,15 +516,6 @@
     "@types/passport" "*"
     "@types/passport-oauth2" "*"
 
-"@types/passport-google-oauth20@^2.0.11":
-  version "2.0.11"
-  resolved "https://registry.yarnpkg.com/@types/passport-google-oauth20/-/passport-google-oauth20-2.0.11.tgz#271ec71de3030a3e1c004b24e633e4b298ccba97"
-  integrity sha512-9XMT1GfwhZL7UQEiCepLef55RNPHkbrCtsU7rsWPTEOsmu5qVIW8nSemtB4p+P24CuOhA+IKkv8LsPThYghGww==
-  dependencies:
-    "@types/express" "*"
-    "@types/passport" "*"
-    "@types/passport-oauth2" "*"
-
 "@types/passport-google-oauth2@^0.1.5":
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/@types/passport-google-oauth2/-/passport-google-oauth2-0.1.5.tgz#5a001be1d02f35c33125fdb7e8347aed47074140"
@@ -2606,13 +2597,6 @@ passport-facebook@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/passport-facebook/-/passport-facebook-3.0.0.tgz#b16f7314128be55d020a2b75f574c194bd6d9805"
   integrity sha512-K/qNzuFsFISYAyC1Nma4qgY/12V3RSLFdFVsPKXiKZt434wOvthFW1p7zKa1iQihQMRhaWorVE1o3Vi1o+ZgeQ==
-  dependencies:
-    passport-oauth2 "1.x.x"
-
-passport-google-oauth20@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/passport-google-oauth20/-/passport-google-oauth20-2.0.0.tgz#0d241b2d21ebd3dc7f2b60669ec4d587e3a674ef"
-  integrity sha512-KSk6IJ15RoxuGq7D1UKK/8qKhNfzbLeLrG3gkLZ7p4A6DBCcv7xpyQwuXtWdpyR0+E0mwkpjY1VfPOhxQrKzdQ==
   dependencies:
     passport-oauth2 "1.x.x"
 

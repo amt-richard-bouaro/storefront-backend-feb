@@ -1,35 +1,30 @@
-import passport from "passport";
-import passportLocal from "passport-local";
-import {
-	findAccountByEmail,
-	passwordValidator,
-} from "../endpoints/utils/reusableFunctions";
-
+import passport from 'passport';
+import passportLocal from 'passport-local';
+import { findAccountByEmail } from '../endpoints/utils/operations/readOperations';
+import { passwordValidator } from '../endpoints/utils/helperFunctions';
 const localStrategy = passportLocal.Strategy;
 
 const LocalSignInOption = () => {
 	passport.use(
-		"local-auth",
+		'local-auth',
 		new localStrategy(
 			{
-				usernameField: "email",
-				passwordField: "password",
+				usernameField: 'email',
+				passwordField: 'password',
 			},
 			async (username, password, done) => {
 				const user = await findAccountByEmail(username);
 
 				if (!user) {
 					return done(null, false, {
-						message: "Incorrect email or password",
+						message: 'Incorrect email or password',
 					});
 				}
-				const validPassword = await passwordValidator(
-					password,
-					user.password
-				);
+				const validPassword = await passwordValidator(password, user.password);
+
 				if (!validPassword) {
 					return done(null, false, {
-						message: "Incorrect email or password",
+						message: 'Incorrect email or password',
 					});
 				}
 				return done(null, {
@@ -41,7 +36,7 @@ const LocalSignInOption = () => {
 					verified: user.verified,
 					isActive: user.isActive,
 					mustChangePassword: user.mustChangePassword,
-					hasResetPassword: user.hasResetPassword,
+					canResetPassword: user.canResetPassword,
 					createdAt: user.createdAt,
 					updatedAt: user.updatedAt,
 					customer: user.customer,

@@ -1,7 +1,7 @@
 export interface RESPONSE {
 	code: string;
 	message: string;
-	type: "error" | "success";
+	type: 'error' | 'success';
 	stack?: any;
 	data?: any;
 	error?: any;
@@ -37,7 +37,7 @@ export type USER = {
 	verified: boolean;
 	isActive: boolean;
 	mustChangePassword: boolean;
-	hasResetPassword: boolean;
+	canResetPassword: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 	customer: object | null;
@@ -49,6 +49,5 @@ export interface REQUEST_WITH_USER {
 	providerId: string;
 }
 
-
-export const ACCOUNT_TYPES = ['Customer', 'Business'] as const
-export type ACCOUNTS = 'Customer' | 'Business'
+export const ACCOUNT_TYPES = ['Customer', 'Business'] as const;
+export type ACCOUNTS = 'Customer' | 'Business';
