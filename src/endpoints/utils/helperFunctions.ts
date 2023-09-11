@@ -76,9 +76,7 @@ export const sendMail = async (
 	callback?: (err: Error | null, info: SentMessageInfo) => void
 ) => {
 	try {
-		const info = transport.sendMail(mailOptions, callback);
-
-		return info;
+		transport.sendMail(mailOptions, callback);
 	} catch (err) {
 		if (err.code === 'ENOTFOUND') {
 			return {

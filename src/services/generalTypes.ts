@@ -33,15 +33,16 @@ export type USER = {
 	email: string;
 	type: 'Business' | 'Customer';
 	provider: 'local' | 'google' | 'facebook';
-	providerId: string;
-	verified: boolean;
-	isActive: boolean;
-	mustChangePassword: boolean;
-	canResetPassword: boolean;
+	providerId?: string;
+	verified?: boolean;
+	isActive?: boolean;
+	verificationToken?: string;
+	mustChangePassword?: boolean;
+	canResetPassword?: boolean;
 	createdAt: Date;
 	updatedAt: Date;
-	customer: object | null;
-	business: object | null;
+	customer?: object | null;
+	business?: object | null;
 };
 
 export interface REQUEST_WITH_USER {

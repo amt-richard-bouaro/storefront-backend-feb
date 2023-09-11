@@ -86,7 +86,6 @@ export const activateAccount = async (id: string) => {
 	const user = await Database.account.update({
 		where: {
 			id,
-			verified: true,
 		},
 		data: {
 			isActive: true,
@@ -110,6 +109,8 @@ export const changePassword = async (data: {
 		},
 		data: {
 			password: hashedPassword,
+			mustChangePassword: false,
+			canResetPassword: false,
 		},
 	});
 

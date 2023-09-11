@@ -6,6 +6,7 @@ import passport from 'passport';
 import { findAccountByEmail } from '../../utils/operations/readOperations';
 import { createAccount } from '../../utils/operations/writeOperations';
 import { mailOptions, sendMail } from '../../utils/helperFunctions';
+import emailVerification from '../../../services/templates/emailVerification';
 
 export const localRegistration = async (
 	req: Request<object, object, NEW_ACCOUNT>,
@@ -50,12 +51,19 @@ export const localRegistration = async (
 			});
 		}
 
+		const name = data.businessName ? data.businessName : data.firstName;
+
 		sendMail(
 			mailOptions({
 				to: email,
 				subject: 'Email Verification',
-				html: `<h1>${code}</h1>`,
-			})
+				html: emailVerification(name, code),
+			}),
+			(err) => {
+				if (err) {
+					// console.log(err)
+				}
+			}
 		);
 
 		passport.authenticate('local-auth', { session: true })(req, res, () => {

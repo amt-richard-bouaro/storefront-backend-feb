@@ -8,8 +8,6 @@ export const handleLoginLocal = (
 	res: Response<RESPONSE>,
 	next: NextFunction
 ) => {
-	console.log(req.body);
-
 	passport.authenticate('local-auth', (err, user) => {
 		if (err) {
 			throw err;

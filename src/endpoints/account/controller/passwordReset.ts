@@ -17,13 +17,22 @@ export const resetPassword = async (
 
 		const { id } = <REQUEST_WITH_USER>req.user;
 
-		const user = findAccountById(id);
+		const user = await findAccountById(id);
 
 		if (!user) {
 			return res.status(STATUS.UNAUTHORIZED).json({
 				code: 'PASSWORD_RESET_FAILED',
 				message:
 					'Could not verify the email address because the request contained invalid data.',
+				type: 'error',
+			});
+		}
+
+		if (!user.canResetPassword || !user.mustChangePassword) {
+			return res.status(STATUS.UNAUTHORIZED).json({
+				code: 'PASSWORD_RESET_FAILED',
+				message:
+					'You cannot change your passwor at this moment. Please start by requesting for password reset.',
 				type: 'error',
 			});
 		}

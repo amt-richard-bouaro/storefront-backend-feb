@@ -11,6 +11,7 @@ import {
 	shortCodeGenerator,
 } from '../../utils/helperFunctions';
 import { updateResetStatus } from '../../utils/operations/updateOperations';
+import emailVerification from '../../../services/templates/emailVerification';
 
 export const requestPasswordReset = async (
 	req: Request,
@@ -38,12 +39,21 @@ export const requestPasswordReset = async (
 
 		await updateResetStatus(email, resetToken);
 
-		sendMail(
+		const name =
+			user.type === 'Business'
+				? user.business.businessName
+				: user.customer.firstName;
+		await sendMail(
 			mailOptions({
 				to: email,
-				subject: 'Email Verification',
-				html: `<h1>${code}</h1>`,
-			})
+				subject: 'Reset Password Request',
+				html: emailVerification(name, code),
+			}),
+			(err) => {
+				if (err) {
+					// console.log(err)
+				}
+			}
 		);
 
 		req.body.password = resetToken;

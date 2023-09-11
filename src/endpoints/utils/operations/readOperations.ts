@@ -1,4 +1,5 @@
 import { Database } from '../../../database/dbClient';
+import { USER } from '../../../services/generalTypes';
 
 export const findAccountByEmail = async (email: string) => {
 	const user = await Database.account.findUnique({
@@ -26,7 +27,7 @@ export const findAccountByEmail = async (email: string) => {
 	return user;
 };
 
-export const findAccountById = async (id: string) => {
+export const findAccountById = async (id: string): Promise<USER> => {
 	try {
 		const user = await Database.account.findUnique({
 			where: {
@@ -42,6 +43,7 @@ export const findAccountById = async (id: string) => {
 				isActive: true,
 				providerId: true,
 				mustChangePassword: true,
+				canResetPassword: true,
 				createdAt: true,
 				updatedAt: true,
 				password: false,

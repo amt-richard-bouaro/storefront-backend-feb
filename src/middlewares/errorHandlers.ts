@@ -12,7 +12,8 @@ export const notFoundError = (req: Request, res: Response<RESPONSE>) => {
 };
 
 export const errorHandler = (err: Error, req: Request, res: Response) => {
-	let status = STATUS.INTERNAL_SERVER_ERROR;
+	let status =
+		res.statusCode === 200 ? STATUS.INTERNAL_SERVER_ERROR : res.statusCode;
 
 	let errorResponse = {
 		code: 'ERROR',
@@ -36,17 +37,6 @@ export const errorHandler = (err: Error, req: Request, res: Response) => {
 			...errorResponse,
 			message: 'Unauthorized: Token has expired',
 			code: 'TOKEN_EXPIRED',
-		};
-	}
-
-	if (err.name === 'PrismaClientKnownRequestError') {
-		console.log(err.message);
-
-		status = STATUS.UNAUTHORIZED;
-		errorResponse = {
-			...errorResponse,
-			message: 'Database Error: Database error occurred',
-			code: 'DATABASE_ERROR',
 		};
 	}
 

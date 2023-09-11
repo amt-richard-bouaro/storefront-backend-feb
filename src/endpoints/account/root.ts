@@ -34,7 +34,9 @@ app.post(
 		try {
 			const user: USER = req.user as USER;
 
-			await activateAccount(user.id);
+			if (user.verified) {
+				await activateAccount(user.id);
+			}
 
 			return res.status(STATUS.OK).json({
 				code: 'LOGGED_IN',
