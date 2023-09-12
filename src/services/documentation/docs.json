@@ -5,13 +5,13 @@
     "version": "1.0.0",
     "contact": {
       "name": "Store Front API",
-      "url": "",
-      "email": ""
+      "url": "https://storefrontsmes-aug-api.amalitech-dev.net/",
+      "email": "richard.bouaro@amalitech.org"
     }
   },
   "servers": [
-    {
-      "url": "https://localhost:4455",
+        {
+      "url": "https://storefrontsmes-aug-api.amalitech-dev.net/",
       "description": "Store Front API"
     }
   ],

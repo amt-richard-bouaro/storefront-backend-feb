@@ -1,110 +1,150 @@
-import passport from "passport";
-import facebookStrategy from "passport-facebook";
-import { FACEBOOK_API } from "../config/main";
-import {
-	createAccount,
-	findAccountByEmail,
-} from "../endpoints/utils/reusableFunctions";
-
-import { NEW_ACCOUNT } from "../endpoints/account/types";
+import passport from 'passport';
+import facebookStrategy from 'passport-facebook';
+import { FACEBOOK_API } from '../config/main';
+import { NEW_ACCOUNT } from '../endpoints/account/types';
+import { findAccountByEmail } from '../endpoints/utils/operations/readOperations';
+import { createAccount } from '../endpoints/utils/operations/writeOperations';
 
 const FacebookStrategy = facebookStrategy.Strategy;
 
 const FacebookSignInOption = () => {
 	passport.use(
-		"facebook-business",
+		'facebook-business',
 		new FacebookStrategy(
 			{
 				clientID: FACEBOOK_API.CLIENT_ID,
 				clientSecret: FACEBOOK_API.CLIENT_SECRET,
-				callbackURL: FACEBOOK_API.CALLBACKURL_BUSINESS,
-				profileFields: ["id", "name", "email"],
+				callbackURL: '/api/account/facebook/business/callback',
+				profileFields: ['id', 'name', 'email'],
 			},
-			async function (
-				accessToken: unknown,
-				refreshToken: unknown,
-				user,
-				done
-			) {
-				const data: NEW_ACCOUNT = {
-					email: user.emails[0].value,
-					password: user.id,
-					provider: "facebook",
-					type: "Business",
-					verified: true,
-					isActive: true,
-					providerId: user.id,
-					businessName: user.name.familyName + " Business",
-				};
+			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.emails[0].value,
+						password: user.id,
+						provider: 'facebook',
+						type: 'Business',
+						verified: true,
+						isActive: true,
+						providerId: user.id,
+						businessName: user.name.familyName + ' Business',
+					};
 
-				const userExist = await findAccountByEmail(data.email);
+					const userExist = await findAccountByEmail(data.email);
 
-				if (!userExist) {
-					await createAccount(data);
+					if (!userExist) {
+						await createAccount(data);
 
-					return done(null, user);
+						return done(null, user);
+					}
+
+					if (userExist && userExist.provider === 'facebook') {
+						return done(null, user);
+					}
+
+					return done(null, false, {
+						message:
+							'There is already a user with registered with this account. if you own this account, please login with your email and password',
+					});
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
 				}
-
-				if (userExist && userExist.provider === "facebook") {
-					return done(null, user);
-				}
-
-				return done(null, false, {
-					message:
-						"There is already a user with registered with this account. if you own this account, please login with your email and password",
-				});
 			}
 		)
 	);
 
 	passport.use(
-		"facebook-customer",
+		'facebook-customer',
 		new FacebookStrategy(
 			{
 				clientID: FACEBOOK_API.CLIENT_ID,
 				clientSecret: FACEBOOK_API.CLIENT_SECRET,
-				callbackURL: FACEBOOK_API.CALLBACKURL_CUSTPMER,
-				profileFields: ["id", "name", "email"],
+				callbackURL: '/api/account/facebook/customer/callback',
+				profileFields: ['id', 'name', 'email'],
 			},
-			async function (
-				accessToken: unknown,
-				refreshToken: unknown,
-				user,
-				done
-			) {
-				const data: NEW_ACCOUNT = {
-					email: user.emails[0].value,
-					password: user.id,
-					provider: "facebook",
-					type: "Customer",
-					verified: true,
-					isActive: true,
-					providerId: user.id,
-					firstName: user.name.givenName,
-					lastName: user.name.familyName,
-				};
+			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.emails[0].value,
+						password: user.id,
+						provider: 'facebook',
+						type: 'Customer',
+						verified: true,
+						isActive: true,
+						providerId: user.id,
+						firstName: user.name.givenName,
+						lastName: user.name.familyName,
+					};
 
-				const userExist = await findAccountByEmail(data.email);
+					const userExist = await findAccountByEmail(data.email);
 
-				if (!userExist) {
-					await createAccount(data);
+					if (!userExist) {
+						await createAccount(data);
 
-					return done(null, user);
+						return done(null, user);
+					}
+
+					if (userExist && userExist.provider === 'facebook') {
+						return done(null, user);
+					}
+
+					return done(null, false, {
+						message:
+							'There is already a user with registered with this account. if you own this account, please login with your email and password',
+					});
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
 				}
-
-				if (userExist && userExist.provider === "facebook") {
-					return done(null, user);
-				}
-
-				return done(null, false, {
-					message:
-						"There is already a user with registered with this account. if you own this account, please login with your email and password",
-				});
 			}
 		)
 	);
-}
 
+	passport.use(
+		'facebook-auth',
+		new FacebookStrategy(
+			{
+				clientID: FACEBOOK_API.CLIENT_ID,
+				clientSecret: FACEBOOK_API.CLIENT_SECRET,
+				callbackURL: '/api/account/facebook/auth/callback',
+				profileFields: ['id', 'name', 'email'],
+			},
+			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.emails[0].value,
+						provider: 'facebook',
+					};
 
+					const userExist = await findAccountByEmail(data.email);
 
-export default FacebookSignInOption
+					if (!userExist) {
+						return done(null, false, {
+							message:
+								'There is no account associated with this facebook account. You might want to create a new account instead.',
+						});
+					}
+
+					if (userExist && userExist.provider === 'facebook') {
+						return done(null, user);
+					}
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
+				}
+			}
+		)
+	);
+};
+
+export default FacebookSignInOption;

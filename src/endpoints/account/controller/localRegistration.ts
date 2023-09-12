@@ -1,16 +1,15 @@
-import { Request, Response, NextFunction } from "express";
-import { NEW_ACCOUNT } from "../types";
-import { RESPONSE } from "../../../services/generalTypes";
-import {
-	findAccountByEmail,
-	createAccount,
-	sendMail,
-	mailOptions,
-} from "../../utils/reusableFunctions";
-import { STATUS } from "../../../config/main";
+import { Request, Response, NextFunction } from 'express';
+import { NEW_ACCOUNT } from '../types';
+import { RESPONSE } from '../../../services/generalTypes';
+import { STATUS } from '../../../config/main';
+import passport from 'passport';
+import { findAccountByEmail } from '../../utils/operations/readOperations';
+import { createAccount } from '../../utils/operations/writeOperations';
+import { mailOptions, sendMail } from '../../utils/helperFunctions';
+import emailVerification from '../../../services/templates/emailVerification';
 
 export const localRegistration = async (
-	req: Request<{}, {}, NEW_ACCOUNT>,
+	req: Request<object, object, NEW_ACCOUNT>,
 	res: Response<RESPONSE>,
 	next: NextFunction
 ) => {
@@ -23,20 +22,20 @@ export const localRegistration = async (
 
 		if (userExist) {
 			return res.status(STATUS.CONFLICT).json({
-				code: "USER_ALREADY_EXIST",
+				code: 'USER_ALREADY_EXIST',
 				message:
-					"There is already a user with that email. If you are the owner of this email, you might want to login instead.",
-				type: "error",
+					'There is already a user with that email. If you are the owner of this email, you might want to login instead.',
+				type: 'error',
 			});
 		}
 
-		const data:NEW_ACCOUNT = {
+		const data: NEW_ACCOUNT = {
 			email: requestBody.email,
 			password: requestBody.password,
-			provider:'local',
+			provider: 'local',
 			type: requestBody.type,
 			verified: false,
-			isActive:false,
+			isActive: false,
 			firstName: requestBody?.firstName,
 			lastName: requestBody?.lastName,
 			businessName: requestBody?.businessName,
@@ -46,29 +45,35 @@ export const localRegistration = async (
 
 		if (!User) {
 			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
-				code: "UNEXPECTED_ERROR",
-				message: "Error occurred: Unexpected error occurred",
-				type: "error",
+				code: 'UNEXPECTED_ERROR',
+				message: 'Error occurred: Unexpected error occurred',
+				type: 'error',
 			});
 		}
+
+		const name = data.businessName ? data.businessName : data.firstName;
 
 		sendMail(
 			mailOptions({
 				to: email,
-				subject: "Email Verification",
-				html: `<h1>${code}</h1>`,
+				subject: 'Email Verification',
+				html: emailVerification(name, code),
 			}),
-			(err, info) => {
-				// network err will be logged to a file/database
+			(err) => {
+				if (err) {
+					// console.log(err)
+				}
 			}
 		);
-		
-		
-		return res.status(STATUS.CREATED).json({
-			code: "REGISTRATION_SUCCESS",
-			message: "Account has been successfully created. A mail has already been sent to your email address with instructions to verify your account.",
-			type: "success",
-			data: User,
+
+		passport.authenticate('local-auth', { session: true })(req, res, () => {
+			return res.status(STATUS.CREATED).json({
+				code: 'REGISTRATION_SUCCESS',
+				message:
+					'Account has been successfully created. A mail has already been sent to your email address with instructions to verify your account.',
+				type: 'success',
+				data: User,
+			});
 		});
 	} catch (error) {
 		const err = error as Error;

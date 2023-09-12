@@ -10,6 +10,8 @@ RUN yarn
 
 COPY . .
 
+RUN yarn db:generate
+
 EXPOSE 4455
 
 CMD ["yarn", "run", "dev"]
