@@ -52,7 +52,7 @@ export const ensureOnlyAuthorized =
 				return res.status(STATUS.UNAUTHORIZED).json({
 					code: 'UNAUTHORIZED',
 					message: !foundUser.verified
-						? 'Account is not verified. You can request for verification at https://..'
+						? 'Account is not verified. You can request for verification.'
 						: foundUser.mustChangePassword
 						? 'You must change your password before you can continue'
 						: !foundUser.isActive

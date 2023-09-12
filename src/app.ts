@@ -7,6 +7,7 @@ import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import flash from 'connect-flash';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -56,6 +57,8 @@ app.use(
 		},
 	})
 );
+
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());

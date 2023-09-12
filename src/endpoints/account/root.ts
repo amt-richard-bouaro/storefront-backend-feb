@@ -29,6 +29,7 @@ app.post(
 	'/login/local',
 	passport.authenticate('local-auth', {
 		failureRedirect: '/api/account/login/failure',
+		failureFlash: true,
 	}),
 	async function (req: Request, res: Response<RESPONSE>, next: NextFunction) {
 		try {
@@ -76,6 +77,7 @@ app.get(
 	passport.authenticate('google-customer', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
 		failureRedirect: '/api/account/login/failure',
+		failureFlash: true,
 	})
 );
 
@@ -89,6 +91,21 @@ app.get(
 	passport.authenticate('google-business', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
 		failureRedirect: '/api/account/login/failure',
+		failureFlash: true,
+	})
+);
+
+app.get(
+	'/google/auth',
+	passport.authenticate('google-auth', { scope: ['profile', 'email'] })
+);
+
+app.get(
+	'/google/auth/callback',
+	passport.authenticate('google-business', {
+		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
+		failureRedirect: '/api/account/login/failure',
+		failureFlash: true,
 	})
 );
 
@@ -102,6 +119,7 @@ app.get(
 	passport.authenticate('facebook-customer', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
 		failureRedirect: '/api/account/login/failure',
+		failureFlash: true,
 	})
 );
 
@@ -115,6 +133,21 @@ app.get(
 	passport.authenticate('facebook-business', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
 		failureRedirect: '/api/account/login/failure',
+		failureFlash: true,
+	})
+);
+
+app.get(
+	'/facebook/auth',
+	passport.authenticate('facebook-auth', { scope: [] })
+);
+
+app.get(
+	'/facebook/auth/callback',
+	passport.authenticate('facebook-auth', {
+		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
+		failureRedirect: '/api/account/login/failure',
+		failureFlash: true,
 	})
 );
 

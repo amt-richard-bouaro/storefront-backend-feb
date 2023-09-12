@@ -13,35 +13,44 @@ const LocalSignInOption = () => {
 				passwordField: 'password',
 			},
 			async (username, password, done) => {
-				const user = await findAccountByEmail(username);
+				try {
+					const user = await findAccountByEmail(username);
 
-				if (!user) {
+					if (!user) {
+						return done(null, false, {
+							message: 'Incorrect email or password',
+						});
+					}
+					const validPassword = await passwordValidator(
+						password,
+						user.password
+					);
+
+					if (!validPassword) {
+						return done(null, false, {
+							message: 'Incorrect email or password',
+						});
+					}
+					return done(null, {
+						id: user.id,
+						email: user.email,
+						type: user.type,
+						provider: user.provider,
+						providerId: user.providerId,
+						verified: user.verified,
+						isActive: user.isActive,
+						mustChangePassword: user.mustChangePassword,
+						canResetPassword: user.canResetPassword,
+						createdAt: user.createdAt,
+						updatedAt: user.updatedAt,
+						customer: user.customer,
+						business: user.business,
+					});
+				} catch (error) {
 					return done(null, false, {
-						message: 'Incorrect email or password',
+						message: 'Something went wrong while trying to authenticate user',
 					});
 				}
-				const validPassword = await passwordValidator(password, user.password);
-
-				if (!validPassword) {
-					return done(null, false, {
-						message: 'Incorrect email or password',
-					});
-				}
-				return done(null, {
-					id: user.id,
-					email: user.email,
-					type: user.type,
-					provider: user.provider,
-					providerId: user.providerId,
-					verified: user.verified,
-					isActive: user.isActive,
-					mustChangePassword: user.mustChangePassword,
-					canResetPassword: user.canResetPassword,
-					createdAt: user.createdAt,
-					updatedAt: user.updatedAt,
-					customer: user.customer,
-					business: user.business,
-				});
 			}
 		)
 	);

@@ -14,37 +14,45 @@ const FacebookSignInOption = () => {
 			{
 				clientID: FACEBOOK_API.CLIENT_ID,
 				clientSecret: FACEBOOK_API.CLIENT_SECRET,
-				callbackURL: FACEBOOK_API.CALLBACKURL_BUSINESS,
+				callbackURL: '/api/account/facebook/business/callback',
 				profileFields: ['id', 'name', 'email'],
 			},
 			async function (accessToken: unknown, refreshToken: unknown, user, done) {
-				const data: NEW_ACCOUNT = {
-					email: user.emails[0].value,
-					password: user.id,
-					provider: 'facebook',
-					type: 'Business',
-					verified: true,
-					isActive: true,
-					providerId: user.id,
-					businessName: user.name.familyName + ' Business',
-				};
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.emails[0].value,
+						password: user.id,
+						provider: 'facebook',
+						type: 'Business',
+						verified: true,
+						isActive: true,
+						providerId: user.id,
+						businessName: user.name.familyName + ' Business',
+					};
 
-				const userExist = await findAccountByEmail(data.email);
+					const userExist = await findAccountByEmail(data.email);
 
-				if (!userExist) {
-					await createAccount(data);
+					if (!userExist) {
+						await createAccount(data);
 
-					return done(null, user);
+						return done(null, user);
+					}
+
+					if (userExist && userExist.provider === 'facebook') {
+						return done(null, user);
+					}
+
+					return done(null, false, {
+						message:
+							'There is already a user with registered with this account. if you own this account, please login with your email and password',
+					});
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
 				}
-
-				if (userExist && userExist.provider === 'facebook') {
-					return done(null, user);
-				}
-
-				return done(null, false, {
-					message:
-						'There is already a user with registered with this account. if you own this account, please login with your email and password',
-				});
 			}
 		)
 	);
@@ -55,38 +63,85 @@ const FacebookSignInOption = () => {
 			{
 				clientID: FACEBOOK_API.CLIENT_ID,
 				clientSecret: FACEBOOK_API.CLIENT_SECRET,
-				callbackURL: FACEBOOK_API.CALLBACKURL_CUSTPMER,
+				callbackURL: '/api/account/facebook/customer/callback',
 				profileFields: ['id', 'name', 'email'],
 			},
 			async function (accessToken: unknown, refreshToken: unknown, user, done) {
-				const data: NEW_ACCOUNT = {
-					email: user.emails[0].value,
-					password: user.id,
-					provider: 'facebook',
-					type: 'Customer',
-					verified: true,
-					isActive: true,
-					providerId: user.id,
-					firstName: user.name.givenName,
-					lastName: user.name.familyName,
-				};
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.emails[0].value,
+						password: user.id,
+						provider: 'facebook',
+						type: 'Customer',
+						verified: true,
+						isActive: true,
+						providerId: user.id,
+						firstName: user.name.givenName,
+						lastName: user.name.familyName,
+					};
 
-				const userExist = await findAccountByEmail(data.email);
+					const userExist = await findAccountByEmail(data.email);
 
-				if (!userExist) {
-					await createAccount(data);
+					if (!userExist) {
+						await createAccount(data);
 
-					return done(null, user);
+						return done(null, user);
+					}
+
+					if (userExist && userExist.provider === 'facebook') {
+						return done(null, user);
+					}
+
+					return done(null, false, {
+						message:
+							'There is already a user with registered with this account. if you own this account, please login with your email and password',
+					});
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
 				}
+			}
+		)
+	);
 
-				if (userExist && userExist.provider === 'facebook') {
-					return done(null, user);
+	passport.use(
+		'facebook-auth',
+		new FacebookStrategy(
+			{
+				clientID: FACEBOOK_API.CLIENT_ID,
+				clientSecret: FACEBOOK_API.CLIENT_SECRET,
+				callbackURL: '/api/account/facebook/auth/callback',
+				profileFields: ['id', 'name', 'email'],
+			},
+			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.emails[0].value,
+						provider: 'facebook',
+					};
+
+					const userExist = await findAccountByEmail(data.email);
+
+					if (!userExist) {
+						return done(null, false, {
+							message:
+								'There is no account associated with this facebook account. You might want to create a new account instead.',
+						});
+					}
+
+					if (userExist && userExist.provider === 'facebook') {
+						return done(null, user);
+					}
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
 				}
-
-				return done(null, false, {
-					message:
-						'There is already a user with registered with this account. if you own this account, please login with your email and password',
-				});
 			}
 		)
 	);

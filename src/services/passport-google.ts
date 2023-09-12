@@ -14,36 +14,44 @@ const GoogleSignOption = () => {
 			{
 				clientID: GOOGLE_API.CLIENT_ID,
 				clientSecret: GOOGLE_API.CLIENT_SECRET,
-				callbackURL: GOOGLE_API.CALLBACKURL_BUSINESS,
+				callbackURL: '/api/account/google/business/callback',
 			},
-			async function (accessToken, refreshToken, user, done) {
-				const data: NEW_ACCOUNT = {
-					email: user.email,
-					password: user.id,
-					provider: 'google',
-					type: 'Business',
-					verified: user.verified,
-					isActive: true,
-					providerId: user.id,
-					businessName: user.name.familyName + ' Business',
-				};
+			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.email,
+						password: user.id,
+						provider: 'google',
+						type: 'Business',
+						verified: user.verified,
+						isActive: true,
+						providerId: user.id,
+						businessName: user.name.familyName + ' Business',
+					};
 
-				const userExist = await findAccountByEmail(data.email);
+					const userExist = await findAccountByEmail(data.email);
 
-				if (!userExist) {
-					await createAccount(data);
+					if (!userExist) {
+						await createAccount(data);
 
-					return done(null, user);
+						return done(null, user);
+					}
+
+					if (userExist && userExist.provider === 'google') {
+						return done(null, user);
+					}
+
+					return done(null, false, {
+						message:
+							'There is already a user registered with this account. if you own this account, please login with your email and password',
+					});
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
 				}
-
-				if (userExist && userExist.provider === 'google') {
-					return done(null, user);
-				}
-
-				return done(null, false, {
-					message:
-						'There is already a user with registered with this account. if you own this account, please login with your email and password',
-				});
 			}
 		)
 	);
@@ -54,37 +62,83 @@ const GoogleSignOption = () => {
 			{
 				clientID: GOOGLE_API.CLIENT_ID,
 				clientSecret: GOOGLE_API.CLIENT_SECRET,
-				callbackURL: GOOGLE_API.CALLBACKURL_CUSTPMER,
+				callbackURL: '/api/account/google/customer/callback',
 			},
 			async function (accessToken, refreshToken, user, done) {
-				const data: NEW_ACCOUNT = {
-					email: user.email,
-					password: user.id,
-					provider: 'google',
-					type: 'Customer',
-					verified: user.verified,
-					isActive: true,
-					providerId: user.id,
-					firstName: user.name.givenName,
-					lastName: user.name.familyName,
-				};
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.email,
+						password: user.id,
+						provider: 'google',
+						type: 'Customer',
+						verified: user.verified,
+						isActive: true,
+						providerId: user.id,
+						firstName: user.name.givenName,
+						lastName: user.name.familyName,
+					};
 
-				const userExist = await findAccountByEmail(data.email);
+					const userExist = await findAccountByEmail(data.email);
 
-				if (!userExist) {
-					await createAccount(data);
+					if (!userExist) {
+						await createAccount(data);
 
-					return done(null, user);
+						return done(null, user);
+					}
+
+					if (userExist && userExist.provider === 'google') {
+						return done(null, user);
+					}
+
+					return done(null, false, {
+						message:
+							'There is already a user registered with this account. if you own this account, please login with your email and password',
+					});
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user: ' +
+							error.message,
+					});
 				}
+			}
+		)
+	);
 
-				if (userExist && userExist.provider === 'google') {
-					return done(null, user);
+	passport.use(
+		'google-auth',
+		new GoogleStrategy(
+			{
+				clientID: GOOGLE_API.CLIENT_ID,
+				clientSecret: GOOGLE_API.CLIENT_SECRET,
+				callbackURL: '/api/account/google/auth/callback',
+			},
+			async function (accessToken, refreshToken, user, done) {
+				try {
+					const data: NEW_ACCOUNT = {
+						email: user.email,
+						provider: 'google',
+					};
+
+					const userExist = await findAccountByEmail(data.email);
+
+					if (!userExist) {
+						return done(null, false, {
+							message:
+								'There is no account associated with this google account. You might want to create a new account instead.',
+						});
+					}
+
+					if (userExist && userExist.provider === 'google') {
+						return done(null, user);
+					}
+				} catch (error) {
+					return done(null, false, {
+						message:
+							'Something went wrong while trying to authenticate user ' +
+							error.message,
+					});
 				}
-
-				return done(null, false, {
-					message:
-						'There is already a user with registered with this account. if you own this account, please login with your email and password',
-				});
 			}
 		)
 	);
