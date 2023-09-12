@@ -15,6 +15,7 @@ import { resetPassword } from './controller/passwordReset';
 import { requestPasswordReset } from './controller/requestPasswordReset';
 import { verifyPasswordResetCode } from './controller/verifyPasswordResetCode';
 import { activateAccount } from '../utils/operations/updateOperations';
+import { Prisma } from '@prisma/client';
 
 app.post('/register/local', localRegistration);
 app.get('/login/failure', handleFailure);
@@ -60,9 +61,17 @@ app.post(
 				},
 			});
 		} catch (error) {
+			if (error instanceof Prisma.PrismaClientKnownRequestError) {
+				return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
+					code: 'DB_ERROR',
+					message: 'Something went wrong',
+					type: 'error',
+				});
+			}
+
 			const err = error as Error;
 
-			next(err);
+			return next(err);
 		}
 	}
 );

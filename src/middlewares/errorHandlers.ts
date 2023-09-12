@@ -49,6 +49,15 @@ export const errorHandler = (err: Error, req: Request, res: Response) => {
 		});
 	}
 
+	if (err.name === 'PrismaClientKnownRequestError') {
+		return res.status(STATUS.BAD_REQUEST).json({
+			code: `DB_ERROR_`,
+			message: err.message,
+			type: 'error',
+			error: err,
+		});
+	}
+
 	if (err instanceof Prisma.PrismaClientInitializationError) {
 		return res.status(STATUS.BAD_REQUEST).json({
 			code: `DB_ERROR_${err.errorCode}`,
