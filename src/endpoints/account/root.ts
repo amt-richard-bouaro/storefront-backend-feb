@@ -10,7 +10,7 @@ import { handleLogout } from './controller/handleLogout';
 import { accountVerification } from './controller/verifyAccount';
 import { SERVER_CONFIG, STATUS } from '../../config/main';
 import { RESPONSE, USER } from '../../services/generalTypes';
-import { ensureOnlyAuthorized } from '../../middlewares/authenticate';
+// import { ensureOnlyAuthorized } from '../../middlewares/authenticate';
 import { resetPassword } from './controller/passwordReset';
 import { requestPasswordReset } from './controller/requestPasswordReset';
 import { verifyPasswordResetCode } from './controller/verifyPasswordResetCode';
@@ -19,7 +19,7 @@ import { Prisma } from '@prisma/client';
 
 app.post('/register/local', localRegistration);
 app.get('/login/failure', handleFailure);
-app.get('/auth/user', ensureOnlyAuthorized(), authenticatedUser);
+app.get('/auth/user', authenticatedUser);
 app.get('/logout', handleLogout);
 
 app.put('/password/reset', resetPassword);

@@ -68,6 +68,7 @@ export const requestPasswordReset = async (
 		});
 	} catch (error) {
 		const err = error as Error;
+
 		return next(err);
 	}
 };

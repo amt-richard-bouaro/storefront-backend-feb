@@ -11,7 +11,11 @@ export const notFoundError = (req: Request, res: Response) => {
 	});
 };
 
-export const errorHandler = (err: Error, req: Request, res: Response) => {
+export const errorHandler = <T extends Error>(
+	err: T,
+	req: Request,
+	res: Response
+) => {
 	let status =
 		res.statusCode === 200 ? STATUS.INTERNAL_SERVER_ERROR : res.statusCode;
 

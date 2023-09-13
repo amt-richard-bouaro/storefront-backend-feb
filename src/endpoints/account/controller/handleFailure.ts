@@ -3,6 +3,8 @@ import { RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
 
 export const handleFailure = (req: Request, res: Response<RESPONSE>) => {
+	// console.log(req);
+
 	return res.status(STATUS.UNAUTHORIZED).json({
 		code: 'UNAUTHORIZED',
 		message: `Could not authenticate user. ${req.flash('error')[0]}`,
