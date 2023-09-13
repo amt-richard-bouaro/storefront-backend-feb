@@ -1,15 +1,12 @@
 import { findAccountById } from './../../utils/operations/readOperations';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { REQUEST_WITH_USER, RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
 import { PASSWORDS } from '../types';
 import { changePassword } from '../../utils/operations/updateOperations';
+import { errorHandler } from '../../../middlewares/errorHandlers';
 
-export const resetPassword = async (
-	req: Request,
-	res: Response<RESPONSE>,
-	next: NextFunction
-) => {
+export const resetPassword = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const passwords = req.body;
 
@@ -55,6 +52,6 @@ export const resetPassword = async (
 		});
 	} catch (error) {
 		const err = error as Error;
-		next(err);
+		errorHandler(err, req, res);
 	}
 };

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import passport from 'passport';
 import { RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
@@ -12,11 +12,11 @@ import {
 } from '../../utils/helperFunctions';
 import { updateResetStatus } from '../../utils/operations/updateOperations';
 import emailVerification from '../../../services/templates/emailVerification';
+import { errorHandler } from '../../../middlewares/errorHandlers';
 
 export const requestPasswordReset = async (
 	req: Request,
-	res: Response<RESPONSE>,
-	next: NextFunction
+	res: Response<RESPONSE>
 ) => {
 	try {
 		const email = req.body.email;
@@ -69,6 +69,6 @@ export const requestPasswordReset = async (
 	} catch (error) {
 		const err = error as Error;
 
-		return next(err);
+		errorHandler(err, req, res);
 	}
 };

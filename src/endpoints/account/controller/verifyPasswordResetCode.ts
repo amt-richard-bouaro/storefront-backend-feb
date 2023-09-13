@@ -1,15 +1,15 @@
 import { findAccountById } from './../../utils/operations/readOperations';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { REQUEST_WITH_USER, RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
 import { CODE } from '../types';
 import { extractJwtPayload } from '../../utils/helperFunctions';
 import { allowResetPassword } from '../../utils/operations/updateOperations';
+import { errorHandler } from '../../../middlewares/errorHandlers';
 
 export const verifyPasswordResetCode = async (
 	req: Request,
-	res: Response<RESPONSE>,
-	next: NextFunction
+	res: Response<RESPONSE>
 ) => {
 	try {
 		const code = req.body.code;
@@ -50,8 +50,6 @@ export const verifyPasswordResetCode = async (
 				id: updatedUser.id,
 				email: updatedUser.email,
 				type: updatedUser.type,
-				provider: updatedUser.provider,
-				providerId: updatedUser.providerId,
 				verified: updatedUser.verified,
 				isActive: updatedUser.isActive,
 				mustChangePassword: updatedUser.mustChangePassword,
@@ -64,6 +62,6 @@ export const verifyPasswordResetCode = async (
 		});
 	} catch (error) {
 		const err = error as Error;
-		next(err);
+		errorHandler(err, req, res);
 	}
 };

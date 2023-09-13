@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { NEW_ACCOUNT } from '../types';
 import { RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
@@ -7,11 +7,12 @@ import { findAccountByEmail } from '../../utils/operations/readOperations';
 import { createAccount } from '../../utils/operations/writeOperations';
 import { mailOptions, sendMail } from '../../utils/helperFunctions';
 import emailVerification from '../../../services/templates/emailVerification';
+import { errorHandler } from '../../../middlewares/errorHandlers';
 
 export const localRegistration = async (
-	req: Request<object, object, NEW_ACCOUNT>,
-	res: Response<RESPONSE>,
-	next: NextFunction
+	req: Request,
+	res: Response<RESPONSE>
+	// next: NextFunction
 ) => {
 	const requestBody = req.body;
 
@@ -77,7 +78,6 @@ export const localRegistration = async (
 		});
 	} catch (error) {
 		const err = error as Error;
-
-		next(err);
+		errorHandler(err, req, res);
 	}
 };

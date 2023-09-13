@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { errorHandler } from './../../../middlewares/errorHandlers';
+import { Request, Response } from 'express';
 import { REQUEST_WITH_USER, RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
 import { findAccountById } from '../../utils/operations/readOperations';
 
 export const authenticatedUser = async (
 	req: Request,
-	res: Response<RESPONSE>,
-	next: NextFunction
+	res: Response<RESPONSE>
 ) => {
 	try {
 		const requestUser = <REQUEST_WITH_USER>req.user;
@@ -37,8 +37,6 @@ export const authenticatedUser = async (
 				id: user.id,
 				email: user.email,
 				type: user.type,
-				provider: user.provider,
-				providerId: user.providerId,
 				verified: user.verified,
 				isActive: user.isActive,
 				mustChangePassword: user.mustChangePassword,
@@ -52,6 +50,6 @@ export const authenticatedUser = async (
 	} catch (error) {
 		const err = error as Error;
 
-		next(err);
+		errorHandler(err, req, res);
 	}
 };

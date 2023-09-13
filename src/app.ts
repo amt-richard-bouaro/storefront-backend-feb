@@ -10,7 +10,7 @@ import session from 'express-session';
 import flash from 'connect-flash';
 import dotenv from 'dotenv';
 dotenv.config();
-
+import { notFoundError, errorHandler } from './middlewares/errorHandlers';
 import { findAccountByProviderId } from './endpoints/utils/operations/readOperations';
 import { userSerialization } from './services/generalTypes';
 import GoogleSignOption from './services/passport-google';
@@ -102,8 +102,6 @@ import accountEndpoints from './endpoints/account/root';
 app.use('/api/account', accountEndpoints);
 
 swaggerDocs(app, PORT);
-
-import { notFoundError, errorHandler } from './middlewares/errorHandlers';
 
 app.use(notFoundError);
 app.use(errorHandler);

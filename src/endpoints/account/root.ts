@@ -1,8 +1,5 @@
 import express, { Response, Request, NextFunction } from 'express';
 import passport from 'passport';
-
-const app = express.Router();
-
 import { localRegistration } from './controller/localRegistration';
 import { handleFailure } from './controller/handleFailure';
 import { authenticatedUser } from './controller/authenticatedUser';
@@ -17,11 +14,12 @@ import { verifyPasswordResetCode } from './controller/verifyPasswordResetCode';
 import { activateAccount } from '../utils/operations/updateOperations';
 import { Prisma } from '@prisma/client';
 
+const app = express.Router();
+
 app.post('/register/local', localRegistration);
 app.get('/login/failure', handleFailure);
 app.get('/auth/user', authenticatedUser);
 app.get('/logout', handleLogout);
-
 app.put('/password/reset', resetPassword);
 app.put('/request/password/reset', requestPasswordReset);
 app.post('/password/resetCode/verify', verifyPasswordResetCode);
