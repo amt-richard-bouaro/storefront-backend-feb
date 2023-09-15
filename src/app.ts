@@ -37,7 +37,7 @@ app.use(
 app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(express.json());
 app.use(bodyParser.json());
 
 app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
