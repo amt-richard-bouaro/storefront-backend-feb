@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import passport from 'passport';
 import { REQUEST_WITH_USER, RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
@@ -11,11 +11,11 @@ import {
 import { verifyAccount } from '../../utils/operations/updateOperations';
 import { CODE } from '../types';
 import emailVerified from '../../../services/templates/emailVerified';
+import { errorHandler } from '../../../middlewares/errorHandlers';
 
 export const accountVerification = async (
-	req: Request<object, object, { code: string }>,
-	res: Response<RESPONSE>,
-	next: NextFunction
+	req: Request,
+	res: Response<RESPONSE>
 ) => {
 	const code = req.body.code;
 
@@ -85,6 +85,6 @@ export const accountVerification = async (
 	} catch (error) {
 		const err = error as Error;
 
-		next(err);
+		errorHandler(err, req, res);
 	}
 };

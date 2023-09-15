@@ -43,10 +43,7 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								id: true,
 								email: true,
 								type: true,
-								provider: true,
 								verified: true,
-								providerId: true,
-								verificationToken: true,
 								mustChangePassword: true,
 								isActive: true,
 								password: false,
@@ -74,16 +71,14 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 						},
 					},
 					select: {
+						id: true,
 						businessName: true,
 						businessAccount: {
 							select: {
 								id: true,
 								email: true,
 								type: true,
-								provider: true,
 								verified: true,
-								providerId: true,
-								verificationToken: true,
 								mustChangePassword: true,
 								isActive: true,
 								password: false,
@@ -94,5 +89,9 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 					},
 			  });
 
-	return { user, email: data.email, code };
+	return {
+		user: user,
+		email: data.email,
+		code,
+	};
 };

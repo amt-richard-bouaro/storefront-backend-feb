@@ -10,7 +10,7 @@ import session from 'express-session';
 import flash from 'connect-flash';
 import dotenv from 'dotenv';
 dotenv.config();
-
+import { notFoundError, errorHandler } from './middlewares/errorHandlers';
 import { findAccountByProviderId } from './endpoints/utils/operations/readOperations';
 import { userSerialization } from './services/generalTypes';
 import GoogleSignOption from './services/passport-google';
@@ -51,9 +51,9 @@ app.use(
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
-			secure: false,
+			secure: SERVER_CONFIG.NODE_ENV === 'production',
 			maxAge: 1000 * 60 * 60 * 24,
-			// sameSite: "none",
+			sameSite: 'lax',
 		},
 	})
 );
@@ -102,8 +102,6 @@ import accountEndpoints from './endpoints/account/root';
 app.use('/api/account', accountEndpoints);
 
 swaggerDocs(app, PORT);
-
-import { notFoundError, errorHandler } from './middlewares/errorHandlers';
 
 app.use(notFoundError);
 app.use(errorHandler);

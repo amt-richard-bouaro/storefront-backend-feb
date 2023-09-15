@@ -1,12 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
+import { errorHandler } from '../../../middlewares/errorHandlers';
 
-export const handleLogout = async (
-	req: Request,
-	res: Response<RESPONSE>,
-	next: NextFunction
-) => {
+export const handleLogout = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		if (!req.isAuthenticated()) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -30,6 +27,6 @@ export const handleLogout = async (
 		});
 	} catch (error) {
 		const err = error as Error;
-		next(err);
+		errorHandler(err, req, res);
 	}
 };
