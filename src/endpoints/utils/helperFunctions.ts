@@ -91,3 +91,20 @@ export const sendMail = async (
 		}
 	}
 };
+
+export const flatNestedObject = (data: object) => {
+	const flatData = {};
+
+	for (const key in data) {
+		if (typeof data[key] === 'object') {
+			const nestedData = data[key];
+			for (const nestedKey in nestedData) {
+				flatData[nestedKey] = nestedData[nestedKey];
+			}
+		} else {
+			flatData[key] = data[key];
+		}
+	}
+
+	return flatData;
+};

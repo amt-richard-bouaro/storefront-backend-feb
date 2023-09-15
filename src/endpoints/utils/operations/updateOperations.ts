@@ -18,11 +18,41 @@ export const verifyAccount = async (id: string) => {
 			verificationToken: true,
 			isActive: true,
 			mustChangePassword: true,
+			canResetPassword: true,
 			createdAt: true,
 			updatedAt: true,
 			password: false,
 			customer: true,
 			business: true,
+		},
+	});
+
+	return user;
+};
+
+export const updateVerificationCode = async (id: string, token: string) => {
+	const user = await Database.account.update({
+		where: {
+			id,
+		},
+		data: {
+			verificationToken: token,
+		},
+		include: {
+			customer: {
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+				},
+			},
+			business: {
+				select: {
+					id: true,
+					businessName: true,
+					businessType: true,
+				},
+			},
 		},
 	});
 

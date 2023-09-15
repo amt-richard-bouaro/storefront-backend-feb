@@ -13,15 +13,18 @@
         {
       "url": "https://storefrontsmes-aug-api.amalitech-dev.net/",
       "description": "Store Front API"
+    },
+        {
+      "url": "http://localhost:4455/",
+      "description": "Store Front API dev-local"
     }
   ],
   "components": {
     "securitySchemas": {
-      "bearerAuth": {
-        "type": "https",
-        "schema": "bearerAuth",
-        "bearerFormat": "cookie"
-      }
+      "passport": {
+      "type": "oauth2",
+      "in": "header"
+  }
     },
     "schemas": {
       "ErrorResponse": {
@@ -91,13 +94,6 @@
             "type": "string",
             "enum": ["Business", "Customer"]
           },
-            "provider": {
-            "type": "string",
-            "enum": ["local", "google", "facebook"]
-          },
-          "verificationToken": {
-            "type": "string"
-          },
           "verified": {
             "type": "boolean",
             "default": false
@@ -107,6 +103,10 @@
             "default": false
           },
           "mustChangePassword": {
+            "type": "boolean",
+            "default": false
+          },
+          "canResetPassword": {
             "type": "boolean",
             "default": false
           },
@@ -136,13 +136,6 @@
             "type": "string",
             "enum": ["Business", "Customer"]
           },
-            "provider": {
-            "type": "string",
-            "enum": ["local", "google", "facebook"]
-          },
-          "verificationToken": {
-            "type": "string"
-          },
           "verified": {
             "type": "boolean",
             "default": false
@@ -152,6 +145,10 @@
             "default": false
           },
           "mustChangePassword": {
+            "type": "boolean",
+            "default": false
+          },
+          "canResetPassword": {
             "type": "boolean",
             "default": false
           },
@@ -175,7 +172,7 @@
     "/api/account/register/local": {
       "post": {
         "tags": ["Account"],
-        "summary": "Register a user",
+        "summary": "This endpoint allows a new customer/business create an account within our system. Customers/businesses are users who can interact with our platform to access/promote various services and products. To create a customer account for instance, you need to provide essential information such as their first name, last name, email address,type (Customer) and password (with password confimation). Upon successful creation, the customer will be able to log in and start using our services.",
         "requestBody": {
           "required": true,
           "content": {
@@ -193,13 +190,8 @@
                   },
                   "type": {
                     "type": "string",
-                    "default": "Customer",
+                    "default": "Business",
                     "enum": ["Business", "Customer"]
-                  },
-                  "provider": {
-                    "type": "string",
-                    "default": "local",
-                    "enum": ["local", "google", "facebook"]
                   },
                   "password": {
                     "type": "string",
@@ -214,7 +206,6 @@
                 },
                 "required": [
                   "BusinessName",
-                  "provider",
                   "email",
                   "type",
                   "password",
@@ -254,7 +245,9 @@
             "description": "BAD REQUEST",
             "content": {
               "application/json": {
+                "schema": {
                 "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
               }
             }
           },
@@ -262,7 +255,9 @@
             "description": "CONFLICT",
             "content": {
               "application/json": {
+                "schema": {
                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           },
@@ -270,13 +265,583 @@
             "description": "INTERNAL SERVER ERROR",
             "content": {
               "application/json": {
+                "schema": {
                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/login/local": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "This endpoint allows a new customer/business to login to their account",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                 
+                  "email": {
+                    "type": "string",
+                    "default": "msmith@example.com"
+                  },
+                  
+                  "password": {
+                    "type": "string",
+                    "default": "oWusu247",
+                    "format": "password"
+                  }
+                  
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "LOGGED_IN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/verify": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "This endpoint allows a new customer/business verify their registered account by providing a short code sent to the their email address after successfully creating their account.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "default": "A940SR"
+                  }
+                },
+                "required": [
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ACCOUNT_VERIFIED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/password/reset": {
+      "put": {
+        "tags": ["Account"],
+        "summary": "This endpoint allows users to reset their password by choosing a new password after a successful reset verification process.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "default": "password"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "default": "password"
+                  }
+                },
+                "required": [
+                  "password",
+                  "confirmPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PASSWORD_RESET_SUCCESSFUL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                    
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/request/password/reset": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "This endpoint allows customer/business request their password reset.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "default": "owuser@example.com"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ACCOUNT_VERIFIED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/password/resetCode/verify": {
+      "post": {
+        "tags": ["Account"],
+        "summary": "This endpoint accept verification code from user and authorize them to change their password if the code is valid.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "default": "AX92L2"
+                  }
+                },
+                "required": [
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "VERIFICATION_CODE_VERIFIED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/auth/user": {
+      "get": {
+        "tags": ["Account"],
+        "summary": "This endpoint fetches account information about an account in our system.",
+        "responses": {
+          "200": {
+            "description": "USER_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/Account"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/login/failure": {
+      "get": {
+        "tags": ["Account"],
+        "summary": "This endpoint is a fallback route for failed login requests with social accounts.",
+        "responses": {
+          "401": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/logout": {
+      "get": {
+        "tags": ["Account"],
+        "summary": "This endpoint allows users to log out of their account.",
+        "responses": {
+
+          
+          "200": {
+            "description": "LOGGED_OUT",
+            "content": {
+              "application/json": {
+                 "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                   
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
         }
       }
     }
+   
+    
   },
   "tags": []
 }

@@ -19,7 +19,7 @@ export const requestPasswordReset = async (
 	res: Response<RESPONSE>
 ) => {
 	try {
-		const email = req.body.email;
+		const { email } = req.body;
 
 		EMAIL.parse(email);
 
@@ -29,6 +29,15 @@ export const requestPasswordReset = async (
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'REQUEST_FAILED',
 				message: 'Could not find your account in the system',
+				type: 'error',
+			});
+		}
+
+		if (user && user.provider !== 'local') {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'REQUEST_DENIED',
+				message:
+					'Your account is registered with third party service hence, we cannot reset your password.',
 				type: 'error',
 			});
 		}
@@ -58,7 +67,7 @@ export const requestPasswordReset = async (
 
 		req.body.password = resetToken;
 
-		passport.authenticate('local-auth', { session: true })(req, res, () => {
+		passport.authenticate('local-auth')(req, res, () => {
 			return res.status(STATUS.OK).json({
 				code: 'REQUEST_CODE_CREATED',
 				message:

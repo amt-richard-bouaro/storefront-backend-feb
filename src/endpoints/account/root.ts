@@ -1,4 +1,4 @@
-import express, { Response, Request, NextFunction } from 'express';
+import express, { Response, Request } from 'express';
 import passport from 'passport';
 import { localRegistration } from './controller/localRegistration';
 import { handleFailure } from './controller/handleFailure';
@@ -7,22 +7,34 @@ import { handleLogout } from './controller/handleLogout';
 import { accountVerification } from './controller/verifyAccount';
 import { SERVER_CONFIG, STATUS } from '../../config/main';
 import { RESPONSE, USER } from '../../services/generalTypes';
-// import { ensureOnlyAuthorized } from '../../middlewares/authenticate';
+import { checkIf, isAuthenticated } from '../../middlewares/authenticate';
 import { resetPassword } from './controller/passwordReset';
 import { requestPasswordReset } from './controller/requestPasswordReset';
 import { verifyPasswordResetCode } from './controller/verifyPasswordResetCode';
 import { activateAccount } from '../utils/operations/updateOperations';
-import { Prisma } from '@prisma/client';
+import { resendVerificationCode } from './controller/resendVerificationCode';
+import { errorHandler } from '../../middlewares/errorHandlers';
 
 const app = express.Router();
 
 app.post('/register/local', localRegistration);
 app.get('/login/failure', handleFailure);
-app.get('/auth/user', authenticatedUser);
+app.get('/auth/user', isAuthenticated, authenticatedUser);
 app.get('/logout', handleLogout);
-app.put('/password/reset', resetPassword);
-app.put('/request/password/reset', requestPasswordReset);
-app.post('/password/resetCode/verify', verifyPasswordResetCode);
+app.post('/verify', accountVerification);
+app.put(
+	'/password/reset',
+	checkIf(['mustChangePassword', 'canResetPassword']),
+	resetPassword
+);
+
+app.post('/request/password/reset', requestPasswordReset);
+app.post(
+	'/password/resetCode/verify',
+	checkIf(['verified', 'mustChangePassword']),
+	verifyPasswordResetCode
+);
+app.get('/resend/code', isAuthenticated, resendVerificationCode);
 
 app.post(
 	'/login/local',
@@ -30,7 +42,7 @@ app.post(
 		failureRedirect: '/api/account/login/failure',
 		failureFlash: true,
 	}),
-	async function (req: Request, res: Response<RESPONSE>, next: NextFunction) {
+	async function (req: Request, res: Response<RESPONSE>) {
 		try {
 			const user: USER = req.user as USER;
 
@@ -59,17 +71,9 @@ app.post(
 				},
 			});
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
-					code: 'DB_ERROR',
-					message: 'Something went wrong',
-					type: 'error',
-				});
-			}
-
 			const err = error as Error;
 
-			return next(err);
+			errorHandler(err, req, res);
 		}
 	}
 );
@@ -109,9 +113,9 @@ app.get(
 
 app.get(
 	'/google/auth/callback',
-	passport.authenticate('google-business', {
+	passport.authenticate('google-auth', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
-		failureRedirect: '/api/account/login/failure',
+		failureRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
 		failureFlash: true,
 	})
 );
@@ -153,11 +157,9 @@ app.get(
 	'/facebook/auth/callback',
 	passport.authenticate('facebook-auth', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
-		failureRedirect: '/api/account/login/failure',
+		failureRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
 		failureFlash: true,
 	})
 );
-
-app.put('/verify', accountVerification);
 
 export default app;
