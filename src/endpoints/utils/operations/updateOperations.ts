@@ -118,6 +118,10 @@ export const activateAccount = async (id: string) => {
 		data: {
 			isActive: true,
 		},
+		include: {
+			business: true,
+			customer: true,
+		},
 	});
 
 	return user;

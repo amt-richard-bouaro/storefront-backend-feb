@@ -30,6 +30,8 @@ model Account {
   isActive           Boolean   @default(false)
   mustChangePassword Boolean   @default(false)
   canResetPassword   Boolean   @default(false)
+  reviews            Review[]  @relation("customerReviews")
+  Replies            Reply[]   @relation("replyFrom")
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   customer           Customer? @relation("customerAccount")
@@ -41,16 +43,159 @@ model Customer {
   firstName       String
   lastName        String
   phone           String?
+  picture         String?
   account         String  @unique
   customerAccount Account @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
 }
 
 model Business {
-  id              String  @id @default(uuid())
-  businessName    String
-  contact         String?
-  location        String?
-  businessType    String?
-  account         String  @unique
-  businessAccount Account @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
+  id                String     @id @default(uuid())
+  businessName      String
+  contact           String?
+  location          String?
+  businessType      String?
+  websiteType       String?
+  promotion         Boolean    @default(false)
+  promotionDiscount Int        @default(0)
+  currency          String?    @default("GHc")
+  products          Product[]  @relation("businessProducts")
+  template          Template?  @relation("storeTemplate")
+  categories        Category[] @relation("businessCategories")
+  account           String     @unique
+  businessAccount   Account    @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
+}
+
+model Template {
+  id             String    @id @default(uuid())
+  name           String
+  brandImage     String?
+  brandColor     String?
+  welcomeColor   String?
+  welcomebtnText String?
+  welcomeText    String?
+  fontstyle      String?
+  primaryColor   String?
+  secondaryColor String?
+  auxillaryColor String?
+  storeStory     String?
+  storeTeams     Teams[]   @relation("storeTeams")
+  storeReasons   Reasons[] @relation("storeReasons")
+  hasContactPage Boolean   @default(false)
+  hasAboutPage   Boolean   @default(false)
+  business       String    @unique
+  temp           Temp?     @relation("temporaryTemplate")
+  storeTemplate  Business  @relation("storeTemplate", fields: [business], references: [id], onDelete: Cascade)
+}
+
+model Reasons {
+  id               String   @id @default(uuid())
+  title            String
+  paragraph        String
+  template         String
+  storeReasons     Template @relation("storeReasons", fields: [template], references: [id], onDelete: Cascade)
+  temp             String
+  storeReasonsTemp Temp     @relation("storeReasonsTemp", fields: [temp], references: [id], onDelete: Cascade)
+}
+
+model Teams {
+  id             String   @id @default(uuid())
+  name           String
+  role           String
+  template       String
+  storeTeams     Template @relation("storeTeams", fields: [template], references: [id], onDelete: Cascade)
+  temp           String
+  storeTeamsTemp Temp     @relation("storeTeamsTemp", fields: [temp], references: [id], onDelete: Cascade)
+}
+
+model Temp {
+  id             String    @id @default(uuid())
+  name           String
+  brandImage     String?
+  brandColor     String?
+  welcomeColor   String?
+  welcomebtnText String?
+  welcomeText    String?
+  fontstyle      String?
+  primaryColor   String?
+  secondaryColor String?
+  auxillaryColor String?
+  storeStory     String?
+  tempTeams      Teams[]   @relation("storeTeamsTemp")
+  tempReasons    Reasons[] @relation("storeReasonsTemp")
+  hasContactPage Boolean   @default(false)
+  hasAboutPage   Boolean   @default(false)
+  template       String    @unique
+  tempTemplate   Template  @relation("temporaryTemplate", fields: [template], references: [id], onDelete: Cascade)
+}
+
+model Product {
+  id               String      @id @default(uuid())
+  name             String
+  images           Image[]     @relation("productImages")
+  description      String
+  isActive         Boolean     @default(true)
+  quantity         Int         @default(0)
+  reStockLevel     Int         @default(0)
+  category         String      @default("All")
+  price            Decimal     @default(0.0)
+  currency         String      @default("GHc")
+  discount         Int         @default(0)
+  promotionProduct Boolean     @default(false)
+  variations       Variation[] @relation("productVariations")
+  reviews          Review[]    @relation("productReviews")
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  business         String
+  businessProducts Business    @relation("businessProducts", fields: [business], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id                 String   @id @default(uuid())
+  name               String
+  business           String
+  businessCategories Business @relation("businessCategories", fields: [business], references: [id], onDelete: Cascade)
+}
+
+model Image {
+  id           String  @id @default(uuid())
+  url          String
+  product      String
+  productImage Product @relation("productImages", fields: [product], references: [id], onDelete: Cascade)
+}
+
+model Variation {
+  id                String  @id @default(uuid())
+  type              String
+  name              String
+  product           String
+  productVariations Product @relation("productVariations", fields: [product], references: [id], onDelete: Cascade)
+}
+
+enum Remarks {
+  Disappointing
+  Great
+  Satisfied
+}
+
+model Review {
+  id              String   @id @default(uuid())
+  product         String
+  rating          Int
+  remarks         Remarks
+  comment         String?
+  reviewedBy      String
+  replies         Reply[]  @relation("reviewReply")
+  reviewedAt      DateTime @default(now())
+  productReview   Product  @relation("productReviews", fields: [product], references: [id], onDelete: Cascade)
+  reviewerAccount Account  @relation("customerReviews", fields: [reviewedBy], references: [id], onDelete: Cascade)
+}
+
+model Reply {
+  id          String   @id @default(uuid())
+  comment     String?
+  from        String
+  replyFrom   Account  @relation("replyFrom", fields: [from], references: [id], onDelete: Cascade)
+  repliedAt   DateTime @default(now())
+  review      String
+  reviewReply Review   @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
 }

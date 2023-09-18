@@ -18,7 +18,7 @@ const LocalSignInOption = () => {
 
 					if (!user) {
 						return done(null, false, {
-							message: 'Unauthorized: email or password incorrect',
+							message: 'Email or password incorrect',
 						});
 					}
 					const validPassword = await passwordValidator(
@@ -28,7 +28,7 @@ const LocalSignInOption = () => {
 
 					if (!validPassword) {
 						return done(null, false, {
-							message: 'Unauthorized: email or password incorrect',
+							message: 'Email or password incorrect',
 						});
 					}
 					return done(null, user);

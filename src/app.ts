@@ -110,6 +110,12 @@ app.get('/', (req, res) => {
 import accountEndpoints from './endpoints/account/root';
 app.use('/api/account', accountEndpoints);
 
+import businessEndpoints from './endpoints/business/root';
+app.use('/api/business', businessEndpoints);
+
+import productEndpoints from './endpoints/product/root';
+app.use('/api/product', productEndpoints);
+
 swaggerDocs(app, PORT);
 
 app.use(notFoundError);

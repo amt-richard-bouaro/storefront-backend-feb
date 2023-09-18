@@ -28,59 +28,73 @@ export const findAccountByEmail = async (email: string) => {
 };
 
 export const findAccountById = async (id: string): Promise<USER> => {
-	try {
-		const user = await Database.account.findUnique({
-			where: {
-				id,
-			},
-			select: {
-				id: true,
-				email: true,
-				type: true,
-				provider: true,
-				verified: true,
-				verificationToken: true,
-				isActive: true,
-				providerId: true,
-				mustChangePassword: true,
-				canResetPassword: true,
-				createdAt: true,
-				updatedAt: true,
-				password: false,
-				customer: true,
-				business: true,
-			},
-		});
-		return user;
-	} catch (error) {
-		return error;
-	}
+	const user = await Database.account.findUnique({
+		where: {
+			id,
+		},
+		select: {
+			id: true,
+			email: true,
+			type: true,
+			provider: true,
+			verified: true,
+			verificationToken: true,
+			isActive: true,
+			providerId: true,
+			mustChangePassword: true,
+			canResetPassword: true,
+			createdAt: true,
+			updatedAt: true,
+			password: false,
+			customer: true,
+			business: true,
+		},
+	});
+	return user;
 };
 export const findAccountByProviderId = async (id: string) => {
-	try {
-		const user = await Database.account.findFirst({
-			where: {
-				providerId: id,
+	const user = await Database.account.findFirst({
+		where: {
+			providerId: id,
+		},
+		select: {
+			id: true,
+			email: false,
+			type: false,
+			provider: false,
+			verified: false,
+			providerId: true,
+			verificationToken: false,
+			isActive: false,
+			mustChangePassword: false,
+			createdAt: false,
+			updatedAt: false,
+			password: false,
+			customer: false,
+			business: false,
+		},
+	});
+	return user;
+};
+
+export const findBusinessById = async (id: string) => {
+	const user = await Database.business.findUnique({
+		where: {
+			id,
+		},
+		include: {
+			template: {
+				select: {
+					business: false,
+					banner: true,
+					id: true,
+					temp: true,
+				},
 			},
-			select: {
-				id: true,
-				email: false,
-				type: false,
-				provider: false,
-				verified: false,
-				providerId: true,
-				verificationToken: false,
-				isActive: false,
-				mustChangePassword: false,
-				createdAt: false,
-				updatedAt: false,
-				password: false,
-				customer: false,
-				business: false,
-			},
-		});
-		return user;
-	} catch (error) {
-		return error;
-	}
+			products: true,
+			categories: true,
+		},
+	});
+
+	return user;
 };
