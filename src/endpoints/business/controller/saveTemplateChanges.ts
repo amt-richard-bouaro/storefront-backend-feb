@@ -17,7 +17,19 @@ export const saveTemplate = async (req: Request, res: Response<RESPONSE>) => {
 				id: tempID,
 			},
 			data: {
-				banner: req.body.banner,
+				name: req.body,
+				brandImage: req.body,
+				brandColor: req.body,
+				welcomeColor: req.body,
+				welcomebtnText: req.body,
+				welcomeText: req.body,
+				fontstyle: req.body,
+				primaryColor: req.body,
+				secondaryColor: req.body,
+				auxillaryColor: req.body,
+				storeStory: req.body,
+				hasContactPage: req.body,
+				hasAboutPage: req.body,
 			},
 		});
 

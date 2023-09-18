@@ -23,7 +23,19 @@ export const publishTemplate = async (
 				id: temp.template,
 			},
 			data: {
-				banner: temp.banner,
+				name: req.body,
+				brandImage: req.body,
+				brandColor: req.body,
+				welcomeColor: req.body,
+				welcomebtnText: req.body,
+				welcomeText: req.body,
+				fontstyle: req.body,
+				primaryColor: req.body,
+				secondaryColor: req.body,
+				auxillaryColor: req.body,
+				storeStory: req.body,
+				hasContactPage: req.body,
+				hasAboutPage: req.body,
 			},
 		});
 

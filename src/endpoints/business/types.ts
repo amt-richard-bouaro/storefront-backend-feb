@@ -16,7 +16,21 @@ const ONBOARDING = z.object({
 type ONBOARDING = z.infer<typeof ONBOARDING>;
 
 const TEMPLATE = z.object({
-	banner: z.string().nonempty('Missing template banner'),
+	name: z.string(),
+	brandImage: z.string(),
+	brandColor: z.string(),
+	welcomeColor: z.string(),
+	welcomebtnText: z.string(),
+	welcomeText: z.string(),
+	fontstyle: z.string(),
+	primaryColor: z.string(),
+	secondaryColor: z.string(),
+	auxillaryColor: z.string(),
+	storeStory: z.string(),
+	storeTeams: z.string().array().optional(),
+	storeReasons: z.string().array().optional(),
+	hasContactPage: z.boolean(),
+	hasAboutPage: z.boolean(),
 });
 
 type TEMPLATE = z.infer<typeof TEMPLATE>;
