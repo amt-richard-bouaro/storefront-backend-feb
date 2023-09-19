@@ -12,8 +12,8 @@ export const getBusiness = async (req: Request, res: Response<RESPONSE>) => {
 		const business = await findBusinessById(businessID);
 
 		return res.status(STATUS.OK).json({
-			code: 'ONBOARDING_UPDATED',
-			message: 'Business information updated successfully',
+			code: 'BUSINESS_DATA',
+			message: 'Business information successfully retrieved',
 			type: 'success',
 			data: business,
 		});

@@ -49,20 +49,28 @@ model Customer {
 }
 
 model Business {
+  id              String  @id @default(uuid())
+  businessName    String
+  contact         String?
+  location        String?
+  businessType    String?
+  stores          Store[] @relation("businessStores")
+  account         String  @unique
+  businessAccount Account @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
+}
+
+model Store {
   id                String     @id @default(uuid())
-  businessName      String
-  contact           String?
-  location          String?
-  businessType      String?
-  websiteType       String?
+  storeName         String     @default("Default")
+  storeType         String
   promotion         Boolean    @default(false)
   promotionDiscount Int        @default(0)
   currency          String?    @default("GHc")
-  products          Product[]  @relation("businessProducts")
+  products          Product[]  @relation("storeProducts")
+  categories        Category[] @relation("storeCategories")
   template          Template?  @relation("storeTemplate")
-  categories        Category[] @relation("businessCategories")
-  account           String     @unique
-  businessAccount   Account    @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
+  business          String
+  businessStores    Business   @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
 }
 
 model Template {
@@ -78,33 +86,35 @@ model Template {
   secondaryColor String?
   auxillaryColor String?
   storeStory     String?
-  storeTeams     Teams[]   @relation("storeTeams")
+  storeTeams     Team[]    @relation("storeTeams")
   storeReasons   Reasons[] @relation("storeReasons")
   hasContactPage Boolean   @default(false)
   hasAboutPage   Boolean   @default(false)
-  business       String    @unique
+  store          String    @unique
   temp           Temp?     @relation("temporaryTemplate")
-  storeTemplate  Business  @relation("storeTemplate", fields: [business], references: [id], onDelete: Cascade)
+  storeTemplate  Store     @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
 }
 
 model Reasons {
   id               String   @id @default(uuid())
   title            String
   paragraph        String
-  template         String
-  storeReasons     Template @relation("storeReasons", fields: [template], references: [id], onDelete: Cascade)
+  template         String?
+  storeReasons     Template? @relation("storeReasons", fields: [template], references: [id], onDelete: Cascade)
   temp             String
   storeReasonsTemp Temp     @relation("storeReasonsTemp", fields: [temp], references: [id], onDelete: Cascade)
 }
 
-model Teams {
-  id             String   @id @default(uuid())
+model Team {
+  id             String    @id @default(uuid())
+  picture        String
+  key            String 
   name           String
   role           String
-  template       String
-  storeTeams     Template @relation("storeTeams", fields: [template], references: [id], onDelete: Cascade)
+  template       String?
+  storeTeams     Template? @relation("storeTeams", fields: [template], references: [id], onDelete: Cascade)
   temp           String
-  storeTeamsTemp Temp     @relation("storeTeamsTemp", fields: [temp], references: [id], onDelete: Cascade)
+  storeTeamsTemp Temp      @relation("storeTeamsTemp", fields: [temp], references: [id], onDelete: Cascade)
 }
 
 model Temp {
@@ -120,7 +130,7 @@ model Temp {
   secondaryColor String?
   auxillaryColor String?
   storeStory     String?
-  tempTeams      Teams[]   @relation("storeTeamsTemp")
+  tempTeams      Team[]    @relation("storeTeamsTemp")
   tempReasons    Reasons[] @relation("storeReasonsTemp")
   hasContactPage Boolean   @default(false)
   hasAboutPage   Boolean   @default(false)
@@ -137,28 +147,28 @@ model Product {
   quantity         Int         @default(0)
   reStockLevel     Int         @default(0)
   category         String      @default("All")
-  price            Decimal     @default(0.0)
-  currency         String      @default("GHc")
+  price            Decimal     @default(0.00)
   discount         Int         @default(0)
   promotionProduct Boolean     @default(false)
   variations       Variation[] @relation("productVariations")
   reviews          Review[]    @relation("productReviews")
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
-  business         String
-  businessProducts Business    @relation("businessProducts", fields: [business], references: [id], onDelete: Cascade)
+  store            String
+  storeProducts    Store       @relation("storeProducts", fields: [store], references: [id], onDelete: Cascade)
 }
 
 model Category {
-  id                 String   @id @default(uuid())
-  name               String
-  business           String
-  businessCategories Business @relation("businessCategories", fields: [business], references: [id], onDelete: Cascade)
+  id              String @id @default(uuid())
+  name            String
+  store           String
+  storeCategories Store  @relation("storeCategories", fields: [store], references: [id], onDelete: Cascade)
 }
 
 model Image {
   id           String  @id @default(uuid())
   url          String
+  key          String
   product      String
   productImage Product @relation("productImages", fields: [product], references: [id], onDelete: Cascade)
 }
@@ -166,7 +176,7 @@ model Image {
 model Variation {
   id                String  @id @default(uuid())
   type              String
-  name              String
+  value             String
   product           String
   productVariations Product @relation("productVariations", fields: [product], references: [id], onDelete: Cascade)
 }

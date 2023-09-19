@@ -10,7 +10,7 @@ export const publishTemplate = async (
 	res: Response<RESPONSE>
 ) => {
 	try {
-		const tempID = req.params.id;
+		const tempID = req.params.tempID;
 
 		const temp = await Database.temp.findUnique({
 			where: {
@@ -23,25 +23,44 @@ export const publishTemplate = async (
 				id: temp.template,
 			},
 			data: {
-				name: req.body,
-				brandImage: req.body,
-				brandColor: req.body,
-				welcomeColor: req.body,
-				welcomebtnText: req.body,
-				welcomeText: req.body,
-				fontstyle: req.body,
-				primaryColor: req.body,
-				secondaryColor: req.body,
-				auxillaryColor: req.body,
-				storeStory: req.body,
-				hasContactPage: req.body,
-				hasAboutPage: req.body,
+				name: temp.name,
+				brandImage: temp.brandImage,
+				brandColor: temp.brandColor,
+				welcomeColor: temp.welcomeColor,
+				welcomebtnText: temp.welcomebtnText,
+				welcomeText: temp.welcomeText,
+				fontstyle: temp.fontstyle,
+				primaryColor: temp.primaryColor,
+				secondaryColor: temp.secondaryColor,
+				auxillaryColor: temp.auxillaryColor,
+				storeStory: temp.storeStory,
+				hasContactPage: temp.hasContactPage,
+				hasAboutPage: temp.hasAboutPage,
+			},
+		});
+
+		await Database.team.updateMany({
+			where: {
+				temp: tempID,
+			},
+			data: {
+				template: template.id,
+			},
+		});
+
+		await Database.reasons.updateMany({
+			where: {
+				temp: tempID,
+			},
+			data: {
+				template: template.id,
 			},
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'ONBOARDING_UPDATED',
-			message: 'Business information updated successfully',
+			code: 'TEMPLATE_PUBLISHED',
+			message:
+				"TEMPLATE successfully published. Now customer will see changes you've made to your site.",
 			type: 'success',
 			data: template,
 		});

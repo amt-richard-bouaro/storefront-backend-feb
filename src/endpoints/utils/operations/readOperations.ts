@@ -83,29 +83,23 @@ export const findBusinessById = async (id: string) => {
 			id,
 		},
 		include: {
-			template: {
-				select: {
-					business: false,
-					name: true,
-					brandImage: true,
-					brandColor: true,
-					welcomeColor: true,
-					welcomebtnText: true,
-					welcomeText: true,
-					fontstyle: true,
-					primaryColor: true,
-					secondaryColor: true,
-					auxillaryColor: true,
-					storeStory: true,
-					storeTeams: true,
-					storeReasons: true,
-					hasContactPage: true,
-					hasAboutPage: true,
-					temp: true,
+			stores: {
+				include: {
+					categories: true,
+					template: {
+						include: {
+							storeTeams: true,
+							storeReasons: true,
+							temp: {
+								include: {
+									tempTeams: true,
+									tempReasons: true,
+								},
+							},
+						},
+					},
 				},
 			},
-			products: true,
-			categories: true,
 		},
 	});
 

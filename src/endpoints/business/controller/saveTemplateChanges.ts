@@ -8,7 +8,7 @@ import { TEMPLATE } from '../types';
 
 export const saveTemplate = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const tempID = req.params.id;
+		const tempID = req.params.tempID;
 
 		TEMPLATE.parse(req.body);
 
@@ -17,25 +17,26 @@ export const saveTemplate = async (req: Request, res: Response<RESPONSE>) => {
 				id: tempID,
 			},
 			data: {
-				name: req.body,
-				brandImage: req.body,
-				brandColor: req.body,
-				welcomeColor: req.body,
-				welcomebtnText: req.body,
-				welcomeText: req.body,
-				fontstyle: req.body,
-				primaryColor: req.body,
-				secondaryColor: req.body,
-				auxillaryColor: req.body,
-				storeStory: req.body,
-				hasContactPage: req.body,
-				hasAboutPage: req.body,
+				name: req.body.name,
+				brandImage: req.body.brandImage,
+				brandColor: req.body.brandColor,
+				welcomeColor: req.body.welcomeColor,
+				welcomebtnText: req.body.welcomebtnText,
+				welcomeText: req.body.welcomeText,
+				fontstyle: req.body.fontstyle,
+				primaryColor: req.body.primaryColor,
+				secondaryColor: req.body.secondaryColor,
+				auxillaryColor: req.body.auxillaryColor,
+				storeStory: req.body.storeStory,
+				hasContactPage: req.body.hasContactPage,
+				hasAboutPage: req.body.hasAboutPage,
 			},
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'ONBOARDING_UPDATED',
-			message: 'Business information updated successfully',
+			code: 'TEMPLATE_UPDATED',
+			message:
+				'Template information updated successfully. Feel free to publish the updated information anytime you want.',
 			type: 'success',
 			data: temp,
 		});

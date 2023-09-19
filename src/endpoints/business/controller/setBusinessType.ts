@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
-import { ONBOARDING } from '../../business/types';
+import { BUSINESS_TYPE } from '../types';
 import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
 
-export const updateOnboarding = async (
+export const setBusinessType = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
 	try {
-		const requestBody = <ONBOARDING>req.body;
+		const requestBody = <BUSINESS_TYPE>req.body;
 
-		ONBOARDING.parse(requestBody);
+		BUSINESS_TYPE.parse(requestBody);
 
-		const businessID = req.params.id;
+		const businessID = req.params.businessID;
 
 		const business = await Database.business.update({
 			where: {
@@ -22,12 +22,11 @@ export const updateOnboarding = async (
 			},
 			data: {
 				businessType: requestBody.businessType,
-				websiteType: requestBody.websiteType,
 			},
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'ONBOARDING_UPDATED',
+			code: 'BUSINESS_TYPE_UPDATED',
 			message: 'Business information updated successfully',
 			type: 'success',
 			data: business,
