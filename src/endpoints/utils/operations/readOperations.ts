@@ -85,6 +85,11 @@ export const findBusinessById = async (id: string) => {
 		include: {
 			stores: {
 				include: {
+					products: {
+						include: {
+							images: true,
+						},
+					},
 					categories: true,
 					template: {
 						include: {
