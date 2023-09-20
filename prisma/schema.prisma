@@ -30,8 +30,6 @@ model Account {
   isActive           Boolean   @default(false)
   mustChangePassword Boolean   @default(false)
   canResetPassword   Boolean   @default(false)
-  reviews            Review[]  @relation("customerReviews")
-  Replies            Reply[]   @relation("replyFrom")
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   customer           Customer? @relation("customerAccount")
@@ -39,13 +37,16 @@ model Account {
 }
 
 model Customer {
-  id              String  @id @default(uuid())
+  id              String   @id @default(uuid())
   firstName       String
   lastName        String
   phone           String?
   picture         String?
-  account         String  @unique
-  customerAccount Account @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
+  reviews         Review[] @relation("customerReviews")
+  Replies         Reply[]  @relation("customerReply")
+  orders          Order[]  @relation("customerOrder")
+  account         String   @unique
+  customerAccount Account  @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
 }
 
 model Business {
@@ -54,6 +55,7 @@ model Business {
   contact         String?
   location        String?
   businessType    String?
+  Replies         Reply[] @relation("businessReply")
   stores          Store[] @relation("businessStores")
   account         String  @unique
   businessAccount Account @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
@@ -69,8 +71,11 @@ model Store {
   products          Product[]  @relation("storeProducts")
   categories        Category[] @relation("storeCategories")
   template          Template?  @relation("storeTemplate")
+  orders            Order[]    @relation("storeOrder")
   business          String
   businessStores    Business   @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 }
 
 model Template {
@@ -96,19 +101,19 @@ model Template {
 }
 
 model Reasons {
-  id               String   @id @default(uuid())
+  id               String    @id @default(uuid())
   title            String
   paragraph        String
   template         String?
   storeReasons     Template? @relation("storeReasons", fields: [template], references: [id], onDelete: Cascade)
   temp             String
-  storeReasonsTemp Temp     @relation("storeReasonsTemp", fields: [temp], references: [id], onDelete: Cascade)
+  storeReasonsTemp Temp      @relation("storeReasonsTemp", fields: [temp], references: [id], onDelete: Cascade)
 }
 
 model Team {
   id             String    @id @default(uuid())
   picture        String
-  key            String 
+  key            String
   name           String
   role           String
   template       String?
@@ -152,6 +157,7 @@ model Product {
   promotionProduct Boolean     @default(false)
   variations       Variation[] @relation("productVariations")
   reviews          Review[]    @relation("productReviews")
+  orders           OrderItem[] @relation("orderedProduct")
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   store            String
@@ -188,24 +194,56 @@ enum Remarks {
 }
 
 model Review {
-  id              String   @id @default(uuid())
-  product         String
-  rating          Int
-  remarks         Remarks
-  comment         String?
-  reviewedBy      String
-  replies         Reply[]  @relation("reviewReply")
-  reviewedAt      DateTime @default(now())
-  productReview   Product  @relation("productReviews", fields: [product], references: [id], onDelete: Cascade)
-  reviewerAccount Account  @relation("customerReviews", fields: [reviewedBy], references: [id], onDelete: Cascade)
+  id             String   @id @default(uuid())
+  product        String
+  rating         Int
+  remarks        Remarks
+  comment        String?
+  customer       String
+  replies        Reply[]  @relation("reviewReply")
+  reviewedAt     DateTime @default(now())
+  productReview  Product  @relation("productReviews", fields: [product], references: [id], onDelete: Cascade)
+  customerReview Customer @relation("customerReviews", fields: [customer], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Reply {
-  id          String   @id @default(uuid())
-  comment     String?
-  from        String
-  replyFrom   Account  @relation("replyFrom", fields: [from], references: [id], onDelete: Cascade)
-  repliedAt   DateTime @default(now())
-  review      String
-  reviewReply Review   @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
+  id            String   @id @default(uuid())
+  comment       String?
+  customer      String
+  customerReply Customer @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
+  business      String
+  buisnessReply Business @relation("businessReply", fields: [business], references: [id], onDelete: Cascade)
+  repliedAt     DateTime @default(now())
+  review        String
+  reviewReply   Review   @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Order {
+  id            String   @id @default(uuid())
+  store         String
+  storeOrder    Store    @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
+  customer      String
+  customerOrder Customer @relation("customerOrder", fields: [customer], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model OrderItem {
+  id           String  @id @default(uuid())
+  quantity     Int     @default(1)
+  price        Decimal @default(0.00)
+  discount     Int     @default(0)
+  productName  String
+  productImage String
+
+  product        String
+  orderedProduct Product @relation("orderedProduct", fields: [product], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id String @id @default(uuid())
 }

@@ -42,11 +42,11 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 		const product = await Database.product.create({
 			data: {
 				name: requestBody.name,
-				price: Number(requestBody.price),
+				price: requestBody.price,
 				quantity: Number(requestBody.quantity),
 				category: requestBody.category,
 				description: requestBody.description,
-				isActive: Boolean(requestBody.isActive),
+				isActive: requestBody.isActive,
 				store: storeID,
 				variations: {
 					createMany: {

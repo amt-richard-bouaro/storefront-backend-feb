@@ -33,4 +33,18 @@ const IMAGES_TO_DELETE = z.object({
 });
 type IMAGES_TO_DELETE = z.infer<typeof IMAGES_TO_DELETE>;
 
-export { NEW_PRODUCT, PRODUCTS_TO_DELETE, IMAGES_TO_DELETE };
+const REMARKS = ['Disappointing', 'Great', 'Satisfied'] as const;
+
+const REVIEW_PRODUCT = z.object({
+	rating: z
+		.number()
+		.min(1, 'Rating ranges from 1 to 5')
+		.max(5, 'Rating ranges from 1 to 5'),
+
+	comment: z.string().optional(),
+	remarks: z.enum(REMARKS),
+});
+
+type REVIEW_PRODUCT = z.infer<typeof REVIEW_PRODUCT>;
+
+export { NEW_PRODUCT, PRODUCTS_TO_DELETE, IMAGES_TO_DELETE, REVIEW_PRODUCT };

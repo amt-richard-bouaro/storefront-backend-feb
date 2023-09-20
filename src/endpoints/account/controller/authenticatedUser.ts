@@ -11,14 +11,6 @@ export const authenticatedUser = async (
 	try {
 		const requestUser = <REQUEST_WITH_USER>req.user;
 
-		if (!req.isAuthenticated() || !requestUser.id) {
-			return res.status(STATUS.UNAUTHORIZED).json({
-				code: 'UNAUTHORIZED',
-				message: 'Unauthorized: Could not authenticate user',
-				type: 'error',
-			});
-		}
-
 		const user = await findAccountById(requestUser.id);
 
 		if (!user) {
