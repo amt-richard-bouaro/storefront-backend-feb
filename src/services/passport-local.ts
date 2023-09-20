@@ -18,7 +18,7 @@ const LocalSignInOption = () => {
 
 					if (!user) {
 						return done(null, false, {
-							message: 'Incorrect email or password',
+							message: 'Unauthorized: email or password incorrect',
 						});
 					}
 					const validPassword = await passwordValidator(
@@ -28,24 +28,10 @@ const LocalSignInOption = () => {
 
 					if (!validPassword) {
 						return done(null, false, {
-							message: 'Incorrect email or password',
+							message: 'Unauthorized: email or password incorrect',
 						});
 					}
-					return done(null, {
-						id: user.id,
-						email: user.email,
-						type: user.type,
-						provider: user.provider,
-						providerId: user.providerId,
-						verified: user.verified,
-						isActive: user.isActive,
-						mustChangePassword: user.mustChangePassword,
-						canResetPassword: user.canResetPassword,
-						createdAt: user.createdAt,
-						updatedAt: user.updatedAt,
-						customer: user.customer,
-						business: user.business,
-					});
+					return done(null, user);
 				} catch (error) {
 					return done(null, false, {
 						message: 'Something went wrong while trying to authenticate user',

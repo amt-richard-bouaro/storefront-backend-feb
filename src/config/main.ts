@@ -6,6 +6,7 @@ export const SERVER_CONFIG = {
 	SESSION_SECRET: process.env.SESSION_SECRET,
 	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
 	ORIGIN: process.env.ORIGIN,
+	ALLOWED_ORIGINS: [process.env.CLIENT_ORIGIN, process.env.ORIGIN],
 	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
 	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
 	EMAIL_SERVICE: process.env.EMAIL_SERVICE,

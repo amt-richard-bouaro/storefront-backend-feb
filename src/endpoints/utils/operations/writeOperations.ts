@@ -3,7 +3,11 @@ import bcrypt from 'bcrypt';
 import { NEW_ACCOUNT } from '../../account/types';
 import { SERVER_CONFIG } from '../../../config/main';
 
-import { jwtGenerator, shortCodeGenerator } from '../helperFunctions';
+import {
+	flatNestedObject,
+	jwtGenerator,
+	shortCodeGenerator,
+} from '../helperFunctions';
 
 export const createAccount = async (data: NEW_ACCOUNT) => {
 	const salt = await bcrypt.genSalt(SERVER_CONFIG.SALT_VALUE);
@@ -89,8 +93,10 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 					},
 			  });
 
+	const flatUser = flatNestedObject(user);
+
 	return {
-		user: user,
+		user: flatUser,
 		email: data.email,
 		code,
 	};

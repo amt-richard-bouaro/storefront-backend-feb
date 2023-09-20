@@ -52,3 +52,8 @@ export interface REQUEST_WITH_USER {
 
 export const ACCOUNT_TYPES = ['Customer', 'Business'] as const;
 export type ACCOUNTS = 'Customer' | 'Business';
+export type CHECKS =
+	| 'verified'
+	| 'isActive'
+	| 'mustChangePassword'
+	| 'canResetPassword';

@@ -17,9 +17,9 @@ export const accountVerification = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
-	const code = req.body.code;
-
 	try {
+		const { code } = req.body;
+
 		CODE.parse(code);
 
 		const { id } = <REQUEST_WITH_USER>req.user;
@@ -74,12 +74,24 @@ export const accountVerification = async (
 			}
 		);
 
-		passport.authenticate('local', { session: false })(req, res, () => {
+		passport.authenticate('local', { session: true })(req, res, () => {
 			return res.status(STATUS.OK).json({
 				code: 'ACCOUNT_VERIFIED',
 				message: 'Account is verified',
 				type: 'success',
-				data: verifiedUser,
+				data: {
+					id: verifiedUser.id,
+					email: verifiedUser.email,
+					type: verifiedUser.type,
+					verified: verifiedUser.verified,
+					isActive: verifiedUser.isActive,
+					mustChangePassword: verifiedUser.mustChangePassword,
+					canResetPassword: verifiedUser.canResetPassword,
+					createdAt: verifiedUser.createdAt,
+					updatedAt: verifiedUser.updatedAt,
+					customer: verifiedUser.customer,
+					business: verifiedUser.business,
+				},
 			});
 		});
 	} catch (error) {

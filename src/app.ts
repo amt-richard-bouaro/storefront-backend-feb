@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import session from 'express-session';
 import flash from 'connect-flash';
 import dotenv from 'dotenv';
@@ -22,7 +23,13 @@ const app = express();
 
 app.use(
 	cors({
-		origin: SERVER_CONFIG.CLIENT_ORIGIN.toString(),
+		origin: function (origin, callback) {
+			if (origin && SERVER_CONFIG.ALLOWED_ORIGINS.includes(origin)) {
+				callback(null, true);
+			} else {
+				callback(null, false);
+			}
+		},
 		credentials: true,
 	})
 );
@@ -31,6 +38,8 @@ app.use(helmet());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(bodyParser.json());
+
 app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 
 const redisClient = createClient({
