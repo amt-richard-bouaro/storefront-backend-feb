@@ -37,16 +37,17 @@ model Account {
 }
 
 model Customer {
-  id              String   @id @default(uuid())
+  id              String      @id @default(uuid())
   firstName       String
   lastName        String
   phone           String?
   picture         String?
-  reviews         Review[] @relation("customerReviews")
-  Replies         Reply[]  @relation("customerReply")
-  orders          Order[]  @relation("customerOrder")
-  account         String   @unique
-  customerAccount Account  @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
+  reviews         Review[]    @relation("customerReviews")
+  Replies         Reply[]     @relation("customerReply")
+  orders          Order[]     @relation("customerOrder")
+  savedProduct    SavedItem[] @relation("customerSavedProduct")
+  account         String      @unique
+  customerAccount Account     @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
 }
 
 model Business {
@@ -67,7 +68,7 @@ model Store {
   storeType         String
   promotion         Boolean    @default(false)
   promotionDiscount Int        @default(0)
-  currency          String?    @default("GHc")
+  currency          String?    @default("GHS")
   products          Product[]  @relation("storeProducts")
   categories        Category[] @relation("storeCategories")
   template          Template?  @relation("storeTemplate")
@@ -92,7 +93,7 @@ model Template {
   auxillaryColor String?
   storeStory     String?
   storeTeams     Team[]    @relation("storeTeams")
-  storeReasons   Reasons[] @relation("storeReasons")
+  storeReasons   Reason[] @relation("storeReasons")
   hasContactPage Boolean   @default(false)
   hasAboutPage   Boolean   @default(false)
   store          String    @unique
@@ -100,7 +101,7 @@ model Template {
   storeTemplate  Store     @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
 }
 
-model Reasons {
+model Reason {
   id               String    @id @default(uuid())
   title            String
   paragraph        String
@@ -136,7 +137,7 @@ model Temp {
   auxillaryColor String?
   storeStory     String?
   tempTeams      Team[]    @relation("storeTeamsTemp")
-  tempReasons    Reasons[] @relation("storeReasonsTemp")
+  tempReasons    Reason[] @relation("storeReasonsTemp")
   hasContactPage Boolean   @default(false)
   hasAboutPage   Boolean   @default(false)
   template       String    @unique
@@ -152,16 +153,17 @@ model Product {
   quantity         Int         @default(0)
   reStockLevel     Int         @default(0)
   category         String      @default("All")
-  price            Decimal     @default(0.00)
+  price            Float     @default(0.00)
   discount         Int         @default(0)
   promotionProduct Boolean     @default(false)
   variations       Variation[] @relation("productVariations")
   reviews          Review[]    @relation("productReviews")
-  orders           OrderItem[] @relation("orderedProduct")
+  customerSave     SavedItem[] @relation("savedProduct")
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   store            String
   storeProducts    Store       @relation("storeProducts", fields: [store], references: [id], onDelete: Cascade)
+  orders           OrderItem[] @relation("productOrdered")
 }
 
 model Category {
@@ -189,8 +191,8 @@ model Variation {
 
 enum Remarks {
   Disappointing
-  Great
-  Satisfied
+  Outstanding
+  Satisfactory
 }
 
 model Review {
@@ -201,7 +203,6 @@ model Review {
   comment        String?
   customer       String
   replies        Reply[]  @relation("reviewReply")
-  reviewedAt     DateTime @default(now())
   productReview  Product  @relation("productReviews", fields: [product], references: [id], onDelete: Cascade)
   customerReview Customer @relation("customerReviews", fields: [customer], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
@@ -215,35 +216,59 @@ model Reply {
   customerReply Customer @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
   business      String
   buisnessReply Business @relation("businessReply", fields: [business], references: [id], onDelete: Cascade)
-  repliedAt     DateTime @default(now())
   review        String
   reviewReply   Review   @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
+enum Status {
+  Pending_Payment
+  Delivered
+  On_Hold
+  Refunded
+  Returned
+  Cancelled
+  Out_For_Delivery
+  Shipped
+  Processing
+  Completed
+  Failed
+}
+
 model Order {
-  id            String   @id @default(uuid())
-  store         String
-  storeOrder    Store    @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
-  customer      String
-  customerOrder Customer @relation("customerOrder", fields: [customer], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                      String      @id @default(uuid())
+  amount                  Decimal
+  paid                    Boolean
+  paymentReference        String
+  accessCode              String
+  paymentAuthorizationUrl String
+  status                  Status
+  store                   String
+  storeOrder              Store       @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
+  customer                String
+  customerOrder           Customer    @relation("customerOrder", fields: [customer], references: [id])
+  items                   OrderItem[] @relation("OrderItems")
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
 }
 
 model OrderItem {
-  id           String  @id @default(uuid())
-  quantity     Int     @default(1)
-  price        Decimal @default(0.00)
-  discount     Int     @default(0)
-  productName  String
-  productImage String
-
+  id             String  @id @default(uuid())
+  quantity       Int     @default(1)
+  price          Decimal @default(0.00)
+  discount       Int     @default(0)
   product        String
-  orderedProduct Product @relation("orderedProduct", fields: [product], references: [id], onDelete: Cascade)
+  productOrdered Product @relation("productOrdered", fields: [product], references: [id])
+  order          String
+  OrderItem      Order   @relation("OrderItems", fields: [order], references: [id], onDelete: Cascade)
 }
 
-model Payment {
-  id String @id @default(uuid())
+model SavedItem {
+  id                  String   @id @default(uuid())
+  product             String
+  savedProduct        Product  @relation("savedProduct", fields: [product], references: [id])
+  customer            String
+  customrSavedProduct Customer @relation("customerSavedProduct", fields: [customer], references: [id], onDelete: Cascade)
+  createdAt           DateTime @default(now())
 }

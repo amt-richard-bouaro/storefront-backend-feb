@@ -9,7 +9,16 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const requestBody = <NEW_PRODUCT>req.body;
 
-		NEW_PRODUCT.parse(requestBody);
+		const body = {
+			price: parseFloat(req.body.price),
+			name: req.body.name,
+			quantity: parseFloat(req.body.quantity),
+			description: req.body.description,
+			isActive: true,
+			category: req.body.category,
+		};
+
+		NEW_PRODUCT.parse(body);
 
 		const storeID = req.params.storeID;
 
@@ -41,12 +50,12 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 
 		const product = await Database.product.create({
 			data: {
-				name: requestBody.name,
-				price: requestBody.price,
-				quantity: Number(requestBody.quantity),
-				category: requestBody.category,
-				description: requestBody.description,
-				isActive: requestBody.isActive,
+				name: body.name,
+				price: body.price,
+				quantity: body.quantity,
+				category: body.category,
+				description: body.description,
+				isActive: body.isActive,
 				store: storeID,
 				variations: {
 					createMany: {

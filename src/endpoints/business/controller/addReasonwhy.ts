@@ -13,7 +13,7 @@ export const addReasonWhy = async (req: Request, res: Response<RESPONSE>) => {
 
 		const tempID = req.params.tempID;
 
-		const reason = await Database.reasons.create({
+		const reason = await Database.reason.create({
 			data: {
 				title: requestBody.title,
 				paragraph: requestBody.paragraph,

@@ -116,8 +116,8 @@ app.use('/api/business', businessEndpoints);
 import productEndpoints from './endpoints/product/root';
 app.use('/api/product', productEndpoints);
 
-import paymentEndpoints from './endpoints/payment/root';
-app.use('/api/payment', paymentEndpoints);
+import orderEndpoints from './endpoints/order/root';
+app.use('/api/order', orderEndpoints);
 
 swaggerDocs(app, PORT);
 

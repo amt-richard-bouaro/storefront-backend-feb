@@ -48,7 +48,7 @@ export const publishTemplate = async (
 			},
 		});
 
-		await Database.reasons.updateMany({
+		await Database.reason.updateMany({
 			where: {
 				temp: tempID,
 			},

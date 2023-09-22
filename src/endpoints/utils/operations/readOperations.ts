@@ -1,5 +1,4 @@
 import { Database } from '../../../database/dbClient';
-import { USER } from '../../../services/generalTypes';
 
 export const findAccountByEmail = async (email: string) => {
 	const user = await Database.account.findUnique({
@@ -27,7 +26,7 @@ export const findAccountByEmail = async (email: string) => {
 	return user;
 };
 
-export const findAccountById = async (id: string): Promise<USER> => {
+export const findAccountById = async (id: string) => {
 	const user = await Database.account.findUnique({
 		where: {
 			id,
@@ -50,6 +49,7 @@ export const findAccountById = async (id: string): Promise<USER> => {
 			business: true,
 		},
 	});
+
 	return user;
 };
 export const findAccountByProviderId = async (id: string) => {
@@ -109,4 +109,34 @@ export const findBusinessById = async (id: string) => {
 	});
 
 	return user;
+};
+export const findCustomerById = async (id: string) => {
+	const user = await Database.customer.findFirst({
+		where: {
+			OR: [{ id }, { account: id }],
+		},
+		include: {
+			reviews: true,
+			Replies: true,
+			orders: true,
+		},
+	});
+
+	return user;
+};
+
+export const findStoreById = async (id: string) => {
+	const store = await Database.store.findUnique({
+		where: {
+			id,
+		},
+		include: {
+			products: true,
+			categories: true,
+			orders: true,
+			template: true,
+		},
+	});
+
+	return store;
 };

@@ -1,9 +1,9 @@
 export const SERVER_CONFIG = {
-	PORT: process.env.PORT && parseInt(process.env.PORT),
+	PORT: (process.env.PORT && parseInt(process.env.PORT)) || 4455,
 	NODE_ENV: process.env.NODE_ENV,
 	SALT_VALUE: process.env.SALT_VALUE && parseInt(process.env.SALT_VALUE),
-	JWT_SECRET: process.env.JWT_SECRET,
-	SESSION_SECRET: process.env.SESSION_SECRET,
+	JWT_SECRET: process.env.JWT_SECRET || '',
+	SESSION_SECRET: process.env.SESSION_SECRET || '',
 	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
 	ORIGIN: process.env.ORIGIN,
 	ALLOWED_ORIGINS: [
@@ -43,8 +43,9 @@ export const FACEBOOK_API = {
 };
 
 export const PAYSTACK_API = {
-	PAYSTACK_SECRET_KEY: process.env.PAYSTACK_SECRET_KEY,
-	PAYSTACK_BASE_URL: process.env.PAYSTACK_BASE_URL,
+	SECRET_KEY: process.env.PAYSTACK_SECRET_KEY,
+	BASE_URL: process.env.PAYSTACK_BASE_URL,
+	CHECKOUT_URL: process.env.PAYSTACK_CHECKOUT_URL,
 };
 
 export const STATUS = {
@@ -57,4 +58,5 @@ export const STATUS = {
 	NOT_FOUND: 404,
 	CONFLICT: 409,
 	INTERNAL_SERVER_ERROR: 500,
+	NO_CONTENT: 204,
 };
