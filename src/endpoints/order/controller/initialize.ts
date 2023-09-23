@@ -77,6 +77,8 @@ export const initializeOrder = async (
 			});
 		}
 
+		console.log(availableProducts);
+
 		const orderTotal: number = availableProducts.reduce(
 			(total, item) => total + item.total,
 			0
