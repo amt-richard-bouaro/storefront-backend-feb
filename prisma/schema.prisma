@@ -46,8 +46,25 @@ model Customer {
   Replies         Reply[]     @relation("customerReply")
   orders          Order[]     @relation("customerOrder")
   savedProduct    SavedItem[] @relation("customerSavedProduct")
+  visitedStores   Visitor[]   @relation("visitedStore")
+  shipping        Shipping[]  @relation("customerShipping")
   account         String      @unique
   customerAccount Account     @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
+}
+
+model Shipping {
+  id               String   @id @default(uuid())
+  country          String
+  firstName        String
+  lastName         String
+  streetAddress    String
+  appartmentNo     String?
+  city             String
+  phone            String
+  orders           Order[]  @relation("orderShipping")
+  isActive         Boolean  @default(false)
+  customer         String
+  customerShipping Customer @relation("customerShipping", fields: [customer], references: [id], onDelete: Cascade)
 }
 
 model Business {
@@ -73,6 +90,7 @@ model Store {
   categories        Category[] @relation("storeCategories")
   template          Template?  @relation("storeTemplate")
   orders            Order[]    @relation("storeOrder")
+  visitors          Visitor[]  @relation("storeVisitor")
   business          String
   businessStores    Business   @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
   createdAt         DateTime   @default(now())
@@ -80,7 +98,7 @@ model Store {
 }
 
 model Template {
-  id             String    @id @default(uuid())
+  id             String   @id @default(uuid())
   name           String
   brandImage     String?
   brandColor     String?
@@ -92,13 +110,13 @@ model Template {
   secondaryColor String?
   auxillaryColor String?
   storeStory     String?
-  storeTeams     Team[]    @relation("storeTeams")
+  storeTeams     Team[]   @relation("storeTeams")
   storeReasons   Reason[] @relation("storeReasons")
-  hasContactPage Boolean   @default(false)
-  hasAboutPage   Boolean   @default(false)
-  store          String    @unique
-  temp           Temp?     @relation("temporaryTemplate")
-  storeTemplate  Store     @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
+  hasContactPage Boolean  @default(false)
+  hasAboutPage   Boolean  @default(false)
+  store          String   @unique
+  temp           Temp?    @relation("temporaryTemplate")
+  storeTemplate  Store    @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
 }
 
 model Reason {
@@ -124,7 +142,7 @@ model Team {
 }
 
 model Temp {
-  id             String    @id @default(uuid())
+  id             String   @id @default(uuid())
   name           String
   brandImage     String?
   brandColor     String?
@@ -136,12 +154,12 @@ model Temp {
   secondaryColor String?
   auxillaryColor String?
   storeStory     String?
-  tempTeams      Team[]    @relation("storeTeamsTemp")
+  tempTeams      Team[]   @relation("storeTeamsTemp")
   tempReasons    Reason[] @relation("storeReasonsTemp")
-  hasContactPage Boolean   @default(false)
-  hasAboutPage   Boolean   @default(false)
-  template       String    @unique
-  tempTemplate   Template  @relation("temporaryTemplate", fields: [template], references: [id], onDelete: Cascade)
+  hasContactPage Boolean  @default(false)
+  hasAboutPage   Boolean  @default(false)
+  template       String   @unique
+  tempTemplate   Template @relation("temporaryTemplate", fields: [template], references: [id], onDelete: Cascade)
 }
 
 model Product {
@@ -153,7 +171,7 @@ model Product {
   quantity         Int         @default(0)
   reStockLevel     Int         @default(0)
   category         String      @default("All")
-  price            Float     @default(0.00)
+  price            Float       @default(0.00)
   discount         Int         @default(0)
   promotionProduct Boolean     @default(false)
   variations       Variation[] @relation("productVariations")
@@ -229,7 +247,6 @@ enum Status {
   Refunded
   Returned
   Cancelled
-  Out_For_Delivery
   Shipped
   Processing
   Completed
@@ -249,6 +266,8 @@ model Order {
   customer                String
   customerOrder           Customer    @relation("customerOrder", fields: [customer], references: [id])
   items                   OrderItem[] @relation("OrderItems")
+  shipping                String
+  orderShipping           Shipping    @relation("orderShipping", fields: [shipping], references: [id])
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt
 }
@@ -270,5 +289,15 @@ model SavedItem {
   savedProduct        Product  @relation("savedProduct", fields: [product], references: [id])
   customer            String
   customrSavedProduct Customer @relation("customerSavedProduct", fields: [customer], references: [id], onDelete: Cascade)
+  createdAt           DateTime @default(now())
+}
+
+model Visitor {
+  id                  String   @id @default(uuid())
+  liked               Boolean  @default(false)
+  store               String
+  storeVisitor        Store    @relation("storeVisitor", fields: [store], references: [id])
+  customer            String
+  customrSavedProduct Customer @relation("visitedStore", fields: [customer], references: [id], onDelete: Cascade)
   createdAt           DateTime @default(now())
 }

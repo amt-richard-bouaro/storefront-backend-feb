@@ -1,4 +1,4 @@
-import { REQUEST_WITH_USER } from '../../../services/generalTypes';
+// import { REQUEST_WITH_USER } from '../../../services/generalTypes';
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
@@ -11,21 +11,24 @@ import {
 } from '../../utils/operations/readOperations';
 import { ITEMS_TO_BUY, ITEMS_TO_BUY_TYPE } from '../types';
 import { productsAvailability } from '../../utils/helperFunctions';
+import { createOrder } from '../../../services/Paypal/payPalApi';
 
 export const initializeOrder = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
+	console.log(req.body);
+
 	try {
 		ITEMS_TO_BUY.parse(req.body);
 
 		const requestBody = <ITEMS_TO_BUY_TYPE>req.body;
 
-		const { id } = <REQUEST_WITH_USER>req.user;
+		// const { id } = <REQUEST_WITH_USER>req.user;
 
 		const storeID = req.params.storeID;
 
-		const user = await findAccountById(id);
+		const user = await findAccountById('68f815fd-4bae-46a7-9bdd-1002b0994108');
 
 		const customer = user && (await findCustomerById(user.id));
 
@@ -49,7 +52,7 @@ export const initializeOrder = async (
 
 		const storeProducts = store.products !== undefined ? store.products : [];
 
-		const unavailbleProducts = productsAvailability(
+		const { unavailbleProducts, availableProducts } = productsAvailability(
 			storeProducts,
 			requestBody.items
 		);
@@ -63,13 +66,20 @@ export const initializeOrder = async (
 			});
 		}
 
+		console.log(availableProducts);
+
 		// const email = user.email;
 		// const amount = totalAmountToPay(storeProducts, requestBody.items);
+
+		const response = await createOrder(requestBody.items);
+
+		// const response2 = await captureOrder('1VN97308V5756290L');
 
 		return res.status(STATUS.OK).json({
 			code: 'PAYMENT',
 			message: 'Payment intent',
 			type: 'success',
+			data: response.json,
 		});
 	} catch (error) {
 		const err = error as Error;

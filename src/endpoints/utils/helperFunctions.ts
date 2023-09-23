@@ -1,4 +1,4 @@
-import { MAIL_OPTIONS, PRODUCT } from '../../services/generalTypes';
+import { IMAGE, MAIL_OPTIONS, PRODUCT } from '../../services/generalTypes';
 import bcrypt from 'bcrypt';
 import { SERVER_CONFIG, STATUS } from '../../config/main';
 import { v4 as uuidV4 } from 'uuid';
@@ -112,39 +112,6 @@ export const flatNestedObject = (data: { [key: string]: any }) => {
 	return flatData;
 };
 
-export const productsAvailability = (
-	products: PRODUCT[],
-	items: { product: string; quantity: number }[]
-) => {
-	const unavailbleProducts: {
-		product: string;
-		quantity: number;
-		instock: number;
-		reason: string;
-	}[] = [];
-
-	items.map((item) => {
-		const productFound = products.find(
-			(product) => product.id === item.product
-		);
-		if (productFound === undefined) {
-			unavailbleProducts.push({
-				...item,
-				instock: 0,
-				reason: 'Product not found',
-			});
-		} else if (productFound.quantity < item.quantity) {
-			unavailbleProducts.push({
-				...item,
-				instock: productFound.quantity,
-				reason: 'Stock quantity insufficient',
-			});
-		}
-	});
-
-	return unavailbleProducts;
-};
-
 export const totalAmountToPay = (
 	products: PRODUCT[],
 	items: { product: string; quantity: number }[]
@@ -173,4 +140,57 @@ export const totalAmountToPay = (
 	});
 
 	return Number(total.toFixed(2));
+};
+
+export const productsAvailability = (
+	products: PRODUCT[],
+	items: { product: string; quantity: number }[]
+) => {
+	const unavailbleProducts: {
+		product: string;
+		quantity: number;
+		instock: number;
+		reason: string;
+	}[] = [];
+
+	const availableProducts: {
+		name: string;
+		price: number;
+		discount: number;
+		quantity: number;
+		total: number;
+		images: IMAGE[] | undefined;
+	}[] = [];
+
+	items.map((item) => {
+		const productFound = products.find(
+			(product) => product.id === item.product
+		);
+		if (productFound === undefined) {
+			unavailbleProducts.push({
+				...item,
+				instock: 0,
+				reason: 'Product not found',
+			});
+		} else if (productFound.quantity < item.quantity) {
+			unavailbleProducts.push({
+				...item,
+				instock: productFound.quantity,
+				reason: 'Stock quantity insufficient',
+			});
+		} else {
+			const cart = {
+				name: productFound.name,
+				price: productFound.price,
+				discount: productFound.discount,
+				quantity: item.quantity,
+				total: totalAmountToPay([productFound], [item]),
+				images: productFound.images,
+			};
+
+			availableProducts.push(cart);
+		}
+	});
+
+	return { availableProducts, unavailbleProducts };
 };

@@ -131,7 +131,11 @@ export const findStoreById = async (id: string) => {
 			id,
 		},
 		include: {
-			products: true,
+			products: {
+				include: {
+					images: true,
+				},
+			},
 			categories: true,
 			orders: true,
 			template: true,
