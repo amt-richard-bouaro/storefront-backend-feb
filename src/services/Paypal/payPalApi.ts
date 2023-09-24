@@ -25,8 +25,19 @@ export const generateAccessToken = async () => {
 	}
 };
 
-export const createOrder = async (cart) => {
-	console.log(cart);
+export const createOrder = async (data: {
+	cart?: { name: string; quantity: string; price: string }[];
+	address: {
+		countryCode: string;
+		postalCode: string;
+		streetAddress: string;
+		appartmentNo: string;
+		city: string;
+		phone: string;
+	};
+	total: string;
+}) => {
+	console.log(data.cart);
 
 	const accessToken = await generateAccessToken();
 
@@ -37,10 +48,32 @@ export const createOrder = async (cart) => {
 			{
 				amount: {
 					currency_code: 'USD',
-					value: '0.01',
+					value: data.total,
+				},
+				shipping: {
+					address: {
+						address_line_1: data.address.streetAddress,
+						address_line_2: data.address.appartmentNo,
+						admin_area_2: data.address.appartmentNo,
+						admin_area_1: data.address.city,
+						postal_code: data.address.postalCode,
+						country_code: data.address.countryCode,
+					},
 				},
 			},
 		],
+		payment_source: {
+			paypal: {
+				experience_context: {
+					payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
+					brand_name: 'StoreFront',
+					locale: 'en-US',
+					landing_page: 'LOGIN',
+					shipping_preference: 'SET_PROVIDED_ADDRESS',
+					user_action: 'PAY_NOW',
+				},
+			},
+		},
 	};
 
 	const response = await fetch(url, {
@@ -49,6 +82,50 @@ export const createOrder = async (cart) => {
 			Authorization: `Bearer ${accessToken}`,
 		},
 		method: 'POST',
+		body: JSON.stringify(payload),
+	});
+
+	return handleResponse(response);
+};
+
+export const payoutStore = async (data: {
+	amount: string;
+	receiver: string;
+	orderId: string;
+	reference: string;
+}) => {
+	const accessToken = await generateAccessToken();
+
+	const url = `${PAYPAL_API.BASE_URL}/v1/payments/payouts`;
+
+	const payload = {
+		items: [
+			{
+				receiver: data.receiver,
+				amount: {
+					currency: 'USD',
+					value: data.amount,
+				},
+				recipient_type: 'EMAIL',
+				note: 'Thanks for your patronage!',
+				sender_item_id: data.orderId,
+				recipient_wallet: 'PayPal',
+			},
+		],
+		sender_batch_header: {
+			sender_batch_id: data.reference,
+			email_subject: 'You have a payout!',
+			email_message:
+				'You have received a payout! Thanks for using our service!',
+		},
+	};
+
+	const response = await fetch(url, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`,
+		},
 		body: JSON.stringify(payload),
 	});
 

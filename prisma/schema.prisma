@@ -54,7 +54,8 @@ model Customer {
 
 model Shipping {
   id               String   @id @default(uuid())
-  country          String
+  countryCode      String
+  PostalCode       String
   firstName        String
   lastName         String
   streetAddress    String
@@ -68,15 +69,25 @@ model Shipping {
 }
 
 model Business {
-  id              String  @id @default(uuid())
+  id              String            @id @default(uuid())
   businessName    String
-  contact         String?
-  location        String?
   businessType    String?
-  Replies         Reply[] @relation("businessReply")
-  stores          Store[] @relation("businessStores")
-  account         String  @unique
-  businessAccount Account @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
+  Replies         Reply[]           @relation("businessReply")
+  stores          Store[]           @relation("businessStores")
+  addresses       BusinessAddress[] @relation("businessAddress")
+  account         String            @unique
+  businessAccount Account           @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
+}
+
+model BusinessAddress {
+  id              String   @id @default(uuid())
+  country         String
+  streetAddress   String
+  appartmentNo    String?
+  city            String
+  phone           String
+  business        String
+  businessAddress Business @relation("businessAddress", fields: [business], references: [id], onDelete: Cascade)
 }
 
 model Store {
@@ -91,6 +102,8 @@ model Store {
   template          Template?  @relation("storeTemplate")
   orders            Order[]    @relation("storeOrder")
   visitors          Visitor[]  @relation("storeVisitor")
+  payments          Payout[]   @relation("storePayout")
+  disbursementId    String?
   business          String
   businessStores    Business   @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
   createdAt         DateTime   @default(now())
@@ -230,6 +243,7 @@ model Review {
 model Reply {
   id            String   @id @default(uuid())
   comment       String?
+  from          Type
   customer      String
   customerReply Customer @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
   business      String
@@ -254,29 +268,30 @@ enum Status {
 }
 
 model Order {
-  id                      String      @id @default(uuid())
-  amount                  Decimal
-  paid                    Boolean
-  paymentReference        String
-  accessCode              String
-  paymentAuthorizationUrl String
-  status                  Status
-  store                   String
-  storeOrder              Store       @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
-  customer                String
-  customerOrder           Customer    @relation("customerOrder", fields: [customer], references: [id])
-  items                   OrderItem[] @relation("OrderItems")
-  shipping                String
-  orderShipping           Shipping    @relation("orderShipping", fields: [shipping], references: [id])
-  createdAt               DateTime    @default(now())
-  updatedAt               DateTime    @updatedAt
+  id            String      @id @default(uuid())
+  amount        Float
+  paid          Boolean
+  orderId       String
+  status        Status
+  store         String
+  storeOrder    Store       @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
+  customer      String
+  customerOrder Customer    @relation("customerOrder", fields: [customer], references: [id])
+  items         OrderItem[] @relation("OrderItems")
+  disbursement  Payout?     @relation("orderPayout")
+  shipping      String
+  orderShipping Shipping    @relation("orderShipping", fields: [shipping], references: [id])
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model OrderItem {
   id             String  @id @default(uuid())
   quantity       Int     @default(1)
-  price          Decimal @default(0.00)
+  price          Float   @default(0.00)
   discount       Int     @default(0)
+  name           String
+  image          String
   product        String
   productOrdered Product @relation("productOrdered", fields: [product], references: [id])
   order          String
@@ -300,4 +315,17 @@ model Visitor {
   customer            String
   customrSavedProduct Customer @relation("visitedStore", fields: [customer], references: [id], onDelete: Cascade)
   createdAt           DateTime @default(now())
+}
+
+model Payout {
+  id          String   @id @default(uuid())
+  commission  Float
+  payoutId    String
+  batch       String?
+  order       String   @unique
+  orderPayout Order    @relation("orderPayout", fields: [order], references: [id])
+  store       String
+  storePayout Store    @relation("storePayout", fields: [store], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

@@ -11,7 +11,7 @@ import {
 } from '../../utils/operations/readOperations';
 import { ITEMS_TO_BUY, ITEMS_TO_BUY_TYPE } from '../types';
 import { productsAvailability } from '../../utils/helperFunctions';
-import { createOrder } from '../../../services/Paypal/payPalApi';
+// import { createOrder } from '../../../services/Paypal/payPalApi';
 
 export const initializeOrder = async (
 	req: Request,
@@ -71,7 +71,7 @@ export const initializeOrder = async (
 		// const email = user.email;
 		// const amount = totalAmountToPay(storeProducts, requestBody.items);
 
-		const response = await createOrder(requestBody.items);
+		// const response = await createOrder(requestBody.items);
 
 		// const response2 = await captureOrder('1VN97308V5756290L');
 
@@ -79,7 +79,6 @@ export const initializeOrder = async (
 			code: 'PAYMENT',
 			message: 'Payment intent',
 			type: 'success',
-			data: response.json,
 		});
 	} catch (error) {
 		const err = error as Error;
