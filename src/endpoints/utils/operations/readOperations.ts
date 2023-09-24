@@ -119,6 +119,7 @@ export const findCustomerById = async (id: string) => {
 			reviews: true,
 			Replies: true,
 			orders: true,
+			shipping: true,
 		},
 	});
 

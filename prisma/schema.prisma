@@ -41,7 +41,6 @@ model Customer {
   firstName       String
   lastName        String
   phone           String?
-  picture         String?
   reviews         Review[]    @relation("customerReviews")
   Replies         Reply[]     @relation("customerReply")
   orders          Order[]     @relation("customerOrder")
@@ -55,15 +54,14 @@ model Customer {
 model Shipping {
   id               String   @id @default(uuid())
   countryCode      String
-  PostalCode       String
-  firstName        String
-  lastName         String
+  postalCode       String
+  name         String
   streetAddress    String
-  appartmentNo     String?
+  apartmentNo     String?
   city             String
   phone            String
   orders           Order[]  @relation("orderShipping")
-  isActive         Boolean  @default(false)
+  isActive         Boolean  @default(true)
   customer         String
   customerShipping Customer @relation("customerShipping", fields: [customer], references: [id], onDelete: Cascade)
 }
