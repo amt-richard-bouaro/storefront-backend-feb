@@ -35,10 +35,9 @@ export const createOrder = async (data: {
 		city: string;
 		phone: string;
 	};
-	total: string;
+	total: number;
+	reference: string;
 }) => {
-	console.log(data.cart);
-
 	const accessToken = await generateAccessToken();
 
 	const url = `${PAYPAL_API.BASE_URL}/v2/checkout/orders`;
@@ -46,19 +45,10 @@ export const createOrder = async (data: {
 		intent: 'CAPTURE',
 		purchase_units: [
 			{
+				reference_id: data.reference,
 				amount: {
 					currency_code: 'USD',
 					value: data.total,
-				},
-				shipping: {
-					address: {
-						address_line_1: data.address.streetAddress,
-						address_line_2: data.address.appartmentNo,
-						admin_area_2: data.address.appartmentNo,
-						admin_area_1: data.address.city,
-						postal_code: data.address.postalCode,
-						country_code: data.address.countryCode,
-					},
 				},
 			},
 		],
@@ -68,8 +58,6 @@ export const createOrder = async (data: {
 					payment_method_preference: 'IMMEDIATE_PAYMENT_REQUIRED',
 					brand_name: 'StoreFront',
 					locale: 'en-US',
-					landing_page: 'LOGIN',
-					shipping_preference: 'SET_PROVIDED_ADDRESS',
 					user_action: 'PAY_NOW',
 				},
 			},
@@ -132,6 +120,37 @@ export const payoutStore = async (data: {
 	return handleResponse(response);
 };
 
+export const updateOrder = async (data: {
+	orderID: string;
+	amount: number;
+	referenceId: string;
+}) => {
+	const accessToken = await generateAccessToken();
+
+	const url = `${PAYPAL_API.BASE_URL}/v2/checkout/orders/${data.orderID}`;
+
+	const payload = [
+		{
+			op: 'replace',
+			path: `/purchase_units/@reference_id=='${data.referenceId}'/amount`,
+			value: {
+				currency_code: 'USD',
+				value: data.amount,
+			},
+		},
+	];
+
+	const response = await fetch(url, {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`,
+		},
+		body: JSON.stringify(payload),
+	});
+
+	return handleResponse(response);
+};
 export const captureOrder = async (orderID: string) => {
 	const accessToken = await generateAccessToken();
 
@@ -147,15 +166,42 @@ export const captureOrder = async (orderID: string) => {
 
 	return handleResponse(response);
 };
+export const getOrder = async (orderID: string) => {
+	const accessToken = await generateAccessToken();
+
+	const url = `${PAYPAL_API.BASE_URL}/v2/checkout/orders/${orderID}`;
+
+	const response = await fetch(url, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+	return handleResponse(response);
+};
 
 async function handleResponse(response) {
 	try {
-		const json = await response.json();
-		return {
-			json,
-			status: response.status,
-		};
+		if (response.status === 204) {
+			return {
+				json: {
+					update: true,
+				},
+				status: 204,
+			};
+		} else {
+			const json = await response.json();
+			const status = await response.status;
+			return {
+				json,
+				status,
+			};
+		}
 	} catch (err) {
+		console.log(err);
+
 		const errorMessage = await response.text();
 		throw new Error(errorMessage);
 	}

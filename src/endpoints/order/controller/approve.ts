@@ -1,24 +1,112 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
-// import { Database } from '../../../database/dbClient';
+import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
 
-import { captureOrder } from '../../../services/Paypal/payPalApi';
+// import { captureOrder } from '../../../services/Paypal/payPalApi';
+import { productsAvailability } from '../../utils/helperFunctions';
 
 export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const orderID = req.params.orderID;
 
-		const response = await captureOrder(orderID);
+		const order = await Database.order.findFirst({
+			where: {
+				orderId: orderID,
+			},
+			include: {
+				items: true,
+				storeOrder: {
+					include: {
+						products: true,
+					},
+				},
+			},
+		});
 
-		console.log(response.json, response.status);
+		if (order.status === 'Cancelled') {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'PAYMENT_DENIED',
+				message:
+					'Order was cancelled. Payment cannot be accepted for cancelled order.',
+				type: 'error',
+			});
+		}
+
+		if (order.paid) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'PAYMENT_DENIED',
+				message: 'Currently not accepting any payment. Order paid for already',
+				type: 'error',
+			});
+		}
+
+		if (order.items.length === 0) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'PAYMENT_DENIED',
+				message: 'Order items empty',
+				type: 'error',
+			});
+		}
+
+		const storeProducts =
+			order.storeOrder.products !== undefined ? order.storeOrder.products : [];
+
+		const orderItem = order.items.map((item) => {
+			return {
+				product: item.product,
+				quantity: item.quantity,
+				variations: [],
+			};
+		});
+
+		const { unavailbleProducts } = productsAvailability(
+			storeProducts,
+			orderItem
+		);
+
+		if (unavailbleProducts.length > 0) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'PAYMENT_DENIED',
+				message: 'Could not process payment',
+				type: 'error',
+				error: unavailbleProducts,
+			});
+		}
+
+		// const payment = await captureOrder(orderID);
+
+		// console.log(response.json, response.status);
+
+		for (const item of orderItem) {
+			await Database.product.update({
+				where: {
+					id: item.product,
+				},
+				data: {
+					quantity: {
+						decrement: item.quantity,
+					},
+				},
+			});
+		}
+
+		await Database.order.update({
+			where: {
+				id: order.id,
+			},
+			data: {
+				status: 'Processing',
+				paid: true,
+			},
+		});
 
 		return res.status(STATUS.OK).json({
 			code: 'PAYMENT',
 			message: 'Payment intent',
 			type: 'success',
-			data: response.json,
+			// data: payment.json,
 		});
 	} catch (error) {
 		const err = error as Error;

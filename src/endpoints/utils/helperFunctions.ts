@@ -1,4 +1,4 @@
-import { IMAGE, MAIL_OPTIONS, PRODUCT } from '../../services/generalTypes';
+import { MAIL_OPTIONS, PRODUCT } from '../../services/generalTypes';
 import bcrypt from 'bcrypt';
 import { SERVER_CONFIG, STATUS } from '../../config/main';
 import { v4 as uuidV4 } from 'uuid';
@@ -95,7 +95,7 @@ export const sendMail = async (
 	}
 };
 
-export const flatNestedObject = (data: { [key: string]: any }) => {
+export const flatNestedObject = (data: { [key: string]: any | object }) => {
 	const flatData: { [key: string]: string | number | boolean } = {};
 
 	for (const key in data) {
@@ -144,23 +144,28 @@ export const totalAmountToPay = (
 
 export const productsAvailability = (
 	products: PRODUCT[],
-	items: { product: string; quantity: number }[]
+	items: { product: string; quantity: number; variations: { id: string }[] }[]
 ) => {
 	const unavailbleProducts: {
 		product: string;
 		quantity: number;
+		variations: { id: string }[];
 		instock: number;
 		reason: string;
 	}[] = [];
 
 	const availableProducts: {
+		product: string;
 		name: string;
 		price: number;
 		discount: number;
 		quantity: number;
+		variations: { id: string }[];
 		total: number;
 		images: IMAGE[] | undefined;
 	}[] = [];
+
+	const totalQuantities = new Map<string, number>();
 
 	items.map((item) => {
 		const productFound = products.find(
@@ -172,23 +177,43 @@ export const productsAvailability = (
 				instock: 0,
 				reason: 'Product not found',
 			});
-		} else if (productFound.quantity < item.quantity) {
+		} else if (!productFound.isActive) {
 			unavailbleProducts.push({
 				...item,
 				instock: productFound.quantity,
-				reason: 'Stock quantity insufficient',
+				reason: 'Product is not on sale at this moment',
 			});
 		} else {
-			const cart = {
-				name: productFound.name,
-				price: productFound.price,
-				discount: productFound.discount,
-				quantity: item.quantity,
-				total: totalAmountToPay([productFound], [item]),
-				images: productFound.images,
-			};
+			const totalQuantity = totalQuantities.get(item.product) ?? 0;
 
-			availableProducts.push(cart);
+			totalQuantities.set(item.product, totalQuantity + item.quantity);
+
+			if (productFound.quantity < totalQuantities.get(item.product)) {
+				unavailbleProducts.push({
+					...item,
+					instock: productFound.quantity,
+					reason: `Stock quantity ${
+						productFound.quantity
+					} insufficient for order quantity ${totalQuantities.get(
+						item.product
+					)}`,
+				});
+			} else {
+				const cart = {
+					product: productFound.id,
+					name: productFound.name,
+					price: productFound.price,
+					discount: productFound.discount,
+					quantity: item.quantity,
+					variations: item.variations,
+					total: totalAmountToPay([productFound], [item]),
+					image: productFound.images
+						? productFound.images[0].url
+						: 'https://www.google.com/images/1',
+				};
+
+				availableProducts.push(cart);
+			}
 		}
 	});
 
