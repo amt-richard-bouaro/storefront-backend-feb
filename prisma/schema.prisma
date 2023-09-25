@@ -57,7 +57,7 @@ model Shipping {
   postalCode       String
   name             String
   streetAddress    String
-  apartmentNo      String?
+  apartmentNo      String   @default("N/A")
   city             String
   phone            String
   orders           Order[]  @relation("orderShipping")
@@ -272,7 +272,7 @@ model Order {
   amount        Float
   paid          Boolean     @default(false)
   orderId       String      @unique
-  referenceId   String      
+  referenceId   String
   status        Status      @default(Pending_Payment)
   store         String
   storeOrder    Store       @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)

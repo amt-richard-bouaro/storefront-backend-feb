@@ -39,6 +39,12 @@ export const FACEBOOK_API = {
 	CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET!,
 };
 
+export const PAYPAL_API = {
+	SECRET_KEY: process.env.PAYPAL_SECRET_KEY!,
+	CLIENT_ID: process.env.PAYPAL_CLIENT_ID!,
+	BASE_URL: process.env.PAYPAL_BASE_URL!,
+};
+
 export const STATUS = {
 	OK: 200,
 	CREATED: 201,

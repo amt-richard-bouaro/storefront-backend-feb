@@ -88,9 +88,27 @@ export const validateFacebookApiConfig = (config: FACEBOOK_API_SCHEMA) => {
 	return config;
 };
 
+const PAYPAL_API_SCHEMA = z.object({
+	SECRET_KEY: z.string().nonempty('PayPal Secret Key is required'),
+	CLIENT_ID: z.string().nonempty('PayPal Client ID is required'),
+	BASE_URL: z.string().nonempty('PayPal Base URL is required'),
+});
+
+type PAYPAL_API_SCHEMA = z.infer<typeof PAYPAL_API_SCHEMA>;
+export const validatePayPalApiConfig = (config: PAYPAL_API_SCHEMA) => {
+	const result = PAYPAL_API_SCHEMA.safeParse(config);
+
+	if (!result.success) {
+		throw new Error(`Invalid PayPal API config: ${result.error}`);
+	}
+
+	return config;
+};
+
 export {
 	SERVER_CONFIG_SCHEMA,
 	GOOGLE_API_SCHEMA,
 	S3_BUCKET_SCHEMA,
 	FACEBOOK_API_SCHEMA,
+	PAYPAL_API_SCHEMA,
 };

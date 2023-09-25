@@ -25,6 +25,14 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 			},
 		});
 
+		if (!order) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'PAYMENT_DENIED',
+				message: 'Order not found.',
+				type: 'error',
+			});
+		}
+
 		if (order.status === 'Cancelled') {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'PAYMENT_DENIED',

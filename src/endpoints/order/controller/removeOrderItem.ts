@@ -26,6 +26,14 @@ export const removeOrderItem = async (
 			},
 		});
 
+		if (!order) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'UPDATE_DENIED',
+				message: 'Order not found',
+				type: 'error',
+			});
+		}
+
 		if (order.status === 'Cancelled') {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'UPDATE_DENIED',
@@ -76,11 +84,13 @@ export const removeOrderItem = async (
 			},
 		});
 
-		const response = await updateOrder({
-			orderID,
-			amount: newTotal._sum.total,
-			referenceId: order.referenceId,
-		});
+		const response =
+			typeof newTotal._sum.total === 'number' &&
+			(await updateOrder({
+				orderID,
+				amount: newTotal._sum.total,
+				referenceId: order.referenceId,
+			}));
 
 		console.log({ totel: newTotal._sum.total, orderitem, response });
 
@@ -88,7 +98,7 @@ export const removeOrderItem = async (
 			code: 'PAYMENT',
 			message: 'Payment intent',
 			type: 'success',
-			data: response.json,
+			data: response && response.json,
 		});
 	} catch (error) {
 		const err = error as Error;

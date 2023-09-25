@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 import { PAYPAL_API } from '../../config/main';
 
 export const generateAccessToken = async () => {
@@ -21,7 +21,8 @@ export const generateAccessToken = async () => {
 		const data = await response.json();
 		return data.access_token;
 	} catch (error) {
-		throw new Error('Failed to generate Access Token:', error);
+		const err = error as Error;
+		throw new Error('Failed to generate Access Token:', err);
 	}
 };
 
@@ -182,7 +183,7 @@ export const getOrder = async (orderID: string) => {
 	return handleResponse(response);
 };
 
-async function handleResponse(response) {
+async function handleResponse(response: Response) {
 	try {
 		if (response.status === 204) {
 			return {

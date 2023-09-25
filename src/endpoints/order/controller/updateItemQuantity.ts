@@ -27,6 +27,14 @@ export const updateItemQuantity = async (
 			},
 		});
 
+		if (!order) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'UPDATE_DENIED',
+				message: 'Order not found.',
+				type: 'error',
+			});
+		}
+
 		if (order.status === 'Cancelled') {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'UPDATE_DENIED',
@@ -77,11 +85,13 @@ export const updateItemQuantity = async (
 			},
 		});
 
-		const response = await updateOrder({
-			orderID,
-			amount: newTotal._sum.total,
-			referenceId: order.referenceId,
-		});
+		const response =
+			typeof newTotal._sum.total === 'number' &&
+			(await updateOrder({
+				orderID,
+				amount: newTotal._sum.total,
+				referenceId: order.referenceId,
+			}));
 
 		const getOrderRes = await getOrder(orderID);
 
