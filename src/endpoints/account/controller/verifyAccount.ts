@@ -43,7 +43,7 @@ export const accountVerification = async (
 			});
 		}
 
-		const userVerificationToken = extractJwtPayload(User.verificationToken);
+		const userVerificationToken = extractJwtPayload(User.verificationToken!);
 
 		if (userVerificationToken.code !== code) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -58,8 +58,8 @@ export const accountVerification = async (
 
 		const user =
 			verifiedUser.type === 'Business'
-				? verifiedUser.business.businessName
-				: verifiedUser.customer.firstName;
+				? verifiedUser.business!.businessName
+				: verifiedUser.customer!.firstName;
 
 		await sendMail(
 			mailOptions({

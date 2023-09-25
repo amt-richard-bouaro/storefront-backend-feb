@@ -50,8 +50,8 @@ export const requestPasswordReset = async (
 
 		const name =
 			user.type === 'Business'
-				? user.business.businessName
-				: user.customer.firstName;
+				? user.business!.businessName
+				: user.customer!.firstName;
 		await sendMail(
 			mailOptions({
 				to: email,

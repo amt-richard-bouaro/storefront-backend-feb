@@ -1,6 +1,6 @@
 import passport from 'passport';
 import OAuth2Strategy from 'passport-google-oauth2';
-import { GOOGLE_API } from '../config/main';
+import { GOOGLE_API } from '../config/index';
 import { NEW_ACCOUNT } from '../endpoints/account/types';
 import { findAccountByEmail } from '../endpoints/utils/operations/readOperations';
 import { createAccount } from '../endpoints/utils/operations/writeOperations';
@@ -12,8 +12,8 @@ const GoogleSignOption = () => {
 		'google-business',
 		new GoogleStrategy(
 			{
-				clientID: GOOGLE_API.CLIENT_ID || '',
-				clientSecret: GOOGLE_API.CLIENT_SECRET || '',
+				clientID: GOOGLE_API.CLIENT_ID,
+				clientSecret: GOOGLE_API.CLIENT_SECRET,
 				callbackURL: '/api/account/google/business/callback',
 			},
 			async function (accessToken: unknown, refreshToken: unknown, user, done) {

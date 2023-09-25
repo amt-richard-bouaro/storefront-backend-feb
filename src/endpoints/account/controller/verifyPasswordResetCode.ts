@@ -28,7 +28,7 @@ export const verifyPasswordResetCode = async (
 			});
 		}
 
-		const userVerificationToken = extractJwtPayload(user.verificationToken);
+		const userVerificationToken = extractJwtPayload(user.verificationToken!);
 
 		if (userVerificationToken.code !== code) {
 			return res.status(STATUS.BAD_REQUEST).json({

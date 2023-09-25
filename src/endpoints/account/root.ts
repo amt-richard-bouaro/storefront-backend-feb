@@ -44,13 +44,9 @@ app.post(
 	}),
 	async function (req: Request, res: Response<RESPONSE>) {
 		try {
-			let user: USER = req.user as USER;
+			const user: USER = req.user as USER;
 
-			if (user.verified) {
-				const activatedUser = await activateAccount(user.id);
-
-				user = activatedUser;
-			}
+			await activateAccount(user.id);
 
 			return res.status(STATUS.OK).json({
 				code: 'LOGGED_IN',

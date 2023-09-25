@@ -18,6 +18,14 @@ export const publishTemplate = async (
 			},
 		});
 
+		if (!temp) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'TEMPLATE_NOT_PUBLISHED',
+				message: 'Could not find template',
+				type: 'error',
+			});
+		}
+
 		const template = await Database.template.update({
 			where: {
 				id: temp.template,

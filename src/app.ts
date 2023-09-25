@@ -17,7 +17,8 @@ import { userSerialization } from './services/generalTypes';
 import GoogleSignOption from './services/passport-google';
 import LocalSignInOption from './services/passport-local';
 import FacebookSignInOption from './services/passport-facebook';
-import { SERVER_CONFIG } from './config/main';
+import { SERVER_CONFIG } from './config/index';
+import routes from './endpoints/routes';
 
 const app = express();
 
@@ -72,15 +73,16 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.serializeUser((user: userSerialization, callback) => {
-	if (user.provider === 'local') {
+passport.serializeUser((user, callback) => {
+	const User = <userSerialization>user;
+	if (User.provider === 'local') {
 		return callback(null, {
-			providerId: user.providerId,
+			providerId: User.providerId,
 		});
 	}
 
 	return callback(null, {
-		providerId: user.id,
+		providerId: User.id,
 	});
 });
 
@@ -103,23 +105,9 @@ LocalSignInOption();
 
 const PORT: number = SERVER_CONFIG.PORT;
 
-app.get('/', (req, res) => {
-	return res.redirect('/api/v1/docs');
-});
+routes(app);
 
-import accountEndpoints from './endpoints/account/root';
-app.use('/api/account', accountEndpoints);
-
-import businessEndpoints from './endpoints/business/root';
-app.use('/api/business', businessEndpoints);
-
-import productEndpoints from './endpoints/product/root';
-app.use('/api/product', productEndpoints);
-
-import orderEndpoints from './endpoints/order/root';
-app.use('/api/order', orderEndpoints);
-
-swaggerDocs(app, PORT);
+swaggerDocs(app);
 
 app.use(notFoundError);
 app.use(errorHandler);
