@@ -1,4 +1,4 @@
-import { IMAGE, MAIL_OPTIONS, PRODUCT } from '../../services/generalTypes';
+import { MAIL_OPTIONS, PRODUCT } from '../../services/generalTypes';
 import bcrypt from 'bcrypt';
 import { SERVER_CONFIG, STATUS } from '../../config/main';
 import { v4 as uuidV4 } from 'uuid';
