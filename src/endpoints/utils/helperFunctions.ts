@@ -162,7 +162,7 @@ export const productsAvailability = (
 		quantity: number;
 		variations: { id: string }[];
 		total: number;
-		images: IMAGE[] | undefined;
+		image: string;
 	}[] = [];
 
 	const totalQuantities = new Map<string, number>();
@@ -188,7 +188,9 @@ export const productsAvailability = (
 
 			totalQuantities.set(item.product, totalQuantity + item.quantity);
 
-			if (productFound.quantity < totalQuantities.get(item.product)) {
+			const quantities = totalQuantities.get(item.product) ?? 0;
+
+			if (productFound.quantity < quantities) {
 				unavailbleProducts.push({
 					...item,
 					instock: productFound.quantity,
