@@ -167,6 +167,7 @@ export const captureOrder = async (orderID: string) => {
 
 	return handleResponse(response);
 };
+
 export const getOrder = async (orderID: string) => {
 	const accessToken = await generateAccessToken();
 
@@ -188,7 +189,7 @@ async function handleResponse(response: Response) {
 		if (response.status === 204) {
 			return {
 				json: {
-					update: true,
+					updated: true,
 				},
 				status: 204,
 			};

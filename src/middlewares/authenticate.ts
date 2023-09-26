@@ -35,7 +35,7 @@ export const restrictedTo =
 				});
 			}
 
-			const foundUser = user as USER;
+			const foundUser = user;
 
 			if (to && !to.includes(foundUser.type)) {
 				return res.status(STATUS.UNAUTHORIZED).json({

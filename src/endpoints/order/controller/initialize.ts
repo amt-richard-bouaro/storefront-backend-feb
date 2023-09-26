@@ -38,9 +38,11 @@ export const initializeOrder = async (
 			});
 		}
 
-		const shipping = customer.shipping.find(
-			(shipping) => shipping.id === requestBody.shipping
-		);
+		const shipping =
+			customer.shipping &&
+			customer.shipping.find(
+				(shipping) => shipping.id === requestBody.shipping
+			);
 
 		if (shipping === undefined) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -118,7 +120,7 @@ export const initializeOrder = async (
 				countryCode: 'US',
 				postalCode: shipping.postalCode,
 				streetAddress: shipping.streetAddress,
-				appartmentNo: shipping.apartmentNo,
+				appartmentNo: shipping.apartmentNo || 'N/A',
 				city: shipping.city,
 				phone: shipping.phone,
 			},

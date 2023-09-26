@@ -70,7 +70,6 @@ model Business {
   id              String            @id @default(uuid())
   businessName    String
   businessType    String?
-  Replies         Reply[]           @relation("businessReply")
   stores          Store[]           @relation("businessStores")
   addresses       BusinessAddress[] @relation("businessAddress")
   account         String            @unique
@@ -81,7 +80,7 @@ model BusinessAddress {
   id              String   @id @default(uuid())
   country         String
   streetAddress   String
-  appartmentNo    String?
+  appartmentNo    String   @default("N/A")
   city            String
   phone           String
   business        String
@@ -102,9 +101,9 @@ model Store {
   visitors          Visitor[]   @relation("storeVisitor")
   savedProducts     SavedItem[] @relation("storerSavedProduct")
   payments          Payout[]    @relation("storePayout")
-  disbursementId    String?
+  Replies         Reply[]           @relation("storeReply")
   business          String
-  businessStores    Business    @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
+  businessStore     Business    @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 }
@@ -188,7 +187,7 @@ model Product {
   promotionProduct Boolean     @default(false)
   variations       Variation[] @relation("productVariations")
   reviews          Review[]    @relation("productReviews")
-  customerSave     SavedItem[] @relation("savedProduct")
+  customerSaves     SavedItem[] @relation("savedProduct")
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   store            String
@@ -246,8 +245,8 @@ model Reply {
   from          Type
   customer      String
   customerReply Customer @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
-  business      String
-  buisnessReply Business @relation("businessReply", fields: [business], references: [id], onDelete: Cascade)
+  store      String
+  storeReply Store @relation("storeReply", fields: [store], references: [id], onDelete: Cascade)
   review        String
   reviewReply   Review   @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())

@@ -4,7 +4,7 @@ import { errorHandler } from '../../../middlewares/errorHandlers';
 import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
 
-// import { captureOrder } from '../../../services/Paypal/payPalApi';
+import { captureOrder } from '../../../services/Paypal/payPalApi';
 import { productsAvailability } from '../../utils/helperFunctions';
 
 export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
@@ -58,10 +58,9 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const storeProducts =
-			order.storeOrder.products !== undefined ? order.storeOrder.products : [];
+		const storeProducts = order.storeOrder.products ?? [];
 
-		const orderItem = order.items.map((item) => {
+		const orderItems = order.items.map((item) => {
 			return {
 				product: item.product,
 				quantity: item.quantity,
@@ -71,23 +70,29 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		const { unavailbleProducts } = productsAvailability(
 			storeProducts,
-			orderItem
+			orderItems
 		);
 
 		if (unavailbleProducts.length > 0) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'PAYMENT_DENIED',
-				message: 'Could not process payment',
+				message: 'Could not process payment. Items not available',
 				type: 'error',
 				error: unavailbleProducts,
 			});
 		}
 
-		// const payment = await captureOrder(orderID);
+		const makePayment = await captureOrder(orderID);
 
-		// console.log(response.json, response.status);
+		if (makePayment.status !== STATUS.OK) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'PAYMENT_FAILED',
+				message: 'Could not process payment.',
+				type: 'error',
+			});
+		}
 
-		for (const item of orderItem) {
+		for (const item of orderItems) {
 			await Database.product.update({
 				where: {
 					id: item.product,
@@ -98,23 +103,23 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 					},
 				},
 			});
-		}
 
-		await Database.order.update({
-			where: {
-				id: order.id,
-			},
-			data: {
-				status: 'Processing',
-				paid: true,
-			},
-		});
+			await Database.order.update({
+				where: {
+					id: order.id,
+				},
+				data: {
+					status: 'Processing',
+					paid: true,
+				},
+			});
+		}
 
 		return res.status(STATUS.OK).json({
 			code: 'PAYMENT',
-			message: 'Payment intent',
+			message: 'Payment made successfully',
 			type: 'success',
-			// data: payment.json,
+			data: makePayment.json,
 		});
 	} catch (error) {
 		const err = error as Error;

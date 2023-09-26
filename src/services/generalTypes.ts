@@ -1,5 +1,3 @@
-import { Decimal } from '@prisma/client/runtime/library';
-
 export interface RESPONSE {
 	code: string;
 	message: string;
@@ -35,20 +33,16 @@ export type USER = {
 	email: string;
 	type: 'Business' | 'Customer';
 	provider: 'local' | 'google' | 'facebook';
-	providerId?: string;
-	verified?: boolean;
-	isActive?: boolean;
-	verificationToken?: string;
-	mustChangePassword?: boolean;
-	canResetPassword?: boolean;
+	providerId: string;
+	verified: boolean;
+	isActive: boolean;
+	verificationToken: string | null;
+	mustChangePassword: boolean;
+	canResetPassword: boolean;
 	createdAt: Date;
 	updatedAt: Date;
-	customer?: {
-		id: string;
-	} | null;
-	business?: {
-		id: string;
-	} | null;
+	customer: CUSTOMER | null;
+	business: BUSINESS | null;
 };
 
 export interface REQUEST_WITH_USER {
@@ -71,6 +65,7 @@ export type TEAM = {
 	name: string;
 	role: string;
 	template?: string;
+	storeTeams: TEMPLATE;
 	temp: string;
 };
 export type REASON = {
@@ -79,6 +74,7 @@ export type REASON = {
 	paragraph: string;
 	template: string;
 	temp: string;
+	storeReasons?: TEMPLATE;
 };
 export type TEMPLATE = {
 	id: string;
@@ -106,25 +102,31 @@ export type VARIATION = {
 	type: string;
 	value: string;
 	product: string;
+	productVariations?: PRODUCT;
+	orders?: ORDER_ITEM[];
 };
 export type CATEGORY = {
 	id: string;
 	name: string;
 	store: string;
+	storeCategories?: STORE;
 };
 export type IMAGE = {
 	id: string;
 	url: string;
 	key: string;
 	product: string;
+	productImage?: PRODUCT;
 };
 export type REVIEW = {
 	id: string;
 	product: string;
+	productReview?: PRODUCT;
 	rating: number;
 	remarks: string;
-	comment?: string;
+	comment: string | null;
 	customer: string;
+	customerReview?: CUSTOMER;
 	replies?: REPLY[];
 	createdAt: Date;
 	updatedAt: Date;
@@ -133,9 +135,13 @@ export type REVIEW = {
 export type REPLY = {
 	id: string;
 	comment?: string;
+	from: 'Business' | 'Customer';
 	customer: string;
-	business: string;
+	customerReply: CUSTOMER;
+	store: string;
+	storeReply?: STORE;
 	review: string;
+	reviewReply: REVIEW;
 	createdAt: Date;
 	updatedAt: Date;
 };
@@ -156,11 +162,10 @@ export const ORDER_STATUS = [
 
 export type ORDER = {
 	id: string;
-	amount: Decimal;
+	amount: number;
 	paid: boolean;
-	paymentReference: string;
-	accessCode: string;
-	paymentAuthorizationUrl: string;
+	orderId: string;
+	referenceId: string;
 	status:
 		| 'Pending_Payment'
 		| 'Delivered'
@@ -174,23 +179,39 @@ export type ORDER = {
 		| 'Completed'
 		| 'Failed';
 	store: string;
+	storeOrder?: STORE;
 	customer: string;
+	customerOrder?: CUSTOMER;
 	items?: ORDER_ITEM[];
+	disbursement?: PAYOUT;
+	shipping: string;
+	orderShipping?: SHIPPING;
 	createdAt: Date;
 	updatedAt: Date;
 };
 export type ORDER_ITEM = {
 	id: string;
 	quantity: number;
-	price: Decimal;
+	price: number;
 	discount: number;
+	total: number;
+	image: string;
+	name: string;
+	variations: VARIATION[];
 	product: string;
+	productOrdered?: PRODUCT;
 	order: string;
+	OrderItem?: ORDER;
 };
 export type SAVED_ITEM = {
 	id: string;
 	product: string;
+	liked: boolean;
+	savedProduct: PRODUCT;
 	customer: string;
+	customrSavedProduct: CUSTOMER;
+	store: string;
+	storerSavedProduct: STORE;
 	createdAt: Date;
 };
 
@@ -208,10 +229,11 @@ export type PRODUCT = {
 	promotionProduct: boolean;
 	variations?: VARIATION[];
 	reviews?: REVIEW[];
-	customerSave?: SAVED_ITEM[];
+	customerSaves?: SAVED_ITEM[];
 	createdAt: Date;
 	updatedAt: Date;
 	store: string;
+	storeProducts?: STORE;
 	orders?: ORDER_ITEM[];
 };
 
@@ -226,7 +248,86 @@ export type STORE = {
 	categories?: CATEGORY[];
 	template: TEMPLATE;
 	orders?: ORDER[];
+	visitors: VISITOR[];
+	savedProducts: SAVED_ITEM[];
+	payments: PAYOUT[];
+	Replies?: REPLY[];
 	business: string;
+	businessStore: BUSINESS;
 	createdAt: Date;
 	updatedAt: Date;
+};
+
+export type SHIPPING = {
+	id: string;
+	countryCode: string;
+	postalCode: string;
+	name: string;
+	streetAddress: string;
+	apartmentNo: string | null;
+	city: string;
+	phone: string;
+	orders?: ORDER[];
+	isActive: boolean;
+	customer: string;
+	customerShipping?: CUSTOMER;
+};
+
+export type VISITOR = {
+	id: string;
+	liked: boolean;
+	identity: string;
+	store: string;
+	storeVisitor: STORE;
+	customer: string;
+	customrVisit: CUSTOMER;
+	createdAt: Date;
+};
+
+export type PAYOUT = {
+	id: string;
+	commission: number;
+	payoutId: string;
+	batch?: string;
+	order: string;
+	orderPayout: ORDER;
+	store: string;
+	storePayout: STORE;
+	createdAt: Date;
+	updatedAt: Date;
+};
+
+export type BUSINESS_ADDRESS = {
+	id: string;
+	country: string;
+	streetAddress: string;
+	appartmentNo: string;
+	city: string;
+	phone: string;
+	business: string;
+	businessAddress: BUSINESS;
+};
+
+export type CUSTOMER = {
+	id: string;
+	firstName: string;
+	lastName: string;
+	phone: string | null;
+	reviews?: REVIEW[];
+	replies?: REPLY[];
+	orders?: ORDER[];
+	savedProducts?: SAVED_ITEM[];
+	visitedStores?: VISITOR[];
+	shipping?: SHIPPING[];
+	account: string;
+	customerAccount?: USER;
+};
+
+export type BUSINESS = {
+	id: string;
+	businessName: string;
+	businessType: string | null;
+	stores?: STORE[];
+	addresses?: BUSINESS_ADDRESS[];
+	businessAccount?: USER[];
 };

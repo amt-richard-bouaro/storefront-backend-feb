@@ -1,4 +1,5 @@
 import { Database } from '../../../database/dbClient';
+import { CUSTOMER, USER } from '../../../services/generalTypes';
 
 export const findAccountByEmail = async (email: string) => {
 	const user = await Database.account.findUnique({
@@ -26,25 +27,12 @@ export const findAccountByEmail = async (email: string) => {
 	return user;
 };
 
-export const findAccountById = async (id: string) => {
+export const findAccountById = async (id: string): Promise<USER | null> => {
 	const user = await Database.account.findUnique({
 		where: {
 			id,
 		},
-		select: {
-			id: true,
-			email: true,
-			type: true,
-			provider: true,
-			verified: true,
-			verificationToken: true,
-			isActive: true,
-			providerId: true,
-			mustChangePassword: true,
-			canResetPassword: true,
-			createdAt: true,
-			updatedAt: true,
-			password: false,
+		include: {
 			customer: true,
 			business: true,
 		},
@@ -52,26 +40,16 @@ export const findAccountById = async (id: string) => {
 
 	return user;
 };
-export const findAccountByProviderId = async (id: string) => {
+export const findAccountByProviderId = async (
+	id: string
+): Promise<USER | null> => {
 	const user = await Database.account.findFirst({
 		where: {
 			providerId: id,
 		},
-		select: {
-			id: true,
-			email: false,
-			type: false,
-			provider: false,
-			verified: false,
-			providerId: true,
-			verificationToken: false,
-			isActive: false,
-			mustChangePassword: false,
-			createdAt: false,
-			updatedAt: false,
-			password: false,
-			customer: false,
-			business: false,
+		include: {
+			customer: true,
+			business: true,
 		},
 	});
 	return user;
@@ -110,7 +88,9 @@ export const findBusinessById = async (id: string) => {
 
 	return user;
 };
-export const findCustomerById = async (id: string) => {
+export const findCustomerById = async (
+	id: string
+): Promise<CUSTOMER | null> => {
 	const user = await Database.customer.findFirst({
 		where: {
 			OR: [{ id }, { account: id }],
