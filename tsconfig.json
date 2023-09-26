@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		// "strict": true,
+		"strict": true,
 		"target": "ESNext",
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
@@ -8,7 +8,6 @@
 		"module": "CommonJS",
 		"moduleResolution": "node",
 		"esModuleInterop": true,
-		"resolveJsonModule": true,
 		"rootDir": "src",
 		"outDir": "dist",
 		"allowJs": true,

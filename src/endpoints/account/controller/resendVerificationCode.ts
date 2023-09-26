@@ -37,8 +37,8 @@ export const resendVerificationCode = async (
 
 		const name =
 			user.type === 'Business'
-				? updatedUser.business.businessName
-				: updatedUser.customer.firstName;
+				? updatedUser.business!.businessName
+				: updatedUser.customer!.firstName;
 
 		await sendMail(
 			mailOptions({

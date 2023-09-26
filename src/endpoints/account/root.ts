@@ -21,7 +21,7 @@ app.post('/register/local', localRegistration);
 app.get('/login/failure', handleFailure);
 app.get('/auth/user', isAuthenticated, authenticatedUser);
 app.get('/logout', handleLogout);
-app.post('/verify', accountVerification);
+app.post('/verify', isAuthenticated, accountVerification);
 app.put(
 	'/password/reset',
 	checkIf(['mustChangePassword', 'canResetPassword']),
@@ -46,9 +46,7 @@ app.post(
 		try {
 			const user: USER = req.user as USER;
 
-			if (user.verified) {
-				await activateAccount(user.id);
-			}
+			await activateAccount(user.id);
 
 			return res.status(STATUS.OK).json({
 				code: 'LOGGED_IN',
@@ -58,16 +56,14 @@ app.post(
 					id: user.id,
 					email: user.email,
 					type: user.type,
-					provider: user.provider,
-					providerId: user.providerId,
 					verified: user.verified,
 					isActive: user.isActive,
 					mustChangePassword: user.mustChangePassword,
 					canResetPassword: user.canResetPassword,
 					createdAt: user.createdAt,
 					updatedAt: user.updatedAt,
-					customer: user.customer,
-					business: user.business,
+					customer: user.customer && user.customer.id,
+					business: user.business && user.business.id,
 				},
 			});
 		} catch (error) {

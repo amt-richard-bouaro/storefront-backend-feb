@@ -56,7 +56,7 @@ export const errorHandler = <T extends Error>(
 	if (err.name === 'PrismaClientKnownRequestError') {
 		return res.status(STATUS.BAD_REQUEST).json({
 			code: `DB_ERROR_`,
-			message: err.message,
+			message: err.cause,
 			type: 'error',
 			error: err,
 		});

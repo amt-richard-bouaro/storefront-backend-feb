@@ -33,6 +33,7 @@ export const localRegistration = async (
 		const data: NEW_ACCOUNT = {
 			email: requestBody.email,
 			password: requestBody.password,
+			confirmPassword: requestBody.password,
 			provider: 'local',
 			type: requestBody.type,
 			verified: false,
@@ -58,7 +59,7 @@ export const localRegistration = async (
 			mailOptions({
 				to: email,
 				subject: 'Email Verification',
-				html: emailVerification(name, code),
+				html: emailVerification(name!, code),
 			}),
 			(err) => {
 				if (err) {

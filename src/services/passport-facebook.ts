@@ -1,12 +1,17 @@
 import passport from 'passport';
 import facebookStrategy from 'passport-facebook';
-import { FACEBOOK_API } from '../config/main';
+import { FACEBOOK_API } from '../config/index';
 import { NEW_ACCOUNT } from '../endpoints/account/types';
 import { findAccountByEmail } from '../endpoints/utils/operations/readOperations';
 import { createAccount } from '../endpoints/utils/operations/writeOperations';
 
 const FacebookStrategy = facebookStrategy.Strategy;
 
+type FACEBOOK_USER = {
+	id: string;
+	name: { givenName: string; familyName: string };
+	emails: { value: string }[];
+};
 const FacebookSignInOption = () => {
 	passport.use(
 		'facebook-business',
@@ -17,11 +22,13 @@ const FacebookSignInOption = () => {
 				callbackURL: '/api/account/facebook/business/callback',
 				profileFields: ['id', 'name', 'email'],
 			},
-			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+			async function (accessToken: unknown, refreshToken: unknown, User, done) {
 				try {
+					const user = User as FACEBOOK_USER;
 					const data: NEW_ACCOUNT = {
 						email: user.emails[0].value,
 						password: user.id,
+						confirmPassword: '',
 						provider: 'facebook',
 						type: 'Business',
 						verified: true,
@@ -47,10 +54,11 @@ const FacebookSignInOption = () => {
 							'There is already a user with registered with this account. if you own this account, please login with your email and password',
 					});
 				} catch (error) {
+					const err = error as Error;
 					return done(null, false, {
 						message:
 							'Something went wrong while trying to authenticate user ' +
-							error.message,
+							err.message,
 					});
 				}
 			}
@@ -66,11 +74,13 @@ const FacebookSignInOption = () => {
 				callbackURL: '/api/account/facebook/customer/callback',
 				profileFields: ['id', 'name', 'email'],
 			},
-			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+			async function (accessToken: unknown, refreshToken: unknown, User, done) {
 				try {
+					const user = User as FACEBOOK_USER;
 					const data: NEW_ACCOUNT = {
 						email: user.emails[0].value,
 						password: user.id,
+						confirmPassword: user.id,
 						provider: 'facebook',
 						type: 'Customer',
 						verified: true,
@@ -97,10 +107,11 @@ const FacebookSignInOption = () => {
 							'There is already a user with registered with this account. if you own this account, please login with your email and password',
 					});
 				} catch (error) {
+					const err = error as Error;
 					return done(null, false, {
 						message:
 							'Something went wrong while trying to authenticate user ' +
-							error.message,
+							err.message,
 					});
 				}
 			}
@@ -116,9 +127,10 @@ const FacebookSignInOption = () => {
 				callbackURL: '/api/account/facebook/auth/callback',
 				profileFields: ['id', 'name', 'email'],
 			},
-			async function (accessToken: unknown, refreshToken: unknown, user, done) {
+			async function (accessToken: unknown, refreshToken: unknown, User, done) {
 				try {
-					const data: NEW_ACCOUNT = {
+					const user = User as FACEBOOK_USER;
+					const data: { email: string; provider: 'facebook' } = {
 						email: user.emails[0].value,
 						provider: 'facebook',
 					};
@@ -136,10 +148,11 @@ const FacebookSignInOption = () => {
 						return done(null, user);
 					}
 				} catch (error) {
+					const err = error as Error;
 					return done(null, false, {
 						message:
 							'Something went wrong while trying to authenticate user ' +
-							error.message,
+							err.message,
 					});
 				}
 			}

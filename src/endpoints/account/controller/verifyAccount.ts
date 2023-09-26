@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import passport from 'passport';
+// import passport from 'passport';
 import { REQUEST_WITH_USER, RESPONSE } from '../../../services/generalTypes';
 import { STATUS } from '../../../config/main';
 import { findAccountById } from '../../utils/operations/readOperations';
@@ -18,9 +18,9 @@ export const accountVerification = async (
 	res: Response<RESPONSE>
 ) => {
 	try {
-		const { code } = req.body;
+		CODE.parse(req.body);
 
-		CODE.parse(code);
+		const { code } = req.body;
 
 		const { id } = <REQUEST_WITH_USER>req.user;
 
@@ -38,18 +38,18 @@ export const accountVerification = async (
 		if (User.verified) {
 			return res.status(STATUS.OK).json({
 				code: 'ACCOUNT_VERIFIED',
-				message: 'Account is verified',
+				message: 'Account is already verified',
 				type: 'success',
 			});
 		}
 
-		const userVerificationToken = extractJwtPayload(User.verificationToken);
+		const userVerificationToken = extractJwtPayload(User.verificationToken!);
 
 		if (userVerificationToken.code !== code) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'INVALID_REQUEST',
 				message:
-					'Could not verify the email address because the request contained invalid data.',
+					'Request Failed: Could not verify the email address because the request contained invalid data.',
 				type: 'error',
 			});
 		}
@@ -58,8 +58,8 @@ export const accountVerification = async (
 
 		const user =
 			verifiedUser.type === 'Business'
-				? verifiedUser.business.businessName
-				: verifiedUser.customer.firstName;
+				? verifiedUser.business!.businessName
+				: verifiedUser.customer!.firstName;
 
 		await sendMail(
 			mailOptions({
@@ -74,7 +74,14 @@ export const accountVerification = async (
 			}
 		);
 
-		passport.authenticate('local', { session: true })(req, res, () => {
+		res.cookie('connect.sid', '', {
+			httpOnly: true,
+			expires: new Date(0),
+		});
+
+		req.session.destroy((err) => {
+			err && console.log(err);
+
 			return res.status(STATUS.OK).json({
 				code: 'ACCOUNT_VERIFIED',
 				message: 'Account is verified',
@@ -89,8 +96,8 @@ export const accountVerification = async (
 					canResetPassword: verifiedUser.canResetPassword,
 					createdAt: verifiedUser.createdAt,
 					updatedAt: verifiedUser.updatedAt,
-					customer: verifiedUser.customer,
-					business: verifiedUser.business,
+					customer: verifiedUser.customer && verifiedUser.customer.id,
+					business: verifiedUser.business && verifiedUser.business.id,
 				},
 			});
 		});

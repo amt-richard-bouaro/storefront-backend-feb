@@ -5,7 +5,7 @@ const ACCOUNT_PROVIDERS = ['local', 'google', 'facebook'] as const;
 
 const NEW_ACCOUNT = z
 	.object({
-		email: z.string().email('Please provide a valid email address'),
+		email: z.string().email('Please provide a valid email address.'),
 		password: z.string().refine((val) => {
 			if (val.length < 10) return false;
 
@@ -17,7 +17,7 @@ const NEW_ACCOUNT = z
 
 			return true;
 		}, 'Password must be at least 10 characters long, contain at least one number, have at least one lowercase letter, and have at least one uppercase letter.'),
-		confirmPassword: z.string().nonempty('Please confirm your password'),
+		confirmPassword: z.string().nonempty('Please confirm your password.'),
 		type: z.enum(ACOUNT_TYPES),
 		provider: z.enum(ACCOUNT_PROVIDERS).optional(),
 		firstName: z.string().optional(),
@@ -77,10 +77,12 @@ const EMAIL = z
 
 type EMAIL = z.infer<typeof EMAIL>;
 
-const CODE = z
-	.string()
-	.nonempty('Please enter the code that was sent to your email address')
-	.min(6, 'Code must be at least 6 characters');
+const CODE = z.object({
+	code: z
+		.string()
+		.nonempty('Please enter the code that was sent to your email address')
+		.min(6, 'Code must be at least 6 characters'),
+});
 
 type CODE = z.infer<typeof CODE>;
 

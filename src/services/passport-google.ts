@@ -1,6 +1,6 @@
 import passport from 'passport';
 import OAuth2Strategy from 'passport-google-oauth2';
-import { GOOGLE_API } from '../config/main';
+import { GOOGLE_API } from '../config/index';
 import { NEW_ACCOUNT } from '../endpoints/account/types';
 import { findAccountByEmail } from '../endpoints/utils/operations/readOperations';
 import { createAccount } from '../endpoints/utils/operations/writeOperations';
@@ -21,6 +21,7 @@ const GoogleSignOption = () => {
 					const data: NEW_ACCOUNT = {
 						email: user.email,
 						password: user.id,
+						confirmPassword: '',
 						provider: 'google',
 						type: 'Business',
 						verified: user.verified,
@@ -46,10 +47,11 @@ const GoogleSignOption = () => {
 							'There is already a user registered with this account. if you own this account, please login with your email and password',
 					});
 				} catch (error) {
+					const err = error as Error;
 					return done(null, false, {
 						message:
 							'Something went wrong while trying to authenticate user ' +
-							error.message,
+							err.message,
 					});
 				}
 			}
@@ -60,8 +62,8 @@ const GoogleSignOption = () => {
 		'google-customer',
 		new GoogleStrategy(
 			{
-				clientID: GOOGLE_API.CLIENT_ID,
-				clientSecret: GOOGLE_API.CLIENT_SECRET,
+				clientID: GOOGLE_API.CLIENT_ID || '',
+				clientSecret: GOOGLE_API.CLIENT_SECRET || '',
 				callbackURL: '/api/account/google/customer/callback',
 			},
 			async function (accessToken, refreshToken, user, done) {
@@ -69,6 +71,7 @@ const GoogleSignOption = () => {
 					const data: NEW_ACCOUNT = {
 						email: user.email,
 						password: user.id,
+						confirmPassword: '',
 						provider: 'google',
 						type: 'Customer',
 						verified: user.verified,
@@ -95,10 +98,11 @@ const GoogleSignOption = () => {
 							'There is already a user registered with this account. if you own this account, please login with your email and password',
 					});
 				} catch (error) {
+					const err = error as Error;
 					return done(null, false, {
 						message:
 							'Something went wrong while trying to authenticate user: ' +
-							error.message,
+							err.message,
 					});
 				}
 			}
@@ -109,13 +113,13 @@ const GoogleSignOption = () => {
 		'google-auth',
 		new GoogleStrategy(
 			{
-				clientID: GOOGLE_API.CLIENT_ID,
-				clientSecret: GOOGLE_API.CLIENT_SECRET,
+				clientID: GOOGLE_API.CLIENT_ID || '',
+				clientSecret: GOOGLE_API.CLIENT_SECRET || '',
 				callbackURL: '/api/account/google/auth/callback',
 			},
 			async function (accessToken, refreshToken, user, done) {
 				try {
-					const data: NEW_ACCOUNT = {
+					const data = {
 						email: user.email,
 						provider: 'google',
 					};
@@ -133,10 +137,11 @@ const GoogleSignOption = () => {
 						return done(null, user);
 					}
 				} catch (error) {
+					const err = error as Error;
 					return done(null, false, {
 						message:
 							'Something went wrong while trying to authenticate user ' +
-							error.message,
+							err.message,
 					});
 				}
 			}

@@ -1,41 +1,42 @@
 export const SERVER_CONFIG = {
-	PORT: process.env.PORT && parseInt(process.env.PORT),
-	NODE_ENV: process.env.NODE_ENV,
-	SALT_VALUE: process.env.SALT_VALUE && parseInt(process.env.SALT_VALUE),
-	JWT_SECRET: process.env.JWT_SECRET,
-	SESSION_SECRET: process.env.SESSION_SECRET,
-	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
-	ORIGIN: process.env.ORIGIN,
-	ALLOWED_ORIGINS: [process.env.CLIENT_ORIGIN, process.env.ORIGIN],
-	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS,
-	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
-	EMAIL_SERVICE: process.env.EMAIL_SERVICE,
-	EMAIL_HOST: process.env.EMAIL_HOST,
-	EMAIL_PORT: process.env.EMAIL_PORT,
-	REDIS_URL: process.env.REDIS_URL,
+	PORT: parseInt(process.env.PORT!),
+	NODE_ENV: process.env.NODE_ENV! ?? 'development',
+	SALT_VALUE: parseInt(process.env.SALT_VALUE!),
+	JWT_SECRET: process.env.JWT_SECRET!,
+	SESSION_SECRET: process.env.SESSION_SECRET!,
+	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN!,
+	ORIGIN: process.env.ORIGIN!,
+	ALLOWED_ORIGINS: [
+		process.env.CLIENT_ORIGIN!,
+		process.env.ORIGIN!,
+		'http://localhost:5173',
+	],
+	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS!,
+	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD!,
+	EMAIL_SERVICE: process.env.EMAIL_SERVICE!,
+	EMAIL_HOST: process.env.EMAIL_HOST!,
+	EMAIL_PORT: parseInt(process.env.EMAIL_PORT!),
+	REDIS_URL: process.env.REDIS_URL!,
 };
 
 export const GOOGLE_API = {
-	CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-	CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-	CALLBACKURL_CUSTOMER: process.env.GOOGLE_CALLBACKURL_CUSTOMER,
-	CALLBACKURL_BUSINESS: process.env.GOOGLE_CALLBACKURL_BUSINESS,
-	CALLBACKURL_AUTH: process.env.GOOGLE_CALLBACKURL_AUTH,
+	CLIENT_ID: process.env.GOOGLE_CLIENT_ID!,
+	CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET!,
+	CALLBACKURL_CUSTOMER: process.env.GOOGLE_CALLBACKURL_CUSTOMER!,
+	CALLBACKURL_BUSINESS: process.env.GOOGLE_CALLBACKURL_BUSINESS!,
+	CALLBACKURL_AUTH: process.env.GOOGLE_CALLBACKURL_AUTH!,
 };
 
 export const S3_BUCKET = {
-	REGION: process.env.AWS_BUCKET_REGION || null,
-	NAME: process.env.AWS_BUCKET_NAME || null,
-	ACCESS_KEY: process.env.AWS_ACCESS_KEY_ID || null,
-	SECRET_KEY: process.env.AWS_SECRET_ACCESS_KEY || null,
+	REGION: process.env.AWS_BUCKET_REGION!,
+	NAME: process.env.AWS_BUCKET_NAME!,
+	ACCESS_KEY: process.env.AWS_ACCESS_KEY_ID!,
+	SECRET_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
 };
 
 export const FACEBOOK_API = {
-	CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
-	CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
-	CALLBACKURL_CUSTOMER: process.env.FACEBOOK_CALLBACKURL_CUSTOMER,
-	CALLBACKURL_BUSINESS: process.env.FACEBOOK_CALLBACKURL_BUSINESS,
-	CALLBACKURL_AUTH: process.env.FACEBOOK_CALLBACKURL_AUTH,
+	CLIENT_ID: process.env.FACEBOOK_CLIENT_ID!,
+	CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET!,
 };
 
 export const STATUS = {
@@ -48,4 +49,5 @@ export const STATUS = {
 	NOT_FOUND: 404,
 	CONFLICT: 409,
 	INTERNAL_SERVER_ERROR: 500,
+	NO_CONTENT: 204,
 };

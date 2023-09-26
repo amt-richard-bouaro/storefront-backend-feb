@@ -1,4 +1,4 @@
-import { SERVER_CONFIG } from '../../../config/main';
+import { SERVER_CONFIG } from '../../../config/index';
 import { Database } from '../../../database/dbClient';
 import bcrypt from 'bcrypt';
 
@@ -117,6 +117,10 @@ export const activateAccount = async (id: string) => {
 		},
 		data: {
 			isActive: true,
+		},
+		include: {
+			business: true,
+			customer: true,
 		},
 	});
 

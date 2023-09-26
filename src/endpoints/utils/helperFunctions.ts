@@ -1,4 +1,4 @@
-import { MAIL_OPTIONS } from '../../services/generalTypes';
+import { MAIL_OPTIONS, PRODUCT } from '../../services/generalTypes';
 import bcrypt from 'bcrypt';
 import { SERVER_CONFIG, STATUS } from '../../config/main';
 import { v4 as uuidV4 } from 'uuid';
@@ -76,9 +76,12 @@ export const sendMail = async (
 	callback?: (err: Error | null, info: SentMessageInfo) => void
 ) => {
 	try {
-		transport.sendMail(mailOptions, callback);
-	} catch (err) {
-		if (err.code === 'ENOTFOUND') {
+		callback
+			? transport.sendMail(mailOptions, callback)
+			: transport.sendMail(mailOptions);
+	} catch (error) {
+		const err = error as Error;
+		if (err.name === 'ENOTFOUND') {
 			return {
 				status: STATUS.NOT_FOUND,
 				message: 'The email server could not be found.',
@@ -92,8 +95,8 @@ export const sendMail = async (
 	}
 };
 
-export const flatNestedObject = (data: object) => {
-	const flatData = {};
+export const flatNestedObject = (data: { [key: string]: any }) => {
+	const flatData: { [key: string]: string | number | boolean } = {};
 
 	for (const key in data) {
 		if (typeof data[key] === 'object') {
@@ -107,4 +110,67 @@ export const flatNestedObject = (data: object) => {
 	}
 
 	return flatData;
+};
+
+export const productsAvailability = (
+	products: PRODUCT[],
+	items: { product: string; quantity: number }[]
+) => {
+	const unavailbleProducts: {
+		product: string;
+		quantity: number;
+		instock: number;
+		reason: string;
+	}[] = [];
+
+	items.map((item) => {
+		const productFound = products.find(
+			(product) => product.id === item.product
+		);
+		if (productFound === undefined) {
+			unavailbleProducts.push({
+				...item,
+				instock: 0,
+				reason: 'Product not found',
+			});
+		} else if (productFound.quantity < item.quantity) {
+			unavailbleProducts.push({
+				...item,
+				instock: productFound.quantity,
+				reason: 'Stock quantity insufficient',
+			});
+		}
+	});
+
+	return unavailbleProducts;
+};
+
+export const totalAmountToPay = (
+	products: PRODUCT[],
+	items: { product: string; quantity: number }[]
+): number => {
+	const itemIDs: string[] = items.map((item) => item.product);
+
+	const orderedItems = products.filter((product) =>
+		itemIDs.includes(product.id)
+	);
+
+	let total: number = 0;
+
+	orderedItems.map((product) => {
+		const item = items.find((item) => item.product === product.id);
+
+		if (item !== undefined) {
+			const discount =
+				product.discount > 0
+					? (product.discount / 100) * product.price * item.quantity
+					: 0;
+
+			const amount = item.quantity * product.price - discount;
+
+			total = total + amount;
+		}
+	});
+
+	return Number(total.toFixed(2));
 };

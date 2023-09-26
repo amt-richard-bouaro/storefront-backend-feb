@@ -1,7 +1,7 @@
 import { Database } from '../../../database/dbClient';
 import bcrypt from 'bcrypt';
 import { NEW_ACCOUNT } from '../../account/types';
-import { SERVER_CONFIG } from '../../../config/main';
+import { SERVER_CONFIG } from '../../../config/index';
 
 import {
 	flatNestedObject,
@@ -22,15 +22,15 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 		data.type === 'Customer'
 			? await Database.customer.create({
 					data: {
-						firstName: data.firstName,
-						lastName: data.lastName,
+						firstName: data.firstName!,
+						lastName: data.lastName!,
 
 						customerAccount: {
 							create: {
 								email: data.email,
 								password: hashedPassword,
 								type: data.type,
-								provider: data.provider,
+								provider: data.provider!,
 								verified: data.verified,
 								isActive: data.isActive,
 								providerId:
@@ -49,6 +49,7 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: true,
 								verified: true,
 								mustChangePassword: true,
+								canResetPassword: true,
 								isActive: true,
 								password: false,
 								createdAt: true,
@@ -59,13 +60,13 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 			  })
 			: await Database.business.create({
 					data: {
-						businessName: data.businessName,
+						businessName: data.businessName!,
 						businessAccount: {
 							create: {
 								email: data.email,
 								password: hashedPassword,
 								type: data.type,
-								provider: data.provider,
+								provider: data.provider!,
 								verified: data.verified,
 								isActive: data.isActive,
 								providerId:
@@ -84,6 +85,7 @@ export const createAccount = async (data: NEW_ACCOUNT) => {
 								type: true,
 								verified: true,
 								mustChangePassword: true,
+								canResetPassword: true,
 								isActive: true,
 								password: false,
 								createdAt: true,
