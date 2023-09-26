@@ -1,5 +1,5 @@
 import fetch, { Response } from 'node-fetch';
-import { PAYPAL_API } from '../../config/main';
+import { PAYPAL_API } from '../../config/index';
 
 export const generateAccessToken = async () => {
 	try {
@@ -28,15 +28,8 @@ export const generateAccessToken = async () => {
 
 export const createOrder = async (data: {
 	cart?: { name: string; quantity: string; price: string }[];
-	address: {
-		countryCode: string;
-		postalCode: string;
-		streetAddress: string;
-		appartmentNo: string;
-		city: string;
-		phone: string;
-	};
 	total: number;
+	currency: string;
 	reference: string;
 }) => {
 	const accessToken = await generateAccessToken();

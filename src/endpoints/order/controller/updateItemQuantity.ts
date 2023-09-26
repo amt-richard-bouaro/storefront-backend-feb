@@ -1,10 +1,8 @@
-import { getOrder } from './../../../services/Paypal/payPalApi';
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
 import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
-// import { productsAvailability } from '../../utils/helperFunctions';
 import { CHANGE_ORDER_ITEM_QUANTITY } from '../types';
 import { updateOrder } from '../../../services/Paypal/payPalApi';
 
@@ -15,12 +13,13 @@ export const updateItemQuantity = async (
 	try {
 		CHANGE_ORDER_ITEM_QUANTITY.parse(req.body);
 
-		const orderID = req.params.orderID;
+		const orderID = req.params.order_id;
+
 		const requestBody = <CHANGE_ORDER_ITEM_QUANTITY>req.body;
 
 		const order = await Database.order.findFirst({
 			where: {
-				orderId: orderID,
+				id: orderID,
 			},
 			include: {
 				items: true,
@@ -30,7 +29,7 @@ export const updateItemQuantity = async (
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'UPDATE_DENIED',
-				message: 'Order not found.',
+				message: 'Order was not found',
 				type: 'error',
 			});
 		}
@@ -61,47 +60,46 @@ export const updateItemQuantity = async (
 			});
 		}
 
-		const orderitem = await Database.orderItem.update({
-			where: {
-				id: requestBody.id,
-			},
-			data: {
-				quantity: requestBody.quantity,
-				total: Number(
-					(
-						requestBody.quantity * item.price -
-						(item.discount / 100) * requestBody.quantity * item.price
-					).toFixed(2)
-				),
-			},
+		const updatedOrderItem = await Database.$transaction(async (query) => {
+			const orderItem = await query.orderItem.update({
+				where: {
+					id: requestBody.id,
+				},
+				data: {
+					quantity: requestBody.quantity,
+					total: Number(
+						(
+							requestBody.quantity * item.price -
+							(item.discount / 100) * requestBody.quantity * item.price
+						).toFixed(2)
+					),
+				},
+			});
+
+			const newTotal = await query.orderItem.aggregate({
+				_sum: {
+					total: true,
+				},
+				where: {
+					order: order.id,
+				},
+			});
+
+			return { newTotal, orderItem };
 		});
 
-		const newTotal = await Database.orderItem.aggregate({
-			_sum: {
-				total: true,
-			},
-			where: {
-				order: order.id,
-			},
-		});
-
-		const response =
-			typeof newTotal._sum.total === 'number' &&
+		typeof updatedOrderItem.newTotal._sum.total === 'number' &&
 			(await updateOrder({
-				orderID,
-				amount: newTotal._sum.total,
+				orderID: order.orderId,
+				amount: updatedOrderItem.newTotal._sum.total,
 				referenceId: order.referenceId,
 			}));
-
-		const getOrderRes = await getOrder(orderID);
-
-		console.log({ totel: newTotal._sum.total, orderitem, response });
 
 		return res.status(STATUS.OK).json({
 			code: 'PAYMENT',
 			message: 'Payment intent',
 			type: 'success',
-			data: getOrderRes.json,
+			data: updatedOrderItem.orderItem,
 		});
 	} catch (error) {
 		const err = error as Error;

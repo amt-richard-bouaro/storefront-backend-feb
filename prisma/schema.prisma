@@ -93,7 +93,7 @@ model Store {
   storeType         String
   promotion         Boolean     @default(false)
   promotionDiscount Int         @default(0)
-  currency          String?     @default("GHS")
+  currency          String      @default("USD")
   products          Product[]   @relation("storeProducts")
   categories        Category[]  @relation("storeCategories")
   template          Template?   @relation("storeTemplate")
@@ -101,7 +101,7 @@ model Store {
   visitors          Visitor[]   @relation("storeVisitor")
   savedProducts     SavedItem[] @relation("storerSavedProduct")
   payments          Payout[]    @relation("storePayout")
-  Replies         Reply[]           @relation("storeReply")
+  Replies           Reply[]     @relation("storeReply")
   business          String
   businessStore     Business    @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
   createdAt         DateTime    @default(now())
@@ -110,17 +110,17 @@ model Store {
 
 model Template {
   id             String   @id @default(uuid())
-  name           String
-  brandImage     String?
-  brandColor     String?
-  welcomeColor   String?
-  welcomebtnText String?
-  welcomeText    String?
-  fontstyle      String?
-  primaryColor   String?
-  secondaryColor String?
-  auxillaryColor String?
-  storeStory     String?
+  name           String   @default("Not Set")
+  brandImage     String   @default("Not Set")
+  brandColor     String   @default("Not Set")
+  welcomeColor   String   @default("Not Set")
+  welcomebtnText String   @default("Not Set")
+  welcomeText    String   @default("Not Set")
+  fontstyle      String   @default("Not Set")
+  primaryColor   String   @default("Not Set")
+  secondaryColor String   @default("Not Set")
+  auxillaryColor String   @default("Not Set")
+  storeStory     String   @default("Not Set")
   storeTeams     Team[]   @relation("storeTeams")
   storeReasons   Reason[] @relation("storeReasons")
   hasContactPage Boolean  @default(false)
@@ -155,16 +155,16 @@ model Team {
 model Temp {
   id             String   @id @default(uuid())
   name           String
-  brandImage     String?
-  brandColor     String?
-  welcomeColor   String?
-  welcomebtnText String?
-  welcomeText    String?
-  fontstyle      String?
-  primaryColor   String?
-  secondaryColor String?
-  auxillaryColor String?
-  storeStory     String?
+  brandImage     String
+  brandColor     String
+  welcomeColor   String
+  welcomebtnText String
+  welcomeText    String
+  fontstyle      String
+  primaryColor   String
+  secondaryColor String
+  auxillaryColor String
+  storeStory     String
   tempTeams      Team[]   @relation("storeTeamsTemp")
   tempReasons    Reason[] @relation("storeReasonsTemp")
   hasContactPage Boolean  @default(false)
@@ -187,7 +187,7 @@ model Product {
   promotionProduct Boolean     @default(false)
   variations       Variation[] @relation("productVariations")
   reviews          Review[]    @relation("productReviews")
-  customerSaves     SavedItem[] @relation("savedProduct")
+  customerSaves    SavedItem[] @relation("savedProduct")
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   store            String
@@ -245,8 +245,8 @@ model Reply {
   from          Type
   customer      String
   customerReply Customer @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
-  store      String
-  storeReply Store @relation("storeReply", fields: [store], references: [id], onDelete: Cascade)
+  store         String
+  storeReply    Store    @relation("storeReply", fields: [store], references: [id], onDelete: Cascade)
   review        String
   reviewReply   Review   @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())

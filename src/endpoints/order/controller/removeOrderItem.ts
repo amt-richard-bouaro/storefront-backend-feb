@@ -1,25 +1,26 @@
 import { Request, Response } from 'express';
-import { RESPONSE } from '../../../services/generalTypes';
+import { ORDER_ITEM, RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
 import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
-// import { productsAvailability } from '../../utils/helperFunctions';
-import { CHANGE_ORDER_ITEM_QUANTITY } from '../types';
+import { DELETE_ORDER_ITEM } from '../types';
 import { updateOrder } from '../../../services/Paypal/payPalApi';
+import { findOrderById } from '../../utils/operations/readOperations';
 
 export const removeOrderItem = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
 	try {
-		CHANGE_ORDER_ITEM_QUANTITY.parse(req.body);
+		DELETE_ORDER_ITEM.parse(req.body);
 
-		const orderID = req.params.orderID;
-		const requestBody = <CHANGE_ORDER_ITEM_QUANTITY>req.body;
+		const orderID = req.params.order_id;
+
+		const requestBody = <DELETE_ORDER_ITEM>req.body;
 
 		const order = await Database.order.findFirst({
 			where: {
-				orderId: orderID,
+				id: orderID,
 			},
 			include: {
 				items: true,
@@ -29,7 +30,7 @@ export const removeOrderItem = async (
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'UPDATE_DENIED',
-				message: 'Order not found',
+				message: 'Order was not found',
 				type: 'error',
 			});
 		}
@@ -50,55 +51,65 @@ export const removeOrderItem = async (
 			});
 		}
 
-		const item = order.items.find((item) => item.id === requestBody.id);
+		const items: ORDER_ITEM[] = [];
 
-		if (item === undefined) {
+		for (const id of requestBody.items) {
+			const item = order.items.find((item) => item.id === id);
+			item && items.push(item);
+		}
+
+		if (items.length === 0) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'UPDATE_DENIED',
-				message: 'The provided order item not found',
+				message: 'Could not find any item that matches what was provided',
 				type: 'error',
 			});
 		}
 
-		const orderitem = await Database.orderItem.update({
-			where: {
-				id: requestBody.id,
-			},
-			data: {
-				quantity: requestBody.quantity,
-				total: Number(
-					(
-						requestBody.quantity * item.price -
-						(item.discount / 100) * requestBody.quantity * item.price
-					).toFixed(2)
-				),
-			},
+		if (order.items.length < 2 || order.items.length - items.length < 1) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'UPDATE_DENIED',
+				message:
+					'Every Order must have at least one item. Items can no longer be deleted from this order. You might want to cancel the order instead.',
+				type: 'error',
+			});
+		}
+
+		const updatedOrderItem = await Database.$transaction(async (query) => {
+			await query.orderItem.deleteMany({
+				where: {
+					id: {
+						in: items.map((item) => item.id),
+					},
+				},
+			});
+
+			const newOrder = await findOrderById(order.id);
+
+			const newTotal = await query.orderItem.aggregate({
+				_sum: {
+					total: true,
+				},
+				where: {
+					order: newOrder?.id,
+				},
+			});
+
+			return { newTotal, newOrder: newOrder?.items };
 		});
 
-		const newTotal = await Database.orderItem.aggregate({
-			_sum: {
-				total: true,
-			},
-			where: {
-				order: order.id,
-			},
-		});
-
-		const response =
-			typeof newTotal._sum.total === 'number' &&
+		typeof updatedOrderItem.newTotal._sum.total === 'number' &&
 			(await updateOrder({
-				orderID,
-				amount: newTotal._sum.total,
+				orderID: order.orderId,
+				amount: updatedOrderItem.newTotal._sum.total,
 				referenceId: order.referenceId,
 			}));
-
-		console.log({ totel: newTotal._sum.total, orderitem, response });
 
 		return res.status(STATUS.OK).json({
 			code: 'PAYMENT',
 			message: 'Payment intent',
 			type: 'success',
-			data: response && response.json,
+			data: updatedOrderItem.newOrder,
 		});
 	} catch (error) {
 		const err = error as Error;

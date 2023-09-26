@@ -39,4 +39,25 @@ const CHANGE_ORDER_ITEM_QUANTITY = z.object({
 
 type CHANGE_ORDER_ITEM_QUANTITY = z.infer<typeof CHANGE_ORDER_ITEM_QUANTITY>;
 
-export { ITEMS_TO_BUY, ITEMS_TO_BUY_TYPE, CHANGE_ORDER_ITEM_QUANTITY };
+const DELETE_ORDER_ITEM = z.object({
+	items: z.string().array().nonempty('Order must at least have one product.'),
+});
+
+type DELETE_ORDER_ITEM = z.infer<typeof DELETE_ORDER_ITEM>;
+
+const CANCEL_ORDERS = z.object({
+	orders: z
+		.string()
+		.array()
+		.nonempty('There must be at least on order ID in the array.'),
+});
+
+type CANCEL_ORDERS = z.infer<typeof CANCEL_ORDERS>;
+
+export {
+	ITEMS_TO_BUY,
+	ITEMS_TO_BUY_TYPE,
+	CHANGE_ORDER_ITEM_QUANTITY,
+	DELETE_ORDER_ITEM,
+	CANCEL_ORDERS,
+};

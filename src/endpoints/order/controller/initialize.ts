@@ -1,12 +1,9 @@
-// import { REQUEST_WITH_USER } from '../../../services/generalTypes';
 import { v4 as uuidV4 } from 'uuid';
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
-// import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
 import {
-	// findAccountById,
 	findCustomerById,
 	findStoreById,
 } from '../../utils/operations/readOperations';
@@ -19,8 +16,6 @@ export const initializeOrder = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
-	console.log(req.body);
-
 	try {
 		ITEMS_TO_BUY.parse(req.body);
 
@@ -79,8 +74,6 @@ export const initializeOrder = async (
 			});
 		}
 
-		console.log(availableProducts);
-
 		const orderTotal: number = availableProducts.reduce(
 			(total, item) => total + item.total,
 			0
@@ -116,14 +109,7 @@ export const initializeOrder = async (
 		const referenceId = uuidV4().replaceAll('-', '');
 
 		const createdOrder = await createOrder({
-			address: {
-				countryCode: 'US',
-				postalCode: shipping.postalCode,
-				streetAddress: shipping.streetAddress,
-				appartmentNo: shipping.apartmentNo || 'N/A',
-				city: shipping.city,
-				phone: shipping.phone,
-			},
+			currency: store.currency || 'USD',
 			total: orderTotal,
 			reference: referenceId,
 		});
@@ -136,7 +122,7 @@ export const initializeOrder = async (
 			});
 		}
 
-		await Database.order.create({
+		const newOrder = await Database.order.create({
 			data: {
 				customer: customerID,
 				shipping: shipping.id,
@@ -152,6 +138,7 @@ export const initializeOrder = async (
 			},
 			include: {
 				items: true,
+				orderShipping: true,
 			},
 		});
 
@@ -160,7 +147,7 @@ export const initializeOrder = async (
 			message:
 				'Order has successfully been initialized. You can proceed to approve payment',
 			type: 'success',
-			data: createdOrder.json,
+			data: newOrder,
 		});
 	} catch (error) {
 		const err = error as Error;

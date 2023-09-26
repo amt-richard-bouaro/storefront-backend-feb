@@ -3,7 +3,6 @@ import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
 import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
-
 import { captureOrder } from '../../../services/Paypal/payPalApi';
 import { productsAvailability } from '../../utils/helperFunctions';
 
@@ -82,29 +81,34 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const makePayment = await captureOrder(orderID);
+		const makePayment = await captureOrder(order.orderId);
 
-		if (makePayment.status !== STATUS.OK) {
+		console.log(order.orderId, makePayment.status);
+
+		if (makePayment.status !== STATUS.CREATED) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'PAYMENT_FAILED',
-				message: 'Could not process payment.',
+				message:
+					'Error occurred while trying to process payment. Paypal could not process the payment.',
 				type: 'error',
 			});
 		}
 
-		for (const item of orderItems) {
-			await Database.product.update({
-				where: {
-					id: item.product,
-				},
-				data: {
-					quantity: {
-						decrement: item.quantity,
+		const updateOrder = await Database.$transaction(async (query) => {
+			for (const item of orderItems) {
+				await query.product.update({
+					where: {
+						id: item.product,
 					},
-				},
-			});
+					data: {
+						quantity: {
+							decrement: item.quantity,
+						},
+					},
+				});
+			}
 
-			await Database.order.update({
+			const update = await query.order.update({
 				where: {
 					id: order.id,
 				},
@@ -113,13 +117,15 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 					paid: true,
 				},
 			});
-		}
+
+			return update;
+		});
 
 		return res.status(STATUS.OK).json({
-			code: 'PAYMENT',
+			code: 'PAYMENT_APPROVED',
 			message: 'Payment made successfully',
 			type: 'success',
-			data: makePayment.json,
+			data: updateOrder,
 		});
 	} catch (error) {
 		const err = error as Error;

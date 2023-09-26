@@ -36,6 +36,7 @@ export type USER = {
 	providerId: string;
 	verified: boolean;
 	isActive: boolean;
+	password: string;
 	verificationToken: string | null;
 	mustChangePassword: boolean;
 	canResetPassword: boolean;
@@ -64,17 +65,19 @@ export type TEAM = {
 	key: string;
 	name: string;
 	role: string;
-	template?: string;
-	storeTeams: TEMPLATE;
+	template: string | null;
+	storeTeams?: TEMPLATE;
 	temp: string;
+	storeTeamsTemp?: TEMP;
 };
 export type REASON = {
 	id: string;
 	title: string;
 	paragraph: string;
-	template: string;
+	template: string | null;
 	temp: string;
 	storeReasons?: TEMPLATE;
+	storeReasonsTemp?: TEMP;
 };
 export type TEMPLATE = {
 	id: string;
@@ -94,7 +97,28 @@ export type TEMPLATE = {
 	hasContactPage: boolean;
 	hasAboutPage: boolean;
 	store: string;
-	temp?: string;
+	temp?: TEMP | null;
+};
+
+export type TEMP = {
+	id: string;
+	name: string;
+	brandImage?: string;
+	brandColor?: string;
+	welcomeColor?: string;
+	welcomebtnText?: string;
+	welcomeText?: string;
+	fontstyle?: string;
+	primaryColor?: string;
+	secondaryColor?: string;
+	auxillaryColor?: string;
+	storeStory?: string;
+	tempTeams?: TEAM[];
+	tempReasons?: REASON[];
+	hasContactPage: boolean;
+	hasAboutPage: boolean;
+	template: string;
+	tempTemplate?: TEMPLATE | null;
 };
 
 export type VARIATION = {
@@ -137,11 +161,11 @@ export type REPLY = {
 	comment?: string;
 	from: 'Business' | 'Customer';
 	customer: string;
-	customerReply: CUSTOMER;
+	customerReply?: CUSTOMER;
 	store: string;
 	storeReply?: STORE;
 	review: string;
-	reviewReply: REVIEW;
+	reviewReply?: REVIEW;
 	createdAt: Date;
 	updatedAt: Date;
 };
@@ -197,7 +221,7 @@ export type ORDER_ITEM = {
 	total: number;
 	image: string;
 	name: string;
-	variations: VARIATION[];
+	variations?: VARIATION[];
 	product: string;
 	productOrdered?: PRODUCT;
 	order: string;
@@ -207,11 +231,11 @@ export type SAVED_ITEM = {
 	id: string;
 	product: string;
 	liked: boolean;
-	savedProduct: PRODUCT;
+	savedProduct?: PRODUCT;
 	customer: string;
-	customrSavedProduct: CUSTOMER;
+	customrSavedProduct?: CUSTOMER;
 	store: string;
-	storerSavedProduct: STORE;
+	storerSavedProduct?: STORE;
 	createdAt: Date;
 };
 
@@ -246,14 +270,14 @@ export type STORE = {
 	currency: string;
 	products?: PRODUCT[];
 	categories?: CATEGORY[];
-	template: TEMPLATE;
+	template?: TEMPLATE | null;
 	orders?: ORDER[];
-	visitors: VISITOR[];
-	savedProducts: SAVED_ITEM[];
-	payments: PAYOUT[];
+	visitors?: VISITOR[];
+	savedProducts?: SAVED_ITEM[];
+	payments?: PAYOUT[];
 	Replies?: REPLY[];
 	business: string;
-	businessStore: BUSINESS;
+	businessStore?: BUSINESS;
 	createdAt: Date;
 	updatedAt: Date;
 };
@@ -312,14 +336,14 @@ export type CUSTOMER = {
 	id: string;
 	firstName: string;
 	lastName: string;
-	phone: string | null;
+	phone?: string | null;
 	reviews?: REVIEW[];
 	replies?: REPLY[];
 	orders?: ORDER[];
 	savedProducts?: SAVED_ITEM[];
 	visitedStores?: VISITOR[];
 	shipping?: SHIPPING[];
-	account: string;
+	account?: string;
 	customerAccount?: USER;
 };
 

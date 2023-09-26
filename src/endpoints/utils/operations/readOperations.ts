@@ -1,7 +1,15 @@
 import { Database } from '../../../database/dbClient';
-import { CUSTOMER, USER } from '../../../services/generalTypes';
+import {
+	BUSINESS,
+	CUSTOMER,
+	ORDER,
+	STORE,
+	USER,
+} from '../../../services/generalTypes';
 
-export const findAccountByEmail = async (email: string) => {
+export const findAccountByEmail = async (
+	email: string
+): Promise<USER | null> => {
 	const user = await Database.account.findUnique({
 		where: {
 			email,
@@ -55,7 +63,9 @@ export const findAccountByProviderId = async (
 	return user;
 };
 
-export const findBusinessById = async (id: string) => {
+export const findBusinessById = async (
+	id: string
+): Promise<BUSINESS | null> => {
 	const user = await Database.business.findUnique({
 		where: {
 			id,
@@ -106,7 +116,7 @@ export const findCustomerById = async (
 	return user;
 };
 
-export const findStoreById = async (id: string) => {
+export const findStoreById = async (id: string): Promise<STORE | null> => {
 	const store = await Database.store.findUnique({
 		where: {
 			id,
@@ -124,4 +134,21 @@ export const findStoreById = async (id: string) => {
 	});
 
 	return store;
+};
+
+export const findOrderById = async (
+	id: string,
+	includes?: { items?: boolean }
+): Promise<ORDER | null> => {
+	const order = await Database.order.findFirst({
+		where: {
+			OR: [{ id }, { store: id }],
+			AND: { NOT: { status: 'Cancelled' } },
+		},
+		include: {
+			items: includes?.items === true,
+		},
+	});
+
+	return order;
 };
