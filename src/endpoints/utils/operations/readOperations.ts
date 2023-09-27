@@ -1,6 +1,15 @@
 import { Database } from '../../../database/dbClient';
+import {
+	BUSINESS,
+	CUSTOMER,
+	ORDER,
+	STORE,
+	USER,
+} from '../../../services/generalTypes';
 
-export const findAccountByEmail = async (email: string) => {
+export const findAccountByEmail = async (
+	email: string
+): Promise<USER | null> => {
 	const user = await Database.account.findUnique({
 		where: {
 			email,
@@ -26,25 +35,12 @@ export const findAccountByEmail = async (email: string) => {
 	return user;
 };
 
-export const findAccountById = async (id: string) => {
+export const findAccountById = async (id: string): Promise<USER | null> => {
 	const user = await Database.account.findUnique({
 		where: {
 			id,
 		},
-		select: {
-			id: true,
-			email: true,
-			type: true,
-			provider: true,
-			verified: true,
-			verificationToken: true,
-			isActive: true,
-			providerId: true,
-			mustChangePassword: true,
-			canResetPassword: true,
-			createdAt: true,
-			updatedAt: true,
-			password: false,
+		include: {
 			customer: true,
 			business: true,
 		},
@@ -52,32 +48,24 @@ export const findAccountById = async (id: string) => {
 
 	return user;
 };
-export const findAccountByProviderId = async (id: string) => {
+export const findAccountByProviderId = async (
+	id: string
+): Promise<USER | null> => {
 	const user = await Database.account.findFirst({
 		where: {
 			providerId: id,
 		},
-		select: {
-			id: true,
-			email: false,
-			type: false,
-			provider: false,
-			verified: false,
-			providerId: true,
-			verificationToken: false,
-			isActive: false,
-			mustChangePassword: false,
-			createdAt: false,
-			updatedAt: false,
-			password: false,
-			customer: false,
-			business: false,
+		include: {
+			customer: true,
+			business: true,
 		},
 	});
 	return user;
 };
 
-export const findBusinessById = async (id: string) => {
+export const findBusinessById = async (
+	id: string
+): Promise<BUSINESS | null> => {
 	const user = await Database.business.findUnique({
 		where: {
 			id,
@@ -110,7 +98,9 @@ export const findBusinessById = async (id: string) => {
 
 	return user;
 };
-export const findCustomerById = async (id: string) => {
+export const findCustomerById = async (
+	id: string
+): Promise<CUSTOMER | null> => {
 	const user = await Database.customer.findFirst({
 		where: {
 			OR: [{ id }, { account: id }],
@@ -119,19 +109,24 @@ export const findCustomerById = async (id: string) => {
 			reviews: true,
 			Replies: true,
 			orders: true,
+			shipping: true,
 		},
 	});
 
 	return user;
 };
 
-export const findStoreById = async (id: string) => {
+export const findStoreById = async (id: string): Promise<STORE | null> => {
 	const store = await Database.store.findUnique({
 		where: {
 			id,
 		},
 		include: {
-			products: true,
+			products: {
+				include: {
+					images: true,
+				},
+			},
 			categories: true,
 			orders: true,
 			template: true,
@@ -139,4 +134,21 @@ export const findStoreById = async (id: string) => {
 	});
 
 	return store;
+};
+
+export const findOrderById = async (
+	id: string,
+	includes?: { items?: boolean }
+): Promise<ORDER | null> => {
+	const order = await Database.order.findFirst({
+		where: {
+			OR: [{ id }, { store: id }],
+			AND: { NOT: { status: 'Cancelled' } },
+		},
+		include: {
+			items: includes?.items === true,
+		},
+	});
+
+	return order;
 };
