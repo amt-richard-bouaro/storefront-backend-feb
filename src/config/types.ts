@@ -32,15 +32,6 @@ export const validateServerConfig = (config: SERVER_CONFIG_SCHEMA) => {
 const GOOGLE_API_SCHEMA = z.object({
 	CLIENT_ID: z.string().nonempty('Google Client ID is required'),
 	CLIENT_SECRET: z.string().nonempty('Google Client Secret is required'),
-	CALLBACKURL_CUSTOMER: z
-		.string()
-		.nonempty('Google Callback URL for Customer is required'),
-	CALLBACKURL_BUSINESS: z
-		.string()
-		.nonempty('Google Callback URL for Business is required'),
-	CALLBACKURL_AUTH: z
-		.string()
-		.nonempty('Google Callback URL for Auth is required'),
 });
 
 type GOOGLE_API_SCHEMA = z.infer<typeof GOOGLE_API_SCHEMA>;

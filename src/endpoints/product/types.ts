@@ -33,7 +33,7 @@ const IMAGES_TO_DELETE = z.object({
 });
 type IMAGES_TO_DELETE = z.infer<typeof IMAGES_TO_DELETE>;
 
-const REMARKS = ['Disappointing', 'Great', 'Satisfied'] as const;
+const REMARKS = ['Disappointing', 'Outstanding', 'Satisfactory'] as const;
 
 const REVIEW_PRODUCT = z.object({
 	rating: z
