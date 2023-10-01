@@ -1,4 +1,3 @@
-// import { REQUEST_WITH_USER } from '../../../services/generalTypes';
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
