@@ -35,8 +35,8 @@ export const authenticatedUser = async (
 				canResetPassword: user.canResetPassword,
 				createdAt: user.createdAt,
 				updatedAt: user.updatedAt,
-				customer: user.customer,
-				business: user.business,
+				customer: user.customer ? user.customer.id : null,
+				business: user.business ? user.business.id : null,
 			},
 		});
 	} catch (error) {

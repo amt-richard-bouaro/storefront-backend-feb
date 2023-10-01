@@ -46,7 +46,7 @@ const NEW_CATEGORY = z.object({
 type NEW_CATEGORY = z.infer<typeof NEW_CATEGORY>;
 
 const TEMPLATE = z.object({
-	name: z.string(),
+	name: z.string().optional(),
 	brandImage: z.string(),
 	brandColor: z.string(),
 	welcomeColor: z.string(),

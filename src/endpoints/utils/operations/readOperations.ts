@@ -65,30 +65,18 @@ export const findAccountByProviderId = async (
 
 export const findBusinessById = async (
 	id: string
+	// includes?: { stores?: boolean }
 ): Promise<BUSINESS | null> => {
-	const user = await Database.business.findUnique({
+	const business = await Database.business.findFirst({
 		where: {
 			id,
 		},
 		include: {
 			stores: {
 				include: {
-					products: {
-						include: {
-							images: true,
-						},
-					},
-					categories: true,
 					template: {
 						include: {
-							storeTeams: true,
-							storeReasons: true,
-							temp: {
-								include: {
-									tempTeams: true,
-									tempReasons: true,
-								},
-							},
+							temp: true,
 						},
 					},
 				},
@@ -96,7 +84,7 @@ export const findBusinessById = async (
 		},
 	});
 
-	return user;
+	return business;
 };
 export const findCustomerById = async (
 	id: string
@@ -116,20 +104,38 @@ export const findCustomerById = async (
 	return user;
 };
 
-export const findStoreById = async (id: string): Promise<STORE | null> => {
+export const findStoreById = async (
+	id: string,
+	includes?: {
+		products?: boolean;
+		categories?: boolean;
+		orders?: boolean;
+		template?: boolean;
+	}
+): Promise<STORE | null> => {
 	const store = await Database.store.findUnique({
 		where: {
 			id,
 		},
 		include: {
-			products: {
-				include: {
-					images: true,
-				},
-			},
-			categories: true,
-			orders: true,
-			template: true,
+			products:
+				includes?.products === true
+					? {
+							include: {
+								images: {
+									select: {
+										url: true,
+										key: false,
+										id: true,
+										product: false,
+									},
+								},
+							},
+					  }
+					: false,
+			categories: includes?.categories === true,
+			orders: includes?.orders === true,
+			template: includes?.template === true,
 		},
 	});
 

@@ -6,9 +6,12 @@ const NEW_PRODUCT = z.object({
 		.min(2, 'Product name must not be less than 2 characters')
 		.nonempty('Please provide a product name'),
 	price: z.number().nonnegative('Product price must not be less than 0.00'),
-	quantity: z
-		.number()
-		.refine((val) => val < 1, 'Product quantity must not be less than 1'),
+	quantity: z.number().refine((val) => {
+		if (val < 1) {
+			return false;
+		}
+		return true;
+	}, 'Product quantity must not be less than 1'),
 	description: z.string().nonempty('Product description must not be empty'),
 	isActive: z.boolean(),
 	category: z.string().nonempty('Product category must not be empty'),
@@ -43,8 +46,23 @@ const REVIEW_PRODUCT = z.object({
 
 	comment: z.string().optional(),
 	remarks: z.enum(REMARKS),
+	product: z.string().nonempty('Please provide the product you want to review'),
 });
 
 type REVIEW_PRODUCT = z.infer<typeof REVIEW_PRODUCT>;
 
-export { NEW_PRODUCT, PRODUCTS_TO_DELETE, IMAGES_TO_DELETE, REVIEW_PRODUCT };
+const REPLY_REVIEW = z.object({
+	comment: z.string(),
+	from: z.string(),
+	review: z.string(),
+});
+
+type REPLY_REVIEW = z.infer<typeof REPLY_REVIEW>;
+
+export {
+	NEW_PRODUCT,
+	PRODUCTS_TO_DELETE,
+	IMAGES_TO_DELETE,
+	REVIEW_PRODUCT,
+	REPLY_REVIEW,
+};

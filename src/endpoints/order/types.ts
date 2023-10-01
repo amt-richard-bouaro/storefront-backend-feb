@@ -54,10 +54,17 @@ const CANCEL_ORDERS = z.object({
 
 type CANCEL_ORDERS = z.infer<typeof CANCEL_ORDERS>;
 
+const CHANGE_SHIPPING = z.object({
+	shipping: z.string().nonempty('You must specify shipping id'),
+});
+
+type CHANGE_SHIPPING = z.infer<typeof CHANGE_SHIPPING>;
+
 export {
 	ITEMS_TO_BUY,
 	ITEMS_TO_BUY_TYPE,
 	CHANGE_ORDER_ITEM_QUANTITY,
 	DELETE_ORDER_ITEM,
 	CANCEL_ORDERS,
+	CHANGE_SHIPPING,
 };

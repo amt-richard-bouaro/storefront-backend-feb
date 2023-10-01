@@ -18,6 +18,12 @@ enum Provider {
   facebook
 }
 
+model Currency {
+  id   String @id @default(uuid())
+  name String
+  code String
+}
+
 model Account {
   id                 String    @id @default(uuid())
   email              String    @unique
@@ -114,8 +120,8 @@ model Template {
   brandImage     String   @default("Not Set")
   brandColor     String   @default("Not Set")
   welcomeColor   String   @default("Not Set")
-  welcomebtnText String   @default("Not Set")
-  welcomeText    String   @default("Not Set")
+  welcomebtnText String   @default("Get Started")
+  welcomeText    String   @default("")
   fontstyle      String   @default("Not Set")
   primaryColor   String   @default("Not Set")
   secondaryColor String   @default("Not Set")
@@ -240,17 +246,17 @@ model Review {
 }
 
 model Reply {
-  id            String   @id @default(uuid())
+  id            String    @id @default(uuid())
   comment       String?
   from          Type
-  customer      String
-  customerReply Customer @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
-  store         String
-  storeReply    Store    @relation("storeReply", fields: [store], references: [id], onDelete: Cascade)
+  customer      String?
+  customerReply Customer? @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
+  store         String?
+  storeReply    Store?    @relation("storeReply", fields: [store], references: [id], onDelete: Cascade)
   review        String
-  reviewReply   Review   @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  reviewReply   Review    @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 enum Status {

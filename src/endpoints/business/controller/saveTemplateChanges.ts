@@ -8,17 +8,46 @@ import { TEMPLATE } from '../types';
 
 export const saveTemplate = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const tempID = req.params.tempID;
+		const storeID = req.params.tempID;
 
 		TEMPLATE.parse(req.body);
 
+		let imageUrl: string;
+
+		if (req.file) {
+			const file = req.file as Express.MulterS3.File;
+			imageUrl = file.location;
+		} else {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'TEAM_MEMBER_NOT_CREATED',
+				message: 'Missing picture for this team member',
+				type: 'error',
+			});
+		}
+
+		const template = await Database.template.findFirst({
+			where: {
+				store: storeID,
+			},
+			include: {
+				temp: true,
+			},
+		});
+
+		if (!template) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'TEMPLATE_NOT_UPDATED',
+				message: 'Store template not updated',
+				type: 'error',
+			});
+		}
+
 		const temp = await Database.temp.update({
 			where: {
-				id: tempID,
+				id: template.temp?.id,
 			},
 			data: {
-				name: req.body.name,
-				brandImage: req.body.brandImage,
+				brandImage: imageUrl,
 				brandColor: req.body.brandColor,
 				welcomeColor: req.body.welcomeColor,
 				welcomebtnText: req.body.welcomebtnText,

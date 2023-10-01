@@ -11,10 +11,11 @@ import { imageUpload } from '../../middlewares/uploader';
 import { addReasonWhy } from './controller/addReasonwhy';
 import { addCategory } from './controller/addcategory';
 import { deleteCategory } from './controller/deleteCategory';
+import { getBusinessStores } from './controller/businessStore';
 
 const app = express.Router();
 
-app.put('/set/type/:businessID', isAuthenticated, setBusinessType);
+app.patch('/set/type/:businessID', isAuthenticated, setBusinessType);
 app.post('/store/new/:businessID', isAuthenticated, newStore);
 app.post('/store/category/add/:storeID', isAuthenticated, addCategory);
 app.delete(
@@ -22,8 +23,14 @@ app.delete(
 	isAuthenticated,
 	deleteCategory
 );
+app.get('/stores/:id', isAuthenticated, getBusinessStores);
 app.get('/:id', isAuthenticated, getBusiness);
-app.put('/template/save/:tempID', isAuthenticated, saveTemplate);
+app.patch(
+	'/template/save/:tempID',
+	isAuthenticated,
+	imageUpload.single('brandImage'),
+	saveTemplate
+);
 app.put('/template/publish/:tempID', isAuthenticated, publishTemplate);
 app.post(
 	'/teams/add/:tempID',

@@ -96,6 +96,8 @@ passport.deserializeUser(async (user: userSerialization, callback) => {
 	return callback(null, {
 		id: User.id,
 		providerId: User.providerId,
+		customer: User.customer?.id,
+		business: User.business?.id,
 	});
 });
 

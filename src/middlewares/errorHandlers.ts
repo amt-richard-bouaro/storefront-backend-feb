@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { SERVER_CONFIG, STATUS } from '../config/main';
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
+import { MulterError } from 'multer';
 
 export const notFoundError = (req: Request, res: Response) => {
 	return res.status(STATUS.NOT_FOUND).json({
@@ -41,6 +42,14 @@ export const errorHandler = <T extends Error>(
 			...errorResponse,
 			message: 'Unauthorized: Token has expired',
 			code: 'TOKEN_EXPIRED',
+		};
+	}
+	if (err.name === 'MulterError' || err instanceof MulterError) {
+		status = STATUS.BAD_REQUEST;
+		errorResponse = {
+			...errorResponse,
+			message: err.message,
+			code: 'MULTER_ERROR',
 		};
 	}
 

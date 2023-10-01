@@ -83,8 +83,6 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		const makePayment = await captureOrder(order.orderId);
 
-		console.log(order.orderId, makePayment.status);
-
 		if (makePayment.status !== STATUS.CREATED) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'PAYMENT_FAILED',

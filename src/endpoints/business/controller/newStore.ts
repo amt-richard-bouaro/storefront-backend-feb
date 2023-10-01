@@ -5,6 +5,7 @@ import { errorHandler } from '../../../middlewares/errorHandlers';
 import { NEW_STORE } from '../types';
 import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
+import { findBusinessById } from '../../utils/operations/readOperations';
 // import { findBusinessById } from '../../utils/operations/readOperations';
 
 const defaultTemplate = {
@@ -30,9 +31,17 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 
 		const businessID = req.params.businessID;
 
-		// const business = await findBusinessById(businessID);
+		const business = await findBusinessById(businessID);
 
-		const template = requestBody.template || defaultTemplate;
+		if (!business) {
+			return res.status(STATUS.OK).json({
+				code: 'BUSINESS_NOT_FOUND',
+				message: 'Could not find business',
+				type: 'error',
+			});
+		}
+
+		const template = requestBody.template ?? defaultTemplate;
 
 		const store = await Database.store.create({
 			data: {

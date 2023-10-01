@@ -7,15 +7,21 @@ import { STATUS } from '../../../config/main';
 
 export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const requestBody = <NEW_PRODUCT>req.body;
+		const requestBody = req.body;
 
-		const body = {
-			price: parseFloat(req.body.price),
-			name: req.body.name,
-			quantity: parseFloat(req.body.quantity),
-			description: req.body.description,
-			isActive: true,
-			category: req.body.category,
+		const body: NEW_PRODUCT = {
+			price: parseFloat(requestBody.price.toString()),
+			name: requestBody.name,
+			quantity: parseInt(requestBody.quantity.toString()),
+			description: requestBody.description,
+			isActive:
+				typeof requestBody.isActive === 'boolean'
+					? requestBody.isActive
+					: requestBody.isActive === 'true'
+					? true
+					: false,
+			category: requestBody.category,
+			variations: JSON.parse(requestBody.variations || '[]'),
 		};
 
 		NEW_PRODUCT.parse(body);
@@ -39,8 +45,8 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 			};
 		});
 
-		const variations = requestBody.variations
-			? requestBody.variations.map((variation) => {
+		const variations = body.variations
+			? body.variations.map((variation) => {
 					return {
 						type: variation.type,
 						value: variation.value,
@@ -67,6 +73,10 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 						data: images,
 					},
 				},
+			},
+			include: {
+				images: true,
+				variations: true,
 			},
 		});
 

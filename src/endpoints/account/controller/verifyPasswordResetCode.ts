@@ -12,9 +12,9 @@ export const verifyPasswordResetCode = async (
 	res: Response<RESPONSE>
 ) => {
 	try {
-		const { code } = req.body;
+		CODE.parse(req.body);
 
-		CODE.parse(code);
+		const { code } = req.body;
 
 		const { id } = <REQUEST_WITH_USER>req.user;
 

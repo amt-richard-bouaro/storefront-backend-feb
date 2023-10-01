@@ -17,5 +17,6 @@ app.delete('/item/:order_id', isAuthenticated, removeOrderItem);
 app.get('/:order_id', isAuthenticated, getOrder);
 app.get('/:storeID', isAuthenticated, getStoreOrder);
 app.patch('/cancel', isAuthenticated, cancelOrder);
+app.patch('change/shipping/:order_id', isAuthenticated, cancelOrder);
 
 export default app;
