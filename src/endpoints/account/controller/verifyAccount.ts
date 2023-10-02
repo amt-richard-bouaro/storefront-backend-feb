@@ -17,6 +17,8 @@ export const accountVerification = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
+	console.log(req);
+
 	try {
 		CODE.parse(req.body);
 

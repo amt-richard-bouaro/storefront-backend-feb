@@ -7,7 +7,7 @@ import { getCustomer } from './controller/getCustomer';
 
 const app = express.Router();
 
-app.post('/shipping/add', isAuthenticated, addShipping);
+app.post('/shipping/add/:customerID', isAuthenticated, addShipping);
 app.get('/:customerID', isAuthenticated, getCustomer);
 
 export default app;

@@ -10,58 +10,31 @@ export const publishTemplate = async (
 	res: Response<RESPONSE>
 ) => {
 	try {
-		const tempID = req.params.tempID;
+		const storeID = req.params.store_id;
 
-		const temp = await Database.temp.findUnique({
+		const template = await Database.template.findFirst({
 			where: {
-				id: tempID,
+				store: storeID,
+			},
+			include: {
+				temp: true,
 			},
 		});
 
-		if (!temp) {
+		if (!template) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'TEMPLATE_NOT_PUBLISHED',
-				message: 'Could not find template',
+				code: 'TEMPLATE_NOT_UPDATED',
+				message: 'Store template not updated',
 				type: 'error',
 			});
 		}
 
-		const template = await Database.template.update({
+		const publishedTemplate = await Database.template.update({
 			where: {
-				id: temp.template,
+				id: template.id,
 			},
 			data: {
-				name: temp.name,
-				brandImage: temp.brandImage,
-				brandColor: temp.brandColor,
-				welcomeColor: temp.welcomeColor,
-				welcomebtnText: temp.welcomebtnText,
-				welcomeText: temp.welcomeText,
-				fontstyle: temp.fontstyle,
-				primaryColor: temp.primaryColor,
-				secondaryColor: temp.secondaryColor,
-				auxillaryColor: temp.auxillaryColor,
-				storeStory: temp.storeStory,
-				hasContactPage: temp.hasContactPage,
-				hasAboutPage: temp.hasAboutPage,
-			},
-		});
-
-		await Database.team.updateMany({
-			where: {
-				temp: tempID,
-			},
-			data: {
-				template: template.id,
-			},
-		});
-
-		await Database.reason.updateMany({
-			where: {
-				temp: tempID,
-			},
-			data: {
-				template: template.id,
+				options: template.temp?.options,
 			},
 		});
 
@@ -70,7 +43,7 @@ export const publishTemplate = async (
 			message:
 				"TEMPLATE successfully published. Now customer will see changes you've made to your site.",
 			type: 'success',
-			data: template,
+			data: publishedTemplate,
 		});
 	} catch (error) {
 		const err = error as Error;

@@ -20,19 +20,7 @@ const NEW_STORE = z.object({
 	storeName: z.string().nonempty('Please specify the name of this store.'),
 	template: z
 		.object({
-			name: z.string(),
-			brandImage: z.string(),
-			brandColor: z.string(),
-			welcomeColor: z.string(),
-			welcomebtnText: z.string(),
-			welcomeText: z.string(),
-			fontstyle: z.string(),
-			primaryColor: z.string(),
-			secondaryColor: z.string(),
-			auxillaryColor: z.string(),
-			storeStory: z.string(),
-			hasContactPage: z.boolean(),
-			hasAboutPage: z.boolean(),
+			options: z.string(),
 		})
 		.optional(),
 });
@@ -46,21 +34,7 @@ const NEW_CATEGORY = z.object({
 type NEW_CATEGORY = z.infer<typeof NEW_CATEGORY>;
 
 const TEMPLATE = z.object({
-	name: z.string().optional(),
-	brandImage: z.string(),
-	brandColor: z.string(),
-	welcomeColor: z.string(),
-	welcomebtnText: z.string(),
-	welcomeText: z.string(),
-	fontstyle: z.string(),
-	primaryColor: z.string(),
-	secondaryColor: z.string(),
-	auxillaryColor: z.string(),
-	storeStory: z.string(),
-	storeTeams: z.string().array().optional(),
-	storeReasons: z.string().array().optional(),
-	hasContactPage: z.boolean(),
-	hasAboutPage: z.boolean(),
+	options: z.string(),
 });
 
 type TEMPLATE = z.infer<typeof TEMPLATE>;

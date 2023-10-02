@@ -81,44 +81,58 @@ export type REASON = {
 	storeReasons?: TEMPLATE;
 	storeReasonsTemp?: TEMP;
 };
+// export type TEMPLATE = {
+// 	id: string;
+// 	name: string;
+// 	brandImage: string;
+// 	brandColor: string;
+// 	welcomeColor: string;
+// 	welcomebtnText: string;
+// 	welcomeText: string;
+// 	fontstyle: string;
+// 	primaryColor: string;
+// 	secondaryColor: string;
+// 	auxillaryColor: string;
+// 	storeStory: string;
+// 	storeTeams?: TEAM[];
+// 	storeReasons?: REASON[];
+// 	hasContactPage: boolean;
+// 	hasAboutPage: boolean;
+// 	store: string;
+// 	temp?: TEMP | null;
+// };
+
 export type TEMPLATE = {
 	id: string;
-	name: string;
-	brandImage: string;
-	brandColor: string;
-	welcomeColor: string;
-	welcomebtnText: string;
-	welcomeText: string;
-	fontstyle: string;
-	primaryColor: string;
-	secondaryColor: string;
-	auxillaryColor: string;
-	storeStory: string;
-	storeTeams?: TEAM[];
-	storeReasons?: REASON[];
-	hasContactPage: boolean;
-	hasAboutPage: boolean;
+	options: string;
 	store: string;
 	temp?: TEMP | null;
 };
 
+// export type TEMP = {
+// 	id: string;
+// 	name: string;
+// 	brandImage?: string;
+// 	brandColor?: string;
+// 	welcomeColor?: string;
+// 	welcomebtnText?: string;
+// 	welcomeText?: string;
+// 	fontstyle?: string;
+// 	primaryColor?: string;
+// 	secondaryColor?: string;
+// 	auxillaryColor?: string;
+// 	storeStory?: string;
+// 	tempTeams?: TEAM[];
+// 	tempReasons?: REASON[];
+// 	hasContactPage: boolean;
+// 	hasAboutPage: boolean;
+// 	template: string;
+// 	tempTemplate?: TEMPLATE | null;
+// };
+
 export type TEMP = {
 	id: string;
-	name: string;
-	brandImage?: string;
-	brandColor?: string;
-	welcomeColor?: string;
-	welcomebtnText?: string;
-	welcomeText?: string;
-	fontstyle?: string;
-	primaryColor?: string;
-	secondaryColor?: string;
-	auxillaryColor?: string;
-	storeStory?: string;
-	tempTeams?: TEAM[];
-	tempReasons?: REASON[];
-	hasContactPage: boolean;
-	hasAboutPage: boolean;
+	options: string;
 	template: string;
 	tempTemplate?: TEMPLATE | null;
 };

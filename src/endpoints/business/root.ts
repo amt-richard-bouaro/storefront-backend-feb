@@ -26,12 +26,12 @@ app.delete(
 app.get('/stores/:id', isAuthenticated, getBusinessStores);
 app.get('/:id', isAuthenticated, getBusiness);
 app.patch(
-	'/template/save/:tempID',
+	'/template/save/:store_id',
 	isAuthenticated,
 	imageUpload.single('brandImage'),
 	saveTemplate
 );
-app.put('/template/publish/:tempID', isAuthenticated, publishTemplate);
+app.put('/template/publish/:store_id', isAuthenticated, publishTemplate);
 app.post(
 	'/teams/add/:tempID',
 	isAuthenticated,

@@ -14,12 +14,7 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 			name: requestBody.name,
 			quantity: parseInt(requestBody.quantity.toString()),
 			description: requestBody.description,
-			isActive:
-				typeof requestBody.isActive === 'boolean'
-					? requestBody.isActive
-					: requestBody.isActive === 'true'
-					? true
-					: false,
+			isActive: requestBody.isActive === 'true',
 			category: requestBody.category,
 			variations: JSON.parse(requestBody.variations || '[]'),
 		};

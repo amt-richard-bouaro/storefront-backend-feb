@@ -47,9 +47,9 @@ export const initializeOrder = async (
 			});
 		}
 
-		const store = await findStoreById(requestBody.store);
+		const store = await findStoreById(requestBody.store, { products: true });
 
-		if (!store) {
+		if (!store || !store.products) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'STORE_NOT_FOUND',
 				message: 'Could not find store',
@@ -57,7 +57,7 @@ export const initializeOrder = async (
 			});
 		}
 
-		const storeProducts = store.products !== undefined ? store.products : [];
+		const storeProducts = store.products ?? [];
 
 		const { unavailbleProducts, availableProducts } = productsAvailability(
 			storeProducts,

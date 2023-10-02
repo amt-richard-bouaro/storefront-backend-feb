@@ -8,22 +8,11 @@ import { TEMPLATE } from '../types';
 
 export const saveTemplate = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const storeID = req.params.tempID;
+		const storeID = req.params.store_id;
 
 		TEMPLATE.parse(req.body);
 
-		let imageUrl: string;
-
-		if (req.file) {
-			const file = req.file as Express.MulterS3.File;
-			imageUrl = file.location;
-		} else {
-			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'TEAM_MEMBER_NOT_CREATED',
-				message: 'Missing picture for this team member',
-				type: 'error',
-			});
-		}
+		const { options } = <TEMPLATE>req.body;
 
 		const template = await Database.template.findFirst({
 			where: {
@@ -47,18 +36,7 @@ export const saveTemplate = async (req: Request, res: Response<RESPONSE>) => {
 				id: template.temp?.id,
 			},
 			data: {
-				brandImage: imageUrl,
-				brandColor: req.body.brandColor,
-				welcomeColor: req.body.welcomeColor,
-				welcomebtnText: req.body.welcomebtnText,
-				welcomeText: req.body.welcomeText,
-				fontstyle: req.body.fontstyle,
-				primaryColor: req.body.primaryColor,
-				secondaryColor: req.body.secondaryColor,
-				auxillaryColor: req.body.auxillaryColor,
-				storeStory: req.body.storeStory,
-				hasContactPage: req.body.hasContactPage,
-				hasAboutPage: req.body.hasAboutPage,
+				options: options,
 			},
 		});
 

@@ -113,7 +113,7 @@ export const findStoreById = async (
 		template?: boolean;
 	}
 ): Promise<STORE | null> => {
-	const store = await Database.store.findUnique({
+	const store = await Database.store.findFirst({
 		where: {
 			id,
 		},
@@ -122,6 +122,7 @@ export const findStoreById = async (
 				includes?.products === true
 					? {
 							include: {
+								variations: true,
 								images: {
 									select: {
 										url: true,

@@ -9,6 +9,7 @@ import { updateProduct } from './controller/updateProduct';
 import { reviewProduct } from './controller/reviewProduct';
 import { getReviews } from './controller/reviews';
 import { getProducts } from './controller/getProducts';
+import { getProduct } from './controller/getProduct';
 
 const app = express.Router();
 
@@ -24,5 +25,6 @@ app.patch('/update/:productID', isAuthenticated, updateProduct);
 app.post('/review/:order_id', isAuthenticated, reviewProduct);
 app.get('/reviews/:product_id', isAuthenticated, getReviews);
 app.get('/all/:store_id', isAuthenticated, getProducts);
+app.get('/:product_id', isAuthenticated, getProduct);
 
 export default app;

@@ -9,19 +9,7 @@ import { findBusinessById } from '../../utils/operations/readOperations';
 // import { findBusinessById } from '../../utils/operations/readOperations';
 
 const defaultTemplate = {
-	name: 'Default',
-	brandImage: 'unknown',
-	brandColor: '#FFFFFF',
-	welcomeColor: '#000000',
-	welcomebtnText: 'Explore More',
-	welcomeText: 'Welcome to Default Store',
-	fontstyle: 'Arial',
-	primaryColor: '#F0F26A',
-	secondaryColor: '#CCC838',
-	auxillaryColor: '#334CCC',
-	storeStory: 'Our Story is short',
-	hasContactPage: false,
-	hasAboutPage: false,
+	options: JSON.stringify({ name: 'default', description: 'not set' }),
 };
 export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -50,36 +38,19 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 				storeType: requestBody.storeType,
 				template: {
 					create: {
-						name: template.name,
-						brandImage: template.brandImage,
-						brandColor: template.brandColor,
-						welcomeColor: template.welcomeColor,
-						welcomebtnText: template.welcomebtnText,
-						welcomeText: template.welcomeText,
-						fontstyle: template.fontstyle,
-						primaryColor: template.primaryColor,
-						secondaryColor: template.secondaryColor,
-						auxillaryColor: template.auxillaryColor,
-						storeStory: template.storeStory,
-						hasContactPage: template.hasContactPage,
-						hasAboutPage: template.hasAboutPage,
+						options: template.options,
 						temp: {
 							create: {
-								name: template.name,
-								brandImage: template.brandImage,
-								brandColor: template.brandColor,
-								welcomeColor: template.welcomeColor,
-								welcomebtnText: template.welcomebtnText,
-								welcomeText: template.welcomeText,
-								fontstyle: template.fontstyle,
-								primaryColor: template.primaryColor,
-								secondaryColor: template.secondaryColor,
-								auxillaryColor: template.auxillaryColor,
-								storeStory: template.storeStory,
-								hasContactPage: template.hasContactPage,
-								hasAboutPage: template.hasAboutPage,
+								options: template.options,
 							},
 						},
+					},
+				},
+			},
+			include: {
+				template: {
+					select: {
+						options: true,
 					},
 				},
 			},

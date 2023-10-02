@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { REQUEST_WITH_USER, RESPONSE } from '../../../services/generalTypes';
+import { RESPONSE } from '../../../services/generalTypes';
 import { errorHandler } from '../../../middlewares/errorHandlers';
 import { Database } from '../../../database/dbClient';
 import { STATUS } from '../../../config/main';
@@ -12,9 +12,10 @@ export const addShipping = async (req: Request, res: Response<RESPONSE>) => {
 
 		CUSTOMER_SHIPPING.parse(requestBody);
 
-		const { id } = <REQUEST_WITH_USER>req.user;
+		// const { id } = <REQUEST_WITH_USER>req.user;
+		const customerID = req.params.customerID;
 
-		const customer = await findCustomerById(id);
+		const customer = await findCustomerById(customerID);
 
 		if (!customer) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -24,18 +25,19 @@ export const addShipping = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const shipping = await Database.shipping.create({
+		await Database.shipping.create({
 			data: {
 				customer: customer.id,
 				...requestBody,
 			},
 		});
 
+		const updatedcustomer = await findCustomerById(customerID);
 		return res.status(STATUS.OK).json({
-			code: 'PAYMENT',
-			message: 'Payment intent',
+			code: 'SHIPPING_ADDRESS_ADDED',
+			message: 'Shipping address added',
 			type: 'success',
-			data: shipping,
+			data: updatedcustomer?.shipping,
 		});
 	} catch (error) {
 		const err = error as Error;

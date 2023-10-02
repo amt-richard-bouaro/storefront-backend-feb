@@ -9,11 +9,7 @@ export const getStores = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const stores = await Database.store.findMany({
 			include: {
-				template: {
-					select: {
-						name: true,
-					},
-				},
+				template: true,
 			},
 		});
 

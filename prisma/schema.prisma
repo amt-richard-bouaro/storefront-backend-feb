@@ -108,75 +108,56 @@ model Store {
   savedProducts     SavedItem[] @relation("storerSavedProduct")
   payments          Payout[]    @relation("storePayout")
   Replies           Reply[]     @relation("storeReply")
+  siteImages        SiteImage[] @relation("storeImages")
   business          String
   businessStore     Business    @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 }
 
+model SiteImage {
+  id         String @id @default(uuid())
+  url        String
+  key        String
+  store      String
+  storeImage Store  @relation("storeImages", fields: [store], references: [id], onDelete: Cascade)
+}
+
 model Template {
-  id             String   @id @default(uuid())
-  name           String   @default("Not Set")
-  brandImage     String   @default("Not Set")
-  brandColor     String   @default("Not Set")
-  welcomeColor   String   @default("Not Set")
-  welcomebtnText String   @default("Get Started")
-  welcomeText    String   @default("")
-  fontstyle      String   @default("Not Set")
-  primaryColor   String   @default("Not Set")
-  secondaryColor String   @default("Not Set")
-  auxillaryColor String   @default("Not Set")
-  storeStory     String   @default("Not Set")
-  storeTeams     Team[]   @relation("storeTeams")
-  storeReasons   Reason[] @relation("storeReasons")
-  hasContactPage Boolean  @default(false)
-  hasAboutPage   Boolean  @default(false)
-  store          String   @unique
-  temp           Temp?    @relation("temporaryTemplate")
-  storeTemplate  Store    @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
+  id            String @id @default(uuid())
+  options       String
+  store         String @unique
+  temp          Temp?  @relation("temporaryTemplate")
+  storeTemplate Store  @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
 }
 
-model Reason {
-  id               String    @id @default(uuid())
-  title            String
-  paragraph        String
-  template         String?
-  storeReasons     Template? @relation("storeReasons", fields: [template], references: [id], onDelete: Cascade)
-  temp             String
-  storeReasonsTemp Temp      @relation("storeReasonsTemp", fields: [temp], references: [id], onDelete: Cascade)
-}
+// model Reason {
+//   id               String    @id @default(uuid())
+//   title            String
+//   paragraph        String
+//   template         String?
+//   storeReasons     Template? @relation("storeReasons", fields: [template], references: [id], onDelete: Cascade)
+//   temp             String
+//   storeReasonsTemp Temp      @relation("storeReasonsTemp", fields: [temp], references: [id], onDelete: Cascade)
+// }
 
-model Team {
-  id             String    @id @default(uuid())
-  picture        String
-  key            String
-  name           String
-  role           String
-  template       String?
-  storeTeams     Template? @relation("storeTeams", fields: [template], references: [id], onDelete: Cascade)
-  temp           String
-  storeTeamsTemp Temp      @relation("storeTeamsTemp", fields: [temp], references: [id], onDelete: Cascade)
-}
+// model Team {
+//   id             String    @id @default(uuid())
+//   picture        String
+//   key            String
+//   name           String
+//   role           String
+//   template       String?
+//   storeTeams     Template? @relation("storeTeams", fields: [template], references: [id], onDelete: Cascade)
+//   temp           String
+//   storeTeamsTemp Temp      @relation("storeTeamsTemp", fields: [temp], references: [id], onDelete: Cascade)
+// }
 
 model Temp {
-  id             String   @id @default(uuid())
-  name           String
-  brandImage     String
-  brandColor     String
-  welcomeColor   String
-  welcomebtnText String
-  welcomeText    String
-  fontstyle      String
-  primaryColor   String
-  secondaryColor String
-  auxillaryColor String
-  storeStory     String
-  tempTeams      Team[]   @relation("storeTeamsTemp")
-  tempReasons    Reason[] @relation("storeReasonsTemp")
-  hasContactPage Boolean  @default(false)
-  hasAboutPage   Boolean  @default(false)
-  template       String   @unique
-  tempTemplate   Template @relation("temporaryTemplate", fields: [template], references: [id], onDelete: Cascade)
+  id           String   @id @default(uuid())
+  options      String
+  template     String   @unique
+  tempTemplate Template @relation("temporaryTemplate", fields: [template], references: [id], onDelete: Cascade)
 }
 
 model Product {
