@@ -1,0 +1,47 @@
+import { STATUS } from '../../config/statusCode';
+import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { Request, Response } from 'express';
+import { REQUEST_WITH_USER, RESPONSE } from '../../interfaces';
+import { findAccountById } from '../../services/app/account/findAccount';
+
+export const authenticatedUser = async (
+	req: Request,
+	res: Response<RESPONSE>
+) => {
+	try {
+		const requestUser = <REQUEST_WITH_USER>req.user;
+
+		const user = await findAccountById(requestUser.id);
+
+		if (!user) {
+			return res.status(STATUS.UNAUTHORIZED).json({
+				code: 'UNAUTHORIZED',
+				message: 'Unauthorized: Could not find any user',
+				type: 'error',
+			});
+		}
+
+		return res.status(STATUS.OK).json({
+			code: 'USER_FOUND',
+			message: 'User found',
+			type: 'success',
+			data: {
+				id: user.id,
+				email: user.email,
+				type: user.type,
+				verified: user.verified,
+				isActive: user.isActive,
+				mustChangePassword: user.mustChangePassword,
+				canResetPassword: user.canResetPassword,
+				createdAt: user.createdAt,
+				updatedAt: user.updatedAt,
+				customer: user.customer ? user.customer.id : null,
+				business: user.business ? user.business.id : null,
+			},
+		});
+	} catch (error) {
+		const err = error as Error;
+
+		errorHandler(err, req, res);
+	}
+};

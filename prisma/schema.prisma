@@ -109,6 +109,7 @@ model Store {
   payments          Payout[]    @relation("storePayout")
   Replies           Reply[]     @relation("storeReply")
   siteImages        SiteImage[] @relation("storeImages")
+  reviews           Review[]    @relation("storeReviews")
   business          String
   businessStore     Business    @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
   createdAt         DateTime    @default(now())
@@ -218,6 +219,10 @@ model Review {
   rating         Int
   remarks        Remarks
   comment        String?
+  order          String
+  orderReview    Order    @relation("orderReviews", fields: [order], references: [id], onDelete: Cascade)
+  store          String
+  storeReviews   Store    @relation("storeReviews", fields: [store], references: [id], onDelete: Cascade)
   customer       String
   replies        Reply[]  @relation("reviewReply")
   productReview  Product  @relation("productReviews", fields: [product], references: [id], onDelete: Cascade)
@@ -266,6 +271,7 @@ model Order {
   customerOrder Customer    @relation("customerOrder", fields: [customer], references: [id])
   items         OrderItem[] @relation("OrderItems")
   disbursement  Payout?     @relation("orderPayout")
+  reviews       Review[]    @relation("orderReviews")
   shipping      String
   orderShipping Shipping    @relation("orderShipping", fields: [shipping], references: [id])
   createdAt     DateTime    @default(now())

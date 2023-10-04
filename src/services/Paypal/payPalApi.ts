@@ -31,6 +31,14 @@ export const createOrder = async (data: {
 	total: number;
 	currency: string;
 	reference: string;
+	shipping: {
+		address_line_1: string;
+		address_line_2: string;
+		admin_area_2: string;
+		admin_area_1: string;
+		postal_code: string;
+		country_code: string;
+	};
 }) => {
 	const accessToken = await generateAccessToken();
 
@@ -41,8 +49,11 @@ export const createOrder = async (data: {
 			{
 				reference_id: data.reference,
 				amount: {
-					currency_code: 'USD',
+					currency_code: data.currency,
 					value: data.total,
+				},
+				shipping: {
+					address: data.shipping,
 				},
 			},
 		],
@@ -53,6 +64,7 @@ export const createOrder = async (data: {
 					brand_name: 'StoreFront',
 					locale: 'en-US',
 					user_action: 'PAY_NOW',
+					shipping_preference: 'SET_PROVIDED_ADDRESS',
 				},
 			},
 		},
@@ -67,7 +79,11 @@ export const createOrder = async (data: {
 		body: JSON.stringify(payload),
 	});
 
-	return handleResponse(response);
+	const res = await handleResponse(response);
+
+	// console.log(res);
+
+	return res;
 };
 
 export const payoutStore = async (data: {
@@ -117,6 +133,7 @@ export const payoutStore = async (data: {
 export const updateOrder = async (data: {
 	orderID: string;
 	amount: number;
+	currency: string;
 	referenceId: string;
 }) => {
 	const accessToken = await generateAccessToken();
@@ -128,7 +145,7 @@ export const updateOrder = async (data: {
 			op: 'replace',
 			path: `/purchase_units/@reference_id=='${data.referenceId}'/amount`,
 			value: {
-				currency_code: 'USD',
+				currency_code: data.currency ?? 'USD',
 				value: data.amount,
 			},
 		},
@@ -176,27 +193,14 @@ export const getOrder = async (orderID: string) => {
 
 	return handleResponse(response);
 };
-
 async function handleResponse(response: Response) {
 	try {
-		if (response.status === 204) {
-			return {
-				json: {
-					updated: true,
-				},
-				status: 204,
-			};
-		} else {
-			const json = await response.json();
-			const status = await response.status;
-			return {
-				json,
-				status,
-			};
-		}
+		const json = await response.json();
+		return {
+			json,
+			status: response.status,
+		};
 	} catch (err) {
-		console.log(err);
-
 		const errorMessage = await response.text();
 		throw new Error(errorMessage);
 	}
