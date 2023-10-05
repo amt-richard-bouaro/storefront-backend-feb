@@ -10,6 +10,7 @@ datasource db {
 enum Type {
   Business
   Customer
+  Admin
 }
 
 enum Provider {
@@ -22,6 +23,14 @@ model Currency {
   id   String @id @default(uuid())
   name String
   code String
+}
+
+model Destination {
+  id       String @id @default(uuid())
+  name     String
+  code     String
+  duration Int
+  cost     Int
 }
 
 model Account {
@@ -94,26 +103,38 @@ model BusinessAddress {
 }
 
 model Store {
-  id                String      @id @default(uuid())
-  storeName         String      @default("Default")
+  id                String                @id @default(uuid())
+  storeName         String                @default("Default")
   storeType         String
-  promotion         Boolean     @default(false)
-  promotionDiscount Int         @default(0)
-  currency          String      @default("USD")
-  products          Product[]   @relation("storeProducts")
-  categories        Category[]  @relation("storeCategories")
-  template          Template?   @relation("storeTemplate")
-  orders            Order[]     @relation("storeOrder")
-  visitors          Visitor[]   @relation("storeVisitor")
-  savedProducts     SavedItem[] @relation("storerSavedProduct")
-  payments          Payout[]    @relation("storePayout")
-  Replies           Reply[]     @relation("storeReply")
-  siteImages        SiteImage[] @relation("storeImages")
-  reviews           Review[]    @relation("storeReviews")
+  promotion         Boolean               @default(false)
+  promotionDiscount Int                   @default(0)
+  currency          String                @default("USD")
+  products          Product[]             @relation("storeProducts")
+  categories        Category[]            @relation("storeCategories")
+  template          Template?             @relation("storeTemplate")
+  orders            Order[]               @relation("storeOrder")
+  visitors          Visitor[]             @relation("storeVisitor")
+  savedProducts     SavedItem[]           @relation("storerSavedProduct")
+  payments          Payout[]              @relation("storePayout")
+  Replies           Reply[]               @relation("storeReply")
+  siteImages        SiteImage[]           @relation("storeImages")
+  reviews           Review[]              @relation("storeReviews")
+  shipping          ShippingDestination[] @relation("shippingDestinations")
   business          String
-  businessStore     Business    @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  businessStore     Business              @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+}
+
+model ShippingDestination {
+  id                   String  @id @default(uuid())
+  name                 String
+  code                 String
+  duration             Int
+  cost                 Int
+  store                String
+  shippingDestinations Store   @relation("shippingDestinations", fields: [store], references: [id], onDelete: Cascade)
+  orders               Order[] @relation("orderDestination")
 }
 
 model SiteImage {
@@ -132,28 +153,6 @@ model Template {
   temp          Temp?  @relation("temporaryTemplate")
   storeTemplate Store  @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
 }
-
-// model Reason {
-//   id               String    @id @default(uuid())
-//   title            String
-//   paragraph        String
-//   template         String?
-//   storeReasons     Template? @relation("storeReasons", fields: [template], references: [id], onDelete: Cascade)
-//   temp             String
-//   storeReasonsTemp Temp      @relation("storeReasonsTemp", fields: [temp], references: [id], onDelete: Cascade)
-// }
-
-// model Team {
-//   id             String    @id @default(uuid())
-//   picture        String
-//   key            String
-//   name           String
-//   role           String
-//   template       String?
-//   storeTeams     Template? @relation("storeTeams", fields: [template], references: [id], onDelete: Cascade)
-//   temp           String
-//   storeTeamsTemp Temp      @relation("storeTeamsTemp", fields: [temp], references: [id], onDelete: Cascade)
-// }
 
 model Temp {
   id           String   @id @default(uuid())
@@ -260,23 +259,25 @@ enum Status {
 }
 
 model Order {
-  id            String      @id @default(uuid())
-  amount        Float
-  paid          Boolean     @default(false)
-  orderId       String      @unique
-  referenceId   String
-  status        Status      @default(Pending_Payment)
-  store         String
-  storeOrder    Store       @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
-  customer      String
-  customerOrder Customer    @relation("customerOrder", fields: [customer], references: [id])
-  items         OrderItem[] @relation("OrderItems")
-  disbursement  Payout?     @relation("orderPayout")
-  reviews       Review[]    @relation("orderReviews")
-  shipping      String
-  orderShipping Shipping    @relation("orderShipping", fields: [shipping], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id               String              @id @default(uuid())
+  amount           Float
+  paid             Boolean             @default(false)
+  orderId          String              @unique
+  referenceId      String
+  status           Status              @default(Pending_Payment)
+  store            String
+  storeOrder       Store               @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
+  customer         String
+  customerOrder    Customer            @relation("customerOrder", fields: [customer], references: [id])
+  items            OrderItem[]         @relation("OrderItems")
+  disbursement     Payout?             @relation("orderPayout")
+  reviews          Review[]            @relation("orderReviews")
+  shipping         String
+  orderShipping    Shipping            @relation("orderShipping", fields: [shipping], references: [id])
+  destination      String
+  orderDestination ShippingDestination @relation("orderDestination", fields: [destination], references: [id])
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
 }
 
 model OrderItem {

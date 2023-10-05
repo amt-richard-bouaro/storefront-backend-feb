@@ -27,6 +27,16 @@ export const STORE_MSG = {
 		CODE: 'STORE_DELETED_SUCCESSFULLY',
 		MESSAGE: 'Store deleted successfully.',
 	},
+	CREATED_SUCCESSFULLY: {
+		CODE: 'STORE_CREATED_SUCCESSFULLY',
+		MESSAGE: 'Your store has been created successfully.',
+	},
+	
+	DELETION_FAILED: {
+		CODE: 'STORE_DELETION_FAILED',
+		MESSAGE: 'Failed to delete store.',
+	},
+	
 	PRODUCT_NOT_FOUND: {
 		CODE: 'STORE_PRODUCT_NOT_FOUND',
 		MESSAGE:

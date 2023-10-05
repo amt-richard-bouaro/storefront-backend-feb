@@ -4,7 +4,7 @@ import { CUSTOMER } from '../customer';
 type USER = {
 	id: string;
 	email: string;
-	type: 'Business' | 'Customer';
+	type: 'Business' | 'Customer'|'Admin';
 	provider: 'local' | 'google' | 'facebook';
 	providerId: string;
 	verified: boolean;
@@ -21,7 +21,7 @@ type USER = {
 
 const ACCOUNT_TYPES = ['Customer', 'Business'] as const;
 
-type ACCOUNTS = 'Customer' | 'Business';
+type ACCOUNTS = 'Customer' | 'Business' | 'Admin';
 
 type CHECKS =
 	| 'verified'

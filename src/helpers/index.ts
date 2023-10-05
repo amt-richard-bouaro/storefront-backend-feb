@@ -69,3 +69,46 @@ export const flatNestedObject = (data: { [key: string]: any | object }) => {
 
 	return flatData;
 };
+
+export const hashPassword = async (password: string): Promise<string> => {
+	const salt = await bcrypt.genSalt(SERVER_CONFIG.SALT_VALUE);
+
+	const hashedPassword = await bcrypt.hash(password, salt);
+
+	return hashedPassword;
+};
+
+export const groupVariations = (
+	variations: {
+		id: string;
+		type: string;
+		value: string;
+		product: string;
+	}[]
+) => {
+	const groupedVariations: { type: string; values: string[] }[] = [];
+
+	variations.forEach((variant) => {
+		const { type, value } = variant;
+		const existingGroup = groupedVariations.find(
+			(group) => group.type === type
+		);
+
+		if (existingGroup) {
+			existingGroup.values.push(value);
+		} else {
+			groupedVariations.push({ type, values: [value] });
+		}
+	});
+
+	return groupedVariations;
+};
+
+interface rating {
+	rating: number;
+}
+export const getTotalRating = (reviews: rating[]): number => {
+	return reviews.length > 0
+		? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+		: 0;
+};

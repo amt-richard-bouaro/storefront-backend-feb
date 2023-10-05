@@ -1,18 +1,16 @@
 import { Database } from '../../../extensions/dbClient';
-import bcrypt from 'bcrypt';
 import { NEW_ACCOUNT } from '../../../validations/account';
-import { SERVER_CONFIG } from '../../../config/index';
 
 import {
 	flatNestedObject,
+	hashPassword,
 	jwtGenerator,
 	shortCodeGenerator,
 } from '../../../helpers';
 
 export const createAccount = async (data: NEW_ACCOUNT) => {
-	const salt = await bcrypt.genSalt(SERVER_CONFIG.SALT_VALUE);
-
-	const hashedPassword = await bcrypt.hash(data.password, salt);
+	
+	const hashedPassword = await hashPassword(data.password);
 
 	const code = await shortCodeGenerator(6);
 

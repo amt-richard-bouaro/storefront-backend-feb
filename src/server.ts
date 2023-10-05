@@ -21,6 +21,9 @@ import { findAccountByProviderId } from './services/app/account/findAccount';
 import routes from './routes';
 import { userSerialization } from './interfaces';
 
+export const redisClient = createClient({
+	url: SERVER_CONFIG.REDIS_URL,
+});
 function server() {
 	const app = express();
 
@@ -46,9 +49,7 @@ function server() {
 
 	app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 
-	const redisClient = createClient({
-		url: SERVER_CONFIG.REDIS_URL,
-	});
+
 
 	redisClient.connect().catch(console.error);
 
