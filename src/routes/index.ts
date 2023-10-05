@@ -5,23 +5,31 @@ import productEndpoints from './product';
 import orderEndpoints from './order';
 import storeEndpoints from './store';
 import customerEndpoints from './customer';
+import {
+	ACCOUNT,
+	BUSINESS,
+	CUSTOMER,
+	ORDER,
+	PRODUCT,
+	STORE,
+} from '../constants/api/endpoints';
 
 function routes(app: Express) {
 	app.get('/', (req, res) => {
 		return res.redirect('/api/v1/docs');
 	});
 
-	app.use('/api/account', accountEndpoints);
+	app.use(ACCOUNT.BASE_ROUTE, accountEndpoints);
 
-	app.use('/api/business', businessEndpoints);
+	app.use(BUSINESS.BASE_ROUTE, businessEndpoints);
 
-	app.use('/api/store', storeEndpoints);
+	app.use(STORE.BASE_ROUTE, storeEndpoints);
 
-	app.use('/api/product', productEndpoints);
+	app.use(PRODUCT.BASE_ROUTE, productEndpoints);
 
-	app.use('/api/order', orderEndpoints);
+	app.use(ORDER.BASE_ROUTE, orderEndpoints);
 
-	app.use('/api/customer', customerEndpoints);
+	app.use(CUSTOMER.BASE_ROUTE, customerEndpoints);
 }
 
 export default routes;

@@ -28,6 +28,14 @@ export const getStore = async (req: Request, res: Response<RESPONSE>) => {
 			},
 		});
 
+		if (!store) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'STORE_NOT_FOUND',
+				message: 'Could not find store',
+				type: 'error',
+			});
+		}
+
 		const groupVariations = (
 			variations: {
 				id: string;

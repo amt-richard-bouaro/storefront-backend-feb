@@ -5,7 +5,7 @@ import { Database } from '../../extensions/dbClient';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 
-export const replyReview = async (req: Request, res: Response<RESPONSE>) => {
+export const customerReply = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		REPLY_REVIEW.parse(req.body);
 

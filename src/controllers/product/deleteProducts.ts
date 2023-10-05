@@ -11,13 +11,15 @@ export const deleteProduct = async (req: Request, res: Response<RESPONSE>) => {
 
 		PRODUCTS_TO_DELETE.parse(requestBody);
 
-		await Database.product.deleteMany({
+		const deleted = await Database.product.deleteMany({
 			where: {
 				id: {
 					in: requestBody.products,
 				},
 			},
 		});
+
+		console.log(deleted);
 
 		return res.status(STATUS.OK).json({
 			code: 'PRODUCT_DELETED',

@@ -4,7 +4,10 @@ import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findAllOrders } from '../../services/app/order/findAllOrders';
 
-export const getStoreOrders = async (req: Request, res: Response<RESPONSE>) => {
+export const getCustomerOrders = async (
+	req: Request,
+	res: Response<RESPONSE>
+) => {
 	try {
 		const customerID = req.params.customer_id;
 

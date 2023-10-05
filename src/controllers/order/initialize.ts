@@ -15,9 +15,12 @@ export const initializeOrder = async (
 	res: Response<RESPONSE>
 ) => {
 	try {
-		ITEMS_TO_BUY.parse(req.body);
+		console.log(req.body);
 
 		const requestBody = <ITEMS_TO_BUY_TYPE>req.body;
+		console.log(requestBody.store);
+
+		ITEMS_TO_BUY.parse(requestBody);
 
 		const customerID = req.params.customer_id;
 
@@ -106,6 +109,19 @@ export const initializeOrder = async (
 
 		const referenceId = 'STFRNT-' + uuid(10);
 
+		console.log({
+			currency: store.currency || 'USD',
+			total: orderTotal,
+			reference: referenceId,
+			shipping: {
+				address_line_1: shipping.streetAddress,
+				address_line_2: shipping.apartmentNo ?? 'N/A',
+				admin_area_2: shipping.city,
+				admin_area_1: shipping.phone,
+				postal_code: shipping.postalCode,
+				country_code: shipping.countryCode,
+			},
+		});
 		const createdOrder = await createOrder({
 			currency: store.currency || 'USD',
 			total: orderTotal,

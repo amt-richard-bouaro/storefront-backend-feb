@@ -7,7 +7,10 @@ import { findOrderById } from '../../services/app/order/findOrder';
 import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 
-export const changeShipping = async (req: Request, res: Response<RESPONSE>) => {
+export const changeOrderShipping = async (
+	req: Request,
+	res: Response<RESPONSE>
+) => {
 	try {
 		CHANGE_SHIPPING.parse(req.body);
 

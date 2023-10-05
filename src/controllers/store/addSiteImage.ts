@@ -9,6 +9,8 @@ export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const storeID = req.params.store_id;
 
+		const imageName = req.body.name;
+
 		const store = await findStoreById(storeID);
 
 		if (!store) {
@@ -21,7 +23,7 @@ export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!req.file) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'FILES_NOT_RECEIVED',
+				code: 'FILE_NOT_RECEIVED',
 				message: 'Server did not receive any files',
 				type: 'error',
 			});
@@ -32,6 +34,7 @@ export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 		const image = {
 			url: file.location,
 			key: file.key,
+			name: imageName,
 			store: storeID,
 		};
 

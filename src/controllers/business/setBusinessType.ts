@@ -15,7 +15,7 @@ export const setBusinessType = async (
 
 		BUSINESS_TYPE.parse(requestBody);
 
-		const businessID = req.params.businessID;
+		const businessID = req.params.business_id;
 
 		const business = await findBusinessById(businessID);
 

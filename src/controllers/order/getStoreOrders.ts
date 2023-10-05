@@ -1,14 +1,21 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
-import { findOrderById } from '../../services/app/order/findOrder';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { Database } from '../../extensions/dbClient';
 
-export const getStoreOrder = async (req: Request, res: Response<RESPONSE>) => {
+export const getStoreOrders = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const storeID = req.params.storeID;
+		const storeID = req.params.store_id;
 
-		const order = await findOrderById(storeID, { items: true });
+		const order = await Database.order.findMany({
+			where: {
+				store: storeID,
+			},
+			include: {
+				items: true,
+			},
+		});
 
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -20,7 +27,7 @@ export const getStoreOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		return res.status(STATUS.OK).json({
 			code: 'ORDER_FOUND',
-			message: 'Order detail successfully retreived',
+			message: 'Store Orders successfully retreived',
 			type: 'success',
 			data: order,
 		});

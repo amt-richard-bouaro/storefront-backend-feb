@@ -5,18 +5,20 @@ import { approveOrder } from '../../controllers/order/approve';
 import { updateItemQuantity } from '../../controllers/order/updateItemQuantity';
 import { removeOrderItem } from '../../controllers/order/removeOrderItem';
 import { cancelOrder } from '../../controllers/order/cancelOrders';
-import { getStoreOrder } from '../../controllers/order/getStoreOrders';
+import { getStoreOrders } from '../../controllers/order/getStoreOrders';
 import { getOrder } from '../../controllers/order/getOrder';
+import { changeOrderShipping } from '../../controllers/order/changeOrderShipping';
+import { ORDER } from '../../constants/api/endpoints';
 
 const order = express.Router();
 
-order.post('/initialize/:customer_id', initializeOrder);
-order.post('/approve/:orderID', approveOrder);
-order.patch('/item/:order_id', isAuthenticated, updateItemQuantity);
-order.delete('/item/:order_id', isAuthenticated, removeOrderItem);
-order.get('/:order_id', isAuthenticated, getOrder);
-order.get('/:storeID', isAuthenticated, getStoreOrder);
-order.patch('/cancel', isAuthenticated, cancelOrder);
-order.patch('change/shipping/:order_id', isAuthenticated, cancelOrder);
+order.post(ORDER.INITIALIZE_ORDER, initializeOrder);
+order.post(ORDER.APPROVE_ORDER_PAYMENT, approveOrder);
+order.patch(ORDER.UPDATE_ORDER_ITEM, isAuthenticated, updateItemQuantity);
+order.delete(ORDER.REMOVE_ORDER_ITEM, isAuthenticated, removeOrderItem);
+order.get(ORDER.GET_ORDER, isAuthenticated, getOrder);
+order.get(ORDER.GET_STORE_ORDERS, isAuthenticated, getStoreOrders);
+order.patch(ORDER.CANCEL_ORDERS, isAuthenticated, cancelOrder);
+order.patch(ORDER.CHANGE_ORDER_SHIPPING, isAuthenticated, changeOrderShipping);
 
 export default order;

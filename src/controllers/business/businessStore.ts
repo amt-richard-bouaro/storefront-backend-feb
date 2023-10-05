@@ -9,7 +9,7 @@ export const getBusinessStores = async (
 	res: Response<RESPONSE>
 ) => {
 	try {
-		const businessID = req.params.id;
+		const businessID = req.params.business_id;
 
 		const business = await findBusinessById(businessID);
 

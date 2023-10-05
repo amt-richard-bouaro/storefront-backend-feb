@@ -10,21 +10,26 @@ import { getReviews } from '../../controllers/product/reviews';
 import { getProducts } from '../../controllers/product/getProducts';
 import { reviewProduct } from '../../controllers/product/reviewProduct';
 import { getSingleProduct } from '../../controllers/product/getSingleProduct';
+import { PRODUCT } from '../../constants/api/endpoints';
 
 const product = express.Router();
 
 product.post(
-	'/add/:storeID',
+	PRODUCT.ADD_PRODUCT,
 	isAuthenticated,
 	imageUpload.array('images', 4),
 	addProduct
 );
-product.delete('/delete', isAuthenticated, deleteProduct);
-product.delete('/images/delete', isAuthenticated, deleteProductImages);
-product.patch('/update/:productID', isAuthenticated, updateProduct);
-product.post('/review/:order_id', isAuthenticated, reviewProduct);
-product.get('/reviews/:product_id', isAuthenticated, getReviews);
-product.get('/all/:store_id', isAuthenticated, getProducts);
-product.get('/:product_id', isAuthenticated, getSingleProduct);
+product.post(PRODUCT.DELETE_PRODUCTS, isAuthenticated, deleteProduct);
+product.post(
+	PRODUCT.DELETE_PRODUCT_IMAGES,
+	isAuthenticated,
+	deleteProductImages
+);
+product.patch(PRODUCT.UPDATE_PRODUCT, isAuthenticated, updateProduct);
+product.post(PRODUCT.REVIEW_PRODUCT, isAuthenticated, reviewProduct);
+product.get(PRODUCT.GET_PRODUCT_REVIEWS, isAuthenticated, getReviews);
+product.get(PRODUCT.GET_STORE_PRODUCTS, isAuthenticated, getProducts);
+product.get(PRODUCT.GET_PRODUCT, isAuthenticated, getSingleProduct);
 
 export default product;

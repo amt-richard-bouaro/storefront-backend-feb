@@ -15,7 +15,7 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 
 		NEW_STORE.parse(requestBody);
 
-		const businessID = req.params.businessID;
+		const businessID = req.params.business_id;
 
 		const business = await findBusinessById(businessID);
 

@@ -119,6 +119,7 @@ model Store {
 model SiteImage {
   id         String @id @default(uuid())
   url        String
+  name       String
   key        String
   store      String
   storeImage Store  @relation("storeImages", fields: [store], references: [id], onDelete: Cascade)

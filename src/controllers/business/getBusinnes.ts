@@ -6,7 +6,7 @@ import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 
 export const getBusiness = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const businessID = req.params.id;
+		const businessID = req.params.business_id;
 
 		const business = await findBusinessById(businessID);
 

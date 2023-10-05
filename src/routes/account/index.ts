@@ -19,32 +19,37 @@ import { resendVerificationCode } from '../../controllers/account/resendVerifica
 import { localLogin } from '../../controllers/account/loginLocal';
 
 import { SERVER_CONFIG } from '../../config';
+import { ACCOUNT } from '../../constants/api/endpoints';
 
 const account = express.Router();
 
-account.post('/register/local', localRegistration);
-account.get('/login/failure', handleFailure);
-account.get('/social/registration/failure', socialRegFailure);
-account.get('/social/login/failure', socialLoginFailure);
-account.get('/auth/user', isAuthenticated, authenticatedUser);
-account.get('/logout', handleLogout);
-account.post('/verify', isAuthenticated, accountVerification);
+account.post(ACCOUNT.CREATE_ACCOUNT_LOCAL, localRegistration);
+account.get(ACCOUNT.AUTH_FAILURE_LOCAL, handleFailure);
+account.get(ACCOUNT.SOCIAL_REGISTRATION_FAILURE, socialRegFailure);
+account.get(ACCOUNT.SOCIAL_AUTH_FAILURE, socialLoginFailure);
+account.get(ACCOUNT.GET_AUTH_ACCOUNT, isAuthenticated, authenticatedUser);
+account.get(ACCOUNT.LOGOUT, handleLogout);
+account.post(ACCOUNT.VERIFY_ACCOUNT, isAuthenticated, accountVerification);
 account.put(
-	'/password/reset',
+	ACCOUNT.PASSWORD_RESET,
 	checkIf(['mustChangePassword', 'canResetPassword']),
 	resetPassword
 );
 
-account.post('/request/password/reset', requestPasswordReset);
+account.post(ACCOUNT.REQUEST_PASSWORD_RESET, requestPasswordReset);
 account.post(
-	'/password/resetCode/verify',
+	ACCOUNT.VERIFY_RESET_CODE,
 	checkIf(['verified', 'mustChangePassword']),
 	verifyPasswordResetCode
 );
-account.get('/resend/code', isAuthenticated, resendVerificationCode);
+account.get(
+	ACCOUNT.RESEND_VERIFICATION_CODE,
+	isAuthenticated,
+	resendVerificationCode
+);
 
 account.post(
-	'/login/local',
+	ACCOUNT.AUTH_ACCOUNT_LOCAL,
 	passport.authenticate('local-auth', {
 		failureRedirect: '/api/account/login/failure',
 		failureFlash: true,
@@ -54,12 +59,12 @@ account.post(
 
 // Customer account registration - Google provider
 account.get(
-	'/google/customer',
+	ACCOUNT.CREATE_CUSTOMER_ACCOUNT_GOOGLE,
 	passport.authenticate('google-customer', { scope: ['profile', 'email'] })
 );
 
 account.get(
-	'/google/customer/callback',
+	ACCOUNT.GOOGLE_CUSTOMER_CALLBACK,
 	passport.authenticate('google-customer', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
 		failureRedirect: '/api/account/social/registration/failure',
@@ -69,12 +74,12 @@ account.get(
 
 // Business account registration - Google provider
 account.get(
-	'/google/business',
+	ACCOUNT.CREATE_BUSINESS_ACCOUNT_GOOGLE,
 	passport.authenticate('google-business', { scope: ['profile', 'email'] })
 );
 
 account.get(
-	'/google/business/callback',
+	ACCOUNT.GOOGLE_BUSINESS_CALLBACK,
 	passport.authenticate('google-business', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
 		failureRedirect: '/api/account/social/registration/failure',
@@ -84,12 +89,12 @@ account.get(
 
 // Authentication - Google provider
 account.get(
-	'/google/auth',
+	ACCOUNT.GET_AUTH_ACCOUNT,
 	passport.authenticate('google-auth', { scope: ['profile', 'email'] })
 );
 
 account.get(
-	'/google/auth/callback',
+	ACCOUNT.GOOGLE_AUTH_CALLBACK,
 	passport.authenticate('google-auth', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
 		failureRedirect: '/api/account/social/login/failure',
@@ -99,12 +104,12 @@ account.get(
 
 // Customer account registration - Facebook provider
 account.get(
-	'/facebook/customer',
+	ACCOUNT.CREATE_CUSTOMER_ACCOUNT_FACEBOOK,
 	passport.authenticate('facebook-customer', { scope: [] })
 );
 
 account.get(
-	'/facebook/customer/callback',
+	ACCOUNT.FACEBOOK_CUSTOMER_CALLBACK,
 	passport.authenticate('facebook-customer', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
 		failureRedirect: '/api/account/social/registration/failure',
@@ -114,12 +119,12 @@ account.get(
 
 // Business account registration - Facebook provider
 account.get(
-	'/facebook/business',
+	ACCOUNT.CREATE_BUSINESS_ACCOUNT_FACEBOOK,
 	passport.authenticate('facebook-business', { scope: [] })
 );
 
 account.get(
-	'/facebook/business/callback',
+	ACCOUNT.FACEBOOK_BUSINESS_CALLBACK,
 	passport.authenticate('facebook-business', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
 		failureRedirect: '/api/account/social/registration/failure',
@@ -129,12 +134,12 @@ account.get(
 
 // Authentication - Facebook provider
 account.get(
-	'/facebook/auth',
+	ACCOUNT.AUTH_ACCOUNT_FACEBOOK,
 	passport.authenticate('facebook-auth', { scope: [] })
 );
 
 account.get(
-	'/facebook/auth/callback',
+	ACCOUNT.FACEBOOK_AUTH_CALLBACK,
 	passport.authenticate('facebook-auth', {
 		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
 		failureRedirect: '/api/account/social/login/failure',
