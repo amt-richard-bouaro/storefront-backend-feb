@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { SERVER_CONFIG } from '../../config';
+import logger from '../../middlewares/logger';
 
 export const socialLoginFailure = (req: Request, res: Response<RESPONSE>) => {
 	req.logout((err) => {
 		if (err) {
-			throw new Error(err);
+			logger.error(err);
 		}
 	});
 

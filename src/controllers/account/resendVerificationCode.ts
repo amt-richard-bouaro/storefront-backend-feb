@@ -7,6 +7,8 @@ import emailVerification from '../../views/templates/emailVerification';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findAccountById } from '../../services/app/account/findAccount';
 import { updateVerificationCode } from '../../services/app/account/updateVerificationCode';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
+import logger from '../../middlewares/logger';
 
 export const resendVerificationCode = async (
 	req: Request,
@@ -19,8 +21,8 @@ export const resendVerificationCode = async (
 
 		if (!user) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'REQUEST_FAILED',
-				message: 'Could not find your account in the system',
+				code: AUTH_MSG.ACCOUNT_NOT_FOUND.CODE,
+				message: AUTH_MSG.ACCOUNT_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -44,15 +46,14 @@ export const resendVerificationCode = async (
 			}),
 			(err) => {
 				if (err) {
-					// console.log(err)
+					logger.error(err);
 				}
 			}
 		);
 
 		return res.status(STATUS.OK).json({
-			code: 'VERIFICATION_CODE_SENT',
-			message:
-				'Your request has been accepted. A mail has already been sent to your email address with instructions to verify your account.',
+			code: AUTH_MSG.VERIFICATION_CODE_SENT.CODE,
+			message: AUTH_MSG.VERIFICATION_CODE_SENT.MESSAGE,
 			type: 'success',
 		});
 	} catch (error) {

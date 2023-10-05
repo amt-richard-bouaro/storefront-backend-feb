@@ -7,13 +7,19 @@ interface RESPONSE {
 	error?: any;
 }
 
+type EMAIL_SUBJECT =
+	| 'Email Verification'
+	| 'Reset Password Confirmation'
+	| 'Password Reset'
+	| 'Reset Password Request'
+	| 'Email Verified';
 interface MAIL_OPTIONS {
 	from?: {
 		name: string;
 		address: string;
 	};
 	to: string;
-	subject: string;
+	subject: EMAIL_SUBJECT;
 	text?: string;
 	html?: string;
 }

@@ -5,6 +5,8 @@ import { findAccountById } from '../../services/app/account/findAccount';
 import { STATUS } from '../../config/statusCode';
 import { changePassword } from '../../services/app/account/changePassword';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
+import logger from '../../middlewares/logger';
 
 export const resetPassword = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -18,18 +20,16 @@ export const resetPassword = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!user) {
 			return res.status(STATUS.UNAUTHORIZED).json({
-				code: 'PASSWORD_RESET_FAILED',
-				message:
-					'Could not verify the email address because the request contained invalid data.',
+				code: AUTH_MSG.RESET_PASSWORD_FAILED.CODE,
+				message: AUTH_MSG.RESET_PASSWORD_FAILED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (!user.canResetPassword || !user.mustChangePassword) {
 			return res.status(STATUS.UNAUTHORIZED).json({
-				code: 'PASSWORD_RESET_FAILED',
-				message:
-					'You cannot change your passwor at this moment. Please start by requesting for password reset.',
+				code: AUTH_MSG.RESET_PASSWORD_FAILED.CODE,
+				message: AUTH_MSG.RESET_PASSWORD_FAILED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -38,16 +38,15 @@ export const resetPassword = async (req: Request, res: Response<RESPONSE>) => {
 
 		req.logout((err) => {
 			if (err) {
-				throw new Error(err);
+				logger.error(err);
 			}
 		});
 
 		req.session.cookie.maxAge = 0;
 
 		return res.status(STATUS.OK).json({
-			code: 'PASSWORD_RESET_SUCCESSFUL',
-			message:
-				'Your password has been successfully changed. Please login to continue',
+			code: AUTH_MSG.RESET_PASSWORD_SUCCESSFUL.CODE,
+			message: AUTH_MSG.RESET_PASSWORD_SUCCESSFUL.MESSAGE,
 			type: 'success',
 		});
 	} catch (error) {

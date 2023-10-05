@@ -9,6 +9,9 @@ import { updateResetStatus } from '../../services/app/account/updateResetStatus'
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
 import emailVerification from '../../views/templates/emailVerification';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
+import { ERROR_MSG } from '../../constants/api/messages';
+import logger from '../../middlewares/logger';
 
 export const requestPasswordReset = async (
 	req: Request,
@@ -23,17 +26,16 @@ export const requestPasswordReset = async (
 
 		if (!user) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'REQUEST_FAILED',
-				message: 'Could not find your account in the system',
+				code: AUTH_MSG.ACCOUNT_NOT_FOUND.CODE,
+				message: AUTH_MSG.ACCOUNT_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (user && user.provider !== 'local') {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'REQUEST_DENIED',
-				message:
-					'Your account is registered with third party service hence, we cannot reset your password.',
+				code: ERROR_MSG.THIRD_PARTY_INVALID__REQUEST.CODE,
+				message: ERROR_MSG.THIRD_PARTY_INVALID__REQUEST.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -56,7 +58,7 @@ export const requestPasswordReset = async (
 			}),
 			(err) => {
 				if (err) {
-					// console.log(err)
+					logger.error(err);
 				}
 			}
 		);
@@ -65,9 +67,8 @@ export const requestPasswordReset = async (
 
 		passport.authenticate('local-auth')(req, res, () => {
 			return res.status(STATUS.OK).json({
-				code: 'REQUEST_CODE_CREATED',
-				message:
-					'Your request has been accepted. A mail has already been sent to your email address with instructions to reset your password.',
+				code: AUTH_MSG.REQUEST_CODE_CREATED.CODE,
+				message: AUTH_MSG.REQUEST_CODE_CREATED.MESSAGE,
 				type: 'success',
 			});
 		});

@@ -8,12 +8,12 @@ import { findAccountById } from '../../services/app/account/findAccount';
 import { extractJwtPayload } from '../../helpers';
 import { verifyAccount } from '../../services/app/account/verifyAccount';
 import emailVerified from '../../views/templates/emailVerified';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
+import logger from '../../middlewares/logger';
 export const accountVerification = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
-	console.log(req);
-
 	try {
 		CODE.parse(req.body);
 
@@ -25,17 +25,16 @@ export const accountVerification = async (
 
 		if (!User) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'INVALID_REQUEST',
-				message:
-					'Could not verify the email address because the request contained invalid data.',
+				code: AUTH_MSG.ACCOUNT_NOT_FOUND.CODE,
+				message: AUTH_MSG.ACCOUNT_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (User.verified) {
 			return res.status(STATUS.OK).json({
-				code: 'ACCOUNT_VERIFIED',
-				message: 'Account is already verified',
+				code: AUTH_MSG.EMAIL_VERIFIED_SUCCESSFULLY.CODE,
+				message: AUTH_MSG.EMAIL_VERIFIED_SUCCESSFULLY.MESSAGE,
 				type: 'success',
 			});
 		}
@@ -44,9 +43,8 @@ export const accountVerification = async (
 
 		if (userVerificationToken.code !== code) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'INVALID_REQUEST',
-				message:
-					'Request Failed: Could not verify the email address because the request contained invalid data.',
+				code: AUTH_MSG.EMAIL_VERIFICATION_FAILED.CODE,
+				message: AUTH_MSG.EMAIL_VERIFICATION_FAILED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -66,7 +64,7 @@ export const accountVerification = async (
 			}),
 			(err) => {
 				if (err) {
-					// console.log(err)
+					logger.error(err);
 				}
 			}
 		);
@@ -76,26 +74,27 @@ export const accountVerification = async (
 			expires: new Date(0),
 		});
 
-		req.session.destroy((err) => {
-			err && console.log(err);
+		const data = {
+			id: verifiedUser.id,
+			email: verifiedUser.email,
+			type: verifiedUser.type,
+			verified: verifiedUser.verified,
+			isActive: verifiedUser.isActive,
+			mustChangePassword: verifiedUser.mustChangePassword,
+			canResetPassword: verifiedUser.canResetPassword,
+			createdAt: verifiedUser.createdAt,
+			updatedAt: verifiedUser.updatedAt,
+			customer: verifiedUser.customer && verifiedUser.customer.id,
+			business: verifiedUser.business && verifiedUser.business.id,
+		};
 
+		req.session.destroy((err) => {
+			err && logger.error(err);
 			return res.status(STATUS.OK).json({
-				code: 'ACCOUNT_VERIFIED',
-				message: 'Account is verified',
+				code: AUTH_MSG.EMAIL_VERIFIED_SUCCESSFULLY.CODE,
+				message: AUTH_MSG.EMAIL_VERIFIED_SUCCESSFULLY.MESSAGE,
 				type: 'success',
-				data: {
-					id: verifiedUser.id,
-					email: verifiedUser.email,
-					type: verifiedUser.type,
-					verified: verifiedUser.verified,
-					isActive: verifiedUser.isActive,
-					mustChangePassword: verifiedUser.mustChangePassword,
-					canResetPassword: verifiedUser.canResetPassword,
-					createdAt: verifiedUser.createdAt,
-					updatedAt: verifiedUser.updatedAt,
-					customer: verifiedUser.customer && verifiedUser.customer.id,
-					business: verifiedUser.business && verifiedUser.business.id,
-				},
+				data,
 			});
 		});
 	} catch (error) {

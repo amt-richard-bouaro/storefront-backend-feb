@@ -2,19 +2,24 @@ import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
 
 export const handleLogout = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		if (!req.isAuthenticated()) {
-			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'LOGGED_OUT_FAILED',
-				message: 'User not logged in',
+			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
+				code: AUTH_MSG.LOGOUT_FAILED.CODE,
+				message: AUTH_MSG.LOGOUT_FAILED.MESSAGE,
 				type: 'error',
 			});
 		}
 		req.logout((err) => {
 			if (err) {
-				throw new Error(err);
+				return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
+					code: AUTH_MSG.LOGOUT_FAILED.CODE,
+					message: AUTH_MSG.LOGOUT_FAILED.MESSAGE,
+					type: 'error',
+				});
 			}
 		});
 
@@ -25,10 +30,10 @@ export const handleLogout = async (req: Request, res: Response<RESPONSE>) => {
 			expires: new Date(0),
 		});
 
-		res.status(STATUS.OK).json({
-			code: 'LOGGED_OUT',
-			message: 'Logout successfully',
-			type: 'success',
+		return res.status(STATUS.OK).json({
+			code: AUTH_MSG.LOGOUT_SUCCESSFUL.CODE,
+			message: AUTH_MSG.LOGOUT_SUCCESSFUL.MESSAGE,
+			type: 'error',
 		});
 	} catch (error) {
 		const err = error as Error;

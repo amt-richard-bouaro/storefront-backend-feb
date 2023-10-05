@@ -2,6 +2,7 @@ import { MAIL_OPTIONS } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { SERVER_CONFIG } from '../../config';
 import nodemailer, { SentMessageInfo } from 'nodemailer';
+import { ERROR_MSG } from '../../constants/api/messages';
 
 const transport = nodemailer.createTransport({
 	service: SERVER_CONFIG.EMAIL_SERVICE,
@@ -46,7 +47,7 @@ export const sendMail = async (
 		} else {
 			return {
 				status: STATUS.INTERNAL_SERVER_ERROR,
-				message: 'An error occurred while sending the email.',
+				message: ERROR_MSG.INTERNAL_SERVER_ERROR.MESSAGE,
 			};
 		}
 	}

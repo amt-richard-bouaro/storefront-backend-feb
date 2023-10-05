@@ -8,23 +8,25 @@ import { createAccount } from '../../services/app/account/createAccount';
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
 import emailVerification from '../../views/templates/emailVerification';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
+import { ERROR_MSG } from '../../constants/api/messages';
+import logger from '../../middlewares/logger';
 
 export const localRegistration = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
-	const requestBody = req.body;
-
 	try {
+		const requestBody = req.body;
+
 		NEW_ACCOUNT.parse(requestBody);
 
 		const userExist = await findAccountByEmail(requestBody.email);
 
 		if (userExist) {
 			return res.status(STATUS.CONFLICT).json({
-				code: 'USER_ALREADY_EXIST',
-				message:
-					'There is already a user with that email. If you are the owner of this email, you might want to login instead.',
+				code: AUTH_MSG.EMAIL_ALREADY_IN_USE.CODE,
+				message: AUTH_MSG.EMAIL_ALREADY_IN_USE.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -46,8 +48,8 @@ export const localRegistration = async (
 
 		if (!User) {
 			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
-				code: 'UNEXPECTED_ERROR',
-				message: 'Error occurred: Unexpected error occurred',
+				code: ERROR_MSG.INTERNAL_SERVER_ERROR.CODE,
+				message: ERROR_MSG.INTERNAL_SERVER_ERROR.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -62,16 +64,15 @@ export const localRegistration = async (
 			}),
 			(err) => {
 				if (err) {
-					// console.log(err)
+					logger.error(err);
 				}
 			}
 		);
 
 		passport.authenticate('local-auth', { session: true })(req, res, () => {
 			return res.status(STATUS.CREATED).json({
-				code: 'REGISTRATION_SUCCESS',
-				message:
-					'Account has been successfully created. A mail has already been sent to your email address with instructions to verify your account.',
+				code: AUTH_MSG.ACCOUNT_CREATED_SUCCESSFULLY.CODE,
+				message: AUTH_MSG.ACCOUNT_CREATED_SUCCESSFULLY.MESSAGE,
 				type: 'success',
 				data: User,
 			});

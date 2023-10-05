@@ -6,6 +6,7 @@ import { CODE } from '../../validations/account';
 import { findAccountById } from '../../services/app/account/findAccount';
 import { extractJwtPayload } from '../../helpers';
 import { allowResetPassword } from '../../services/app/account/allowResetPassword';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
 
 export const verifyPasswordResetCode = async (
 	req: Request,
@@ -22,8 +23,8 @@ export const verifyPasswordResetCode = async (
 
 		if (!user) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'VERIFICATION_FAILED',
-				message: 'Could not verify code with current user',
+				code: AUTH_MSG.EMAIL_VERIFICATION_FAILED.CODE,
+				message: AUTH_MSG.EMAIL_VERIFICATION_FAILED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -32,33 +33,33 @@ export const verifyPasswordResetCode = async (
 
 		if (userVerificationToken.code !== code) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'VERIFICATION_FAILED',
-				message:
-					'The provided verification code was not valid. Please try again with the right code.',
+				code: AUTH_MSG.RESET_PASSWORD_FAILED.CODE,
+				message: AUTH_MSG.RESET_PASSWORD_FAILED.CODE,
 				type: 'error',
 			});
 		}
 
 		const updatedUser = await allowResetPassword(id);
 
+		const data = {
+			id: updatedUser.id,
+			email: updatedUser.email,
+			type: updatedUser.type,
+			verified: updatedUser.verified,
+			isActive: updatedUser.isActive,
+			mustChangePassword: updatedUser.mustChangePassword,
+			canResetPassword: updatedUser.canResetPassword,
+			createdAt: updatedUser.createdAt,
+			updatedAt: updatedUser.updatedAt,
+			customer: updatedUser.customer,
+			business: updatedUser.business,
+		};
+
 		return res.status(STATUS.OK).json({
-			code: 'VERIFICATION_CODE_VERIFIED',
-			message:
-				'We have verified the provided verification code. You can now go ahead and set up your new password',
+			code: AUTH_MSG.CODE_VERIFED.CODE,
+			message: AUTH_MSG.CODE_VERIFED.MESSAGE,
 			type: 'success',
-			data: {
-				id: updatedUser.id,
-				email: updatedUser.email,
-				type: updatedUser.type,
-				verified: updatedUser.verified,
-				isActive: updatedUser.isActive,
-				mustChangePassword: updatedUser.mustChangePassword,
-				canResetPassword: updatedUser.canResetPassword,
-				createdAt: updatedUser.createdAt,
-				updatedAt: updatedUser.updatedAt,
-				customer: updatedUser.customer,
-				business: updatedUser.business,
-			},
+			data,
 		});
 	} catch (error) {
 		const err = error as Error;
