@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
-import { Database } from '../../extensions/dbClient';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { findCustomerReviews } from '../../services/app/customer/findCustomerReviews';
+import { cachResult, getCachedResult } from '../../extensions/redis';
+import { CUSTOMER_MSG } from '../../constants/api/messages';
 
 export const getCustomerReviews = async (
 	req: Request,
@@ -11,59 +13,21 @@ export const getCustomerReviews = async (
 	try {
 		const customerID = req.params.customer_id;
 
-		const reviews = await Database.review.findMany({
-			where: {
-				customer: customerID,
-			},
-			select: {
-				replies: true,
-				productReview: {
-					select: {
-						name: true,
-						images: {
-							select: {
-								url: true,
-							},
-						},
-					},
-				},
-				orderReview: {
-					select: {
-						id: true,
-						paid: true,
-						orderId: true,
-						status: true,
-						items: {
-							select: {
-								name: true,
-								image: true,
-								price: true,
-								total: true,
-								discount: true,
-								variations: true,
-								product: true,
-							},
-						},
-					},
-				},
-				storeReviews: {
-					select: {
-						storeName: true,
-					},
-				},
-				createdAt: true,
-				updatedAt: false,
-				rating: true,
-				remarks: true,
-				comment: true,
-			},
-		});
+		const cachedCustomerReviews = await getCachedResult(
+			'customer-reviews' + customerID
+		);
+
+		const reviews = cachedCustomerReviews
+			? cachedCustomerReviews
+			: await findCustomerReviews(customerID);
+
+		reviews && cachResult('customer-reviews' + customerID, reviews);
 
 		return res.status(STATUS.OK).json({
-			code: 'REVIEWS_FOUND',
-			message: 'Reviews for product specify.',
-			type: 'error',
-			data: reviews,
+			code: CUSTOMER_MSG.REVIEWS_FOUND.CODE,
+			message: CUSTOMER_MSG.REVIEWS_FOUND.MESSAGE,
+			type: 'success',
+			data: reviews ?? [],
 		});
 	} catch (error) {
 		const err = error as Error;

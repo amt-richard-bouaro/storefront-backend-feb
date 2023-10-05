@@ -5,6 +5,7 @@ import { findBusinessById } from '../../services/app/business/findBusiness';
 import { STATUS } from '../../config/statusCode';
 import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { BUSINESS_MSG } from '../../constants/api/messages/business';
 
 export const setBusinessType = async (
 	req: Request,
@@ -21,8 +22,8 @@ export const setBusinessType = async (
 
 		if (!business) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'BUSINESS_NOT_FOUND',
-				message: 'Business information not found',
+				code: BUSINESS_MSG.BUSINESS_NOT_FOUND.CODE,
+				message: BUSINESS_MSG.BUSINESS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -37,8 +38,8 @@ export const setBusinessType = async (
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'BUSINESS_TYPE_UPDATED',
-			message: 'Business information updated successfully',
+			code: BUSINESS_MSG.BUSINESS_INFORMATION_UPDATED_SUCCESSFULLY.CODE,
+			message: BUSINESS_MSG.BUSINESS_INFORMATION_UPDATED_SUCCESSFULLY.MESSAGE,
 			type: 'success',
 			data: updatBusiness,
 		});

@@ -2,7 +2,7 @@ import express from 'express';
 import { isAuthenticated } from '../../middlewares/authentication/authenticate';
 import { setBusinessType } from '../../controllers/business/setBusinessType';
 import { newStore } from '../../controllers/business/newStore';
-import { getBusiness } from '../../controllers/business/getBusinnes';
+import { getBusiness } from '../../controllers/business/getBusiness';
 import { getBusinessStores } from '../../controllers/business/businessStore';
 import { BUSINESS } from '../../constants/api/endpoints';
 

@@ -7,7 +7,7 @@ type REVIEW = {
 	product: string;
 	productReview?: PRODUCT;
 	rating: number;
-	remarks: string;
+	remarks: 'Disappointing' | 'Outstanding' | 'Satisfactory';
 	comment: string | null;
 	customer: string;
 	customerReview?: CUSTOMER;
@@ -18,11 +18,11 @@ type REVIEW = {
 
 type REPLY = {
 	id: string;
-	comment?: string;
-	from: 'Business' | 'Customer';
-	customer: string;
+	comment: string;
+	from: 'Business' | 'Customer' | 'Admin';
+	customer: string | null;
 	customerReply?: CUSTOMER;
-	store: string;
+	store: string | null;
 	storeReply?: STORE;
 	review: string;
 	reviewReply?: REVIEW;

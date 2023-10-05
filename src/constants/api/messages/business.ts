@@ -15,6 +15,14 @@ export const BUSINESS_MSG = {
 		CODE: 'BUSINESS_EMAIL_ALREADY_IN_USE',
 		MESSAGE: 'The business email address you provided is already in use.',
 	},
+	BUSINESS_NOT_FOUND: {
+		CODE: 'BUSINESS_NOT_FOUND',
+		MESSAGE: "The business wasn't found.",
+	},
+	BUSINESS_FOUND: {
+		CODE: 'BUSINESS_FOUND',
+		MESSAGE: 'The business found.',
+	},
 	BUSINESS_INFORMATION_UPDATED_SUCCESSFULLY: {
 		CODE: 'BUSINESS_INFORMATION_UPDATED_SUCCESSFULLY',
 		MESSAGE: 'Your business information has been updated successfully.',
@@ -22,5 +30,13 @@ export const BUSINESS_MSG = {
 	BUSINESS_INFORMATION_UPDATE_FAILED: {
 		CODE: 'BUSINESS_INFORMATION_UPDATE_FAILED',
 		MESSAGE: 'Failed to update business information.',
+	},
+	BUSINESS_STORES_FOUND: {
+		CODE: 'BUSINESS_STORES_FOUND',
+		MESSAGE: 'Business stores found.',
+	},
+	BUSINESS_STORES_NOT_FOUND: {
+		CODE: 'BUSINESS_STORES_NOT_FOUND',
+		MESSAGE: 'No business stores found.',
 	},
 };

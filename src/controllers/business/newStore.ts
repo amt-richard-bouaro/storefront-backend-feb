@@ -5,6 +5,8 @@ import { findBusinessById } from '../../services/app/business/findBusiness';
 import { STATUS } from '../../config/statusCode';
 import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { BUSINESS_MSG } from '../../constants/api/messages/business';
+import { STORE_MSG } from '../../constants/api/messages';
 
 const defaultTemplate = {
 	options: JSON.stringify({ name: 'default', description: 'not set' }),
@@ -21,8 +23,8 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!business) {
 			return res.status(STATUS.OK).json({
-				code: 'BUSINESS_NOT_FOUND',
-				message: 'Could not find business',
+				code: BUSINESS_MSG.BUSINESS_NOT_FOUND.CODE,
+				message: BUSINESS_MSG.BUSINESS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -55,8 +57,8 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'STORE_CREATED',
-			message: 'Business template created successfully',
+			code: STORE_MSG.CREATED_SUCCESSFULLY.CODE,
+			message: STORE_MSG.CREATED_SUCCESSFULLY.MESSAGE,
 			type: 'success',
 			data: store,
 		});

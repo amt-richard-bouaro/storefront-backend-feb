@@ -28,7 +28,6 @@ type ORDER = {
 		| 'Refunded'
 		| 'Returned'
 		| 'Cancelled'
-		| 'Out_For_Delivery'
 		| 'Shipped'
 		| 'Processing'
 		| 'Completed'

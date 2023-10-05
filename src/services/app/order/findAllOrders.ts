@@ -9,8 +9,19 @@ export const findAllOrders = async (
 		where: {
 			OR: [{ store: id }, { customer: id }],
 		},
+
 		include: {
+			orderDestination: {
+				select: {
+					name: true,
+					code: true,
+					cost: true,
+				},
+			},
 			items: includes?.items === true,
+		},
+		orderBy: {
+			createdAt: 'desc',
 		},
 	});
 

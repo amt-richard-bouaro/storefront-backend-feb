@@ -233,7 +233,7 @@ model Review {
 
 model Reply {
   id            String    @id @default(uuid())
-  comment       String?
+  comment       String
   from          Type
   customer      String?
   customerReply Customer? @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)

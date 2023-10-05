@@ -3,6 +3,8 @@ import { RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findAllOrders } from '../../services/app/order/findAllOrders';
+import { ORDER_MSG } from '../../constants/api/messages';
+import { cachResult, getCachedResult } from '../../extensions/redis';
 
 export const getCustomerOrders = async (
 	req: Request,
@@ -11,19 +13,27 @@ export const getCustomerOrders = async (
 	try {
 		const customerID = req.params.customer_id;
 
-		const orders = await findAllOrders(customerID, { items: true });
+		const cachedCustomerOrders = await getCachedResult(
+			'customer-orders' + customerID
+		);
+
+		const orders = cachedCustomerOrders
+			? cachedCustomerOrders
+			: await findAllOrders(customerID, { items: true });
 
 		if (!orders) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'ORDER_NOT_FOUND',
-				message: 'Could not find order information',
+				code: ORDER_MSG.NOT_FOUND.CODE,
+				message: ORDER_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
+		cachResult('customer-orders' + customerID, orders, 15);
+
 		return res.status(STATUS.OK).json({
-			code: 'ORDER_FOUND',
-			message: 'Order detail successfully retreived',
+			code: ORDER_MSG.ORDERS_FOUND.CODE,
+			message: ORDER_MSG.ORDERS_FOUND.MESSAGE,
 			type: 'success',
 			data: orders,
 		});

@@ -1,9 +1,12 @@
+import { REVIEW_MSG } from './../../constants/api/messages/review';
 import { Request, Response } from 'express';
-import { REQUEST_WITH_USER, RESPONSE } from '../../interfaces';
+import { RESPONSE } from '../../interfaces';
 import { REPLY_REVIEW } from '../../validations/product';
-import { Database } from '../../extensions/dbClient';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { findReviewByUniques } from '../../services/app/review/findSingleReview';
+import { addReply } from '../../services/app/review/addReply';
+import { CUSTOMER_MSG } from '../../constants/api/messages';
 
 export const customerReply = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -11,36 +14,28 @@ export const customerReply = async (req: Request, res: Response<RESPONSE>) => {
 
 		const requestBody = <REPLY_REVIEW>req.body;
 
-		const { customer } = <REQUEST_WITH_USER>req.user;
-
 		const reviewID = req.params.review_id;
 
-		const review = await Database.review.findFirst({
-			where: {
-				OR: [{ id: requestBody.review }, { customer }, { id: reviewID }],
-			},
-		});
+		const review = await findReviewByUniques(reviewID);
 
 		if (!review) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'REVIEW_NOT_FIND',
-				message: 'Could not find review',
+				code: REVIEW_MSG.NOT_FOUND.CODE,
+				message: REVIEW_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
-		await Database.reply.create({
-			data: {
-				comment: requestBody.comment,
-				from: 'Customer',
-				customer: requestBody.from,
-				review: requestBody.review,
-			},
+		await addReply({
+			comment: requestBody.comment,
+			from: 'Customer',
+			customer: requestBody.from,
+			review: requestBody.review,
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'REPLY_SENT',
-			message: 'Your reply has been sent to the seller.',
+			code: CUSTOMER_MSG.REPLY_SENT.CODE,
+			message: CUSTOMER_MSG.REPLY_SENT.MESSAGE,
 			type: 'success',
 		});
 	} catch (error) {

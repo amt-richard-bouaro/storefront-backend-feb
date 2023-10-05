@@ -49,4 +49,8 @@ export const ORDER_MSG = {
 		CODE: 'ORDER_RETURNED_SUCCESSFULLY',
 		MESSAGE: 'Your order has been returned successfully.',
 	},
+	ORDERS_FOUND: {
+		CODE: 'ORDERS_FOUND',
+		MESSAGE: 'Orders found.',
+	},
 };
