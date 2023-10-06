@@ -23,7 +23,6 @@
     "@types/passport-google-oauth2": "^0.1.5",
     "@types/passport-local": "^1.0.35",
     "@types/swagger-ui-express": "^4.1.3",
-    "@types/uuid": "^9.0.3",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
     "eslint": "^8.49.0",
@@ -37,8 +36,8 @@
     "typescript": "^5.2.2"
   },
   "prisma": {
-      "seed": "ts-node prisma/seed.ts"
-    },
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "dev": "nodemon -L src/app.ts",
     "build": "tsc -p .",
@@ -51,7 +50,7 @@
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate dev",
     "db:push": "npx prisma db push",
-    "db:seed": "npx prisma db seed" 
+    "db:seed": "npx prisma db seed"
   },
   "repository": {
     "type": "git",
@@ -87,7 +86,6 @@
     "passport-local": "^1.0.0",
     "redis": "^4.6.8",
     "swagger-ui-express": "^4.5.0",
-    "uuid": "^9.0.0",
     "winston": "^3.10.0",
     "zod": "^3.22.2"
   }
