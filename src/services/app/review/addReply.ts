@@ -4,7 +4,8 @@ import { REPLY } from '../../../interfaces/types';
 export const addReply = async (data: {
 	comment: string;
 	from: 'Customer' | 'Business';
-	customer: string;
+	customer?: string;
+	store?: string;
 	review: string;
 }): Promise<REPLY | null> => {
 	const reply = await Database.reply.create({
@@ -12,6 +13,7 @@ export const addReply = async (data: {
 			comment: data.comment,
 			from: data.from,
 			customer: data.customer,
+			store: data.store,
 			review: data.review,
 		},
 	});

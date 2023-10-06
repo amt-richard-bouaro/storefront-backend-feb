@@ -2,34 +2,36 @@ import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
-import { Database } from '../../extensions/dbClient';
+import { findAllOrders } from '../../services/app/order/findAllOrders';
+import { ORDER_MSG } from '../../constants/api/messages';
+import { cachResult, getCachedResult } from '../../extensions/redis';
+import { Order } from '@prisma/client';
 
 export const getStoreOrders = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const storeID = req.params.store_id;
 
-		const order = await Database.order.findMany({
-			where: {
-				store: storeID,
-			},
-			include: {
-				items: true,
-			},
-		});
+		const cachedStoreOrders = await getCachedResult('store-orders' + storeID);
 
-		if (!order) {
+		const orders = cachedStoreOrders
+			? (cachedStoreOrders as Order[])
+			: await findAllOrders(storeID, { items: true });
+
+		if (!orders) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'ORDER_NOT_FOUND',
-				message: 'Could not find order information',
+				code: ORDER_MSG.NOT_RETURNED.CODE,
+				message: ORDER_MSG.NOT_RETURNED.MESSAGE,
 				type: 'error',
 			});
 		}
 
+		cachResult('store-orders' + storeID, orders);
+
 		return res.status(STATUS.OK).json({
-			code: 'ORDER_FOUND',
-			message: 'Store Orders successfully retreived',
+			code: ORDER_MSG.ORDERS_FOUND.CODE,
+			message: ORDER_MSG.ORDERS_FOUND.MESSAGE,
 			type: 'success',
-			data: order,
+			data: orders,
 		});
 	} catch (error) {
 		const err = error as Error;

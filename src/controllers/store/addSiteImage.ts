@@ -4,6 +4,7 @@ import { findStoreById } from '../../services/app/store/findStore';
 import { STATUS } from '../../config/statusCode';
 import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { STORE_MSG } from '../../constants/api/messages';
 
 export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -15,16 +16,16 @@ export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!store) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'STORE_NOT_FOUND',
-				message: 'No store with ID ' + storeID,
+				code: STORE_MSG.NOT_DELETED.CODE,
+				message: STORE_MSG.NOT_DELETED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (!req.file) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'FILE_NOT_RECEIVED',
-				message: 'Server did not receive any files',
+				code: STORE_MSG.IMAGES_NOT_RECEIVED.CODE,
+				message: STORE_MSG.IMAGES_NOT_RECEIVED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -43,8 +44,8 @@ export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'IMAGES UPLOADED',
-			message: 'Store image uploaded successfully',
+			code: STORE_MSG.IMAGE_UPLOADED.CODE,
+			message: STORE_MSG.IMAGE_UPLOADED.MESSAGE,
 			type: 'success',
 			data: { url: uploadSiteImage.url },
 		});

@@ -24,8 +24,8 @@ export const ORDER_MSG = {
 		MESSAGE: 'Order has already been returned.',
 	},
 	NOT_RETURNED: {
-		CODE: 'ORDER_NOT_RETURNED',
-		MESSAGE: 'Failed to return order.',
+		CODE: 'ORDERS_NOT_RETURNED',
+		MESSAGE: 'Failed to return orders.',
 	},
 	INVALID_PAYMENT_METHOD: {
 		CODE: 'INVALID_PAYMENT_METHOD',
@@ -52,5 +52,35 @@ export const ORDER_MSG = {
 	ORDERS_FOUND: {
 		CODE: 'ORDERS_FOUND',
 		MESSAGE: 'Orders found.',
+	},
+	ORDER_FAILED: {
+		CODE: 'ORDER_FAILED',
+		MESSAGE:
+			'Could not process order. This may be because products are un available or quantity is insufficient.',
+	},
+	SHIPPING_ADDRESS_NOT_FOUND: {
+		CODE: 'SHIPPING_ADDRESS_NOT_FOUND',
+		MESSAGE: 'Customer shipping was not found.',
+	},
+	SHIPPING_ADDRESS_UPDATED: {
+		CODE: 'SHIPPING_ADDRESS_UPDATED',
+		MESSAGE: 'Customer shipping was updated successfully',
+	},
+	DESTINATION_NOT_FOUND: {
+		CODE: 'DESTINATION_NOT_FOUND',
+		MESSAGE: 'Destination for was not received.',
+	},
+	ITEMS_NOT_FOUND: {
+		CODE: 'ITEMS_NOT_FOUND',
+		MESSAGE: 'Order items was not found.',
+	},
+	ITEMS_NOT_REMOVED: {
+		CODE: 'ITEMS_NOT_REMOVED',
+		MESSAGE:
+			'Every Order must have at least one item. Items can no longer be deleted from this order. You might want to cancel the order instead.',
+	},
+	ITEMS_UPDATED: {
+		CODE: 'ORDER_ITEMS_UPDATED',
+		MESSAGE: 'Order items was updated successfully.',
 	},
 };

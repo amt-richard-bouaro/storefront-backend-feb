@@ -8,6 +8,7 @@ export const findStoreById = async (
 		categories?: boolean;
 		orders?: boolean;
 		template?: boolean;
+		reviews?: boolean;
 	}
 ): Promise<STORE | null> => {
 	const store = await Database.store.findFirst({
@@ -18,6 +19,9 @@ export const findStoreById = async (
 			products:
 				includes?.products === true
 					? {
+							where: {
+								deleted: false,
+							},
 							include: {
 								variations: true,
 								images: {
@@ -28,6 +32,7 @@ export const findStoreById = async (
 										product: false,
 									},
 								},
+								reviews: includes.reviews === true,
 							},
 							orderBy: {
 								createdAt: 'desc',

@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
-import { Database } from '../../extensions/dbClient';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { getCachedResult } from '../../extensions/redis';
+import { findStoreTemplate } from '../../services/app/store/findTemplate';
+import { TEMPLATE } from '../../interfaces/types';
+import { STORE_MSG } from '../../constants/api/messages';
+import { publishStoreTemplate } from '../../services/app/store/storeTemplate';
 
 export const publishTemplate = async (
 	req: Request,
@@ -10,37 +14,29 @@ export const publishTemplate = async (
 ) => {
 	try {
 		const storeID = req.params.store_id;
+		const cachesStoreTemplate = await getCachedResult(
+			'store-template' + storeID
+		);
 
-		const template = await Database.template.findFirst({
-			where: {
-				store: storeID,
-			},
-			include: {
-				temp: true,
-			},
-		});
+		const template = cachesStoreTemplate
+			? (cachesStoreTemplate as TEMPLATE)
+			: await findStoreTemplate(storeID, { temp: true });
 
 		if (!template) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'TEMPLATE_NOT_UPDATED',
-				message: 'Store template not updated',
+				code: STORE_MSG.TEMPLATE_NOT_FOUND.CODE,
+				message: STORE_MSG.TEMPLATE_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
-		const publishedTemplate = await Database.template.update({
-			where: {
-				id: template.id,
-			},
-			data: {
-				options: template.temp?.options,
-			},
-		});
+		const publishedTemplate =
+			template.temp &&
+			(await publishStoreTemplate(template.id, template.temp?.options));
 
 		return res.status(STATUS.OK).json({
-			code: 'TEMPLATE_PUBLISHED',
-			message:
-				"TEMPLATE successfully published. Now customer will see changes you've made to your site.",
+			code: STORE_MSG.TEMPLATE_PUBLISHED.CODE,
+			message: STORE_MSG.TEMPLATE_PUBLISHED.MESSAGE,
 			type: 'success',
 			data: publishedTemplate,
 		});

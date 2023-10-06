@@ -6,9 +6,8 @@ import { addProduct } from '../../controllers/product/addProduct';
 import { deleteProduct } from '../../controllers/product/deleteProducts';
 import { deleteProductImages } from '../../controllers/product/deleteProductImages';
 import { updateProduct } from '../../controllers/product/updateProduct';
-import { getReviews } from '../../controllers/product/reviews';
+import { getReviews } from '../../controllers/product/getProductReviews';
 import { getProducts } from '../../controllers/product/getProducts';
-import { reviewProduct } from '../../controllers/product/reviewProduct';
 import { getSingleProduct } from '../../controllers/product/getSingleProduct';
 import { PRODUCT } from '../../constants/api/endpoints';
 
@@ -27,7 +26,6 @@ product.post(
 	deleteProductImages
 );
 product.patch(PRODUCT.UPDATE_PRODUCT, isAuthenticated, updateProduct);
-product.post(PRODUCT.REVIEW_PRODUCT, isAuthenticated, reviewProduct);
 product.get(PRODUCT.GET_PRODUCT_REVIEWS, isAuthenticated, getReviews);
 product.get(PRODUCT.GET_STORE_PRODUCTS, isAuthenticated, getProducts);
 product.get(PRODUCT.GET_PRODUCT, isAuthenticated, getSingleProduct);

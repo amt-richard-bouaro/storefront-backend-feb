@@ -7,6 +7,7 @@ import { ORDER_ITEM } from '../../interfaces/types';
 import { findOrderById } from '../../services/app/order/findOrder';
 import { updateOrder } from '../../services/Paypal/payPalApi';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { ORDER_MSG } from '../../constants/api/messages';
 
 export const removeOrderItem = async (
 	req: Request,
@@ -19,64 +20,56 @@ export const removeOrderItem = async (
 
 		const requestBody = <DELETE_ORDER_ITEM>req.body;
 
-		const order = await Database.order.findFirst({
-			where: {
-				id: orderID,
-			},
-			include: {
-				items: true,
-				storeOrder: {
-					select: {
-						currency: true,
-					},
-				},
-			},
+		const order = await findOrderById(orderID, {
+			items: true,
+			storeOrder: true,
 		});
 
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'Order was not found',
+				code: ORDER_MSG.NOT_FOUND.CODE,
+				message: ORDER_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (order.status === 'Cancelled') {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'Order was cancelled. Cannot update cancelled order.',
+				code: ORDER_MSG.ALREADY_CANCELLED.CODE,
+				message: ORDER_MSG.ALREADY_CANCELLED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (order.paid) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'Order has been processed. Cannot change quantities',
+				code: ORDER_MSG.ALREADY_FULFILLED.CODE,
+				message: `${ORDER_MSG.ALREADY_FULFILLED.MESSAGE} Cannot change quantities`,
 				type: 'error',
 			});
 		}
 
 		const items: ORDER_ITEM[] = [];
 
-		for (const id of requestBody.items) {
-			const item = order.items.find((item) => item.id === id);
-			item && items.push(item);
+		if (order.items) {
+			for (const id of requestBody.items) {
+				const item = order.items.find((item) => item.id === id);
+				item && items.push(item);
+			}
 		}
 
-		if (items.length === 0) {
+		if (items.length === 0 || !order.items) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'Could not find any item that matches what was provided',
+				code: ORDER_MSG.ITEMS_NOT_FOUND.CODE,
+				message: ORDER_MSG.ITEMS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (order.items.length < 2 || order.items.length - items.length < 1) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message:
-					'Every Order must have at least one item. Items can no longer be deleted from this order. You might want to cancel the order instead.',
+				code: ORDER_MSG.ITEMS_NOT_REMOVED.CODE,
+				message: ORDER_MSG.ITEMS_NOT_REMOVED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -109,12 +102,12 @@ export const removeOrderItem = async (
 				orderID: order.orderId,
 				amount: updatedOrderItem.newTotal._sum.total,
 				referenceId: order.referenceId,
-				currency: order.storeOrder.currency,
+				currency: order.storeOrder ? order.storeOrder.currency : 'USD',
 			}));
 
 		return res.status(STATUS.OK).json({
-			code: 'PAYMENT',
-			message: 'Payment intent',
+			code: ORDER_MSG.ITEMS_UPDATED.CODE,
+			message: ORDER_MSG.ITEMS_UPDATED.MESSAGE,
 			type: 'success',
 			data: updatedOrderItem.newOrder,
 		});

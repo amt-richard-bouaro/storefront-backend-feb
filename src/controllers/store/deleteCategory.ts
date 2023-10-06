@@ -1,22 +1,22 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
-import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { STATUS } from '../../config/statusCode';
+import { deleteStoreCategory } from '../../services/app/store/category';
+import { DELETE_CATEGORIES } from '../../validations/business';
+import { CATEGORY_MSG } from '../../constants/api/messages';
 
 export const deleteCategory = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const categoryID = req.params.categoryID;
+		const requestBody = <DELETE_CATEGORIES>req.body;
 
-		const category = await Database.category.delete({
-			where: {
-				id: categoryID,
-			},
-		});
+		DELETE_CATEGORIES.parse(requestBody);
+
+		const category = await deleteStoreCategory(requestBody.categories);
 
 		return res.status(STATUS.OK).json({
-			code: 'CATEGORY_DELETED',
-			message: 'Categories deleted successfully',
+			code: CATEGORY_MSG.DELETED.CODE,
+			message: CATEGORY_MSG.DELETED.MESSAGE,
 			type: 'success',
 			data: category,
 		});

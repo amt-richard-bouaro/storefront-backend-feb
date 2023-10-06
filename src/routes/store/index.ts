@@ -3,7 +3,6 @@ import { isAuthenticated } from '../../middlewares/authentication/authenticate';
 import { addSiteImage } from '../../controllers/store/addSiteImage';
 import { getStore } from '../../controllers/store/getStore';
 import { imageUpload } from '../../middlewares/uploader';
-import { getStoreOrder } from '../../controllers/store/getOrders';
 import { saveTemplate } from '../../controllers/store/saveTemplateChanges';
 import { publishTemplate } from '../../controllers/store/publishTemplateChanges';
 import { getTemp } from '../../controllers/store/getStoreTemp';
@@ -21,7 +20,6 @@ store.post(
 );
 
 store.get(STORE.GET_STORE, isAuthenticated, getStore);
-store.get(STORE.GET_STORE_ORDERS, isAuthenticated, getStoreOrder);
 store.get(STORE.GET_TEMPLATE_DRAFT, isAuthenticated, getTemp);
 store.post(STORE.ADD_STORE_CATEGORY, isAuthenticated, addCategory);
 store.delete(STORE.DELETE_STORE_CATEGORY, isAuthenticated, deleteCategory);

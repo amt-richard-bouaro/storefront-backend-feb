@@ -1,8 +1,12 @@
+import { STORE_MSG } from './../../constants/api/messages/store';
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
-import { Database } from '../../extensions/dbClient';
+
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { findStoreReviewById } from '../../services/app/store/findStoreReview';
+import { cachResult, getCachedResult } from '../../extensions/redis';
+import { REVIEW } from '../../interfaces/types';
 
 export const getStoreReviews = async (
 	req: Request,
@@ -11,59 +15,18 @@ export const getStoreReviews = async (
 	try {
 		const storeID = req.params.store_id;
 
-		const reviews = await Database.review.findMany({
-			where: {
-				store: storeID,
-			},
-			select: {
-				replies: true,
-				productReview: {
-					select: {
-						name: true,
-						images: {
-							select: {
-								url: true,
-							},
-						},
-					},
-				},
-				orderReview: {
-					select: {
-						id: true,
-						paid: true,
-						orderId: true,
-						status: true,
-						items: {
-							select: {
-								name: true,
-								image: true,
-								price: true,
-								total: true,
-								discount: true,
-								variations: true,
-								product: true,
-							},
-						},
-					},
-				},
-				customerReview: {
-					select: {
-						firstName: true,
-						lastName: true,
-					},
-				},
-				createdAt: true,
-				updatedAt: false,
-				rating: true,
-				remarks: true,
-				comment: true,
-			},
-		});
+		const cachedStoreReviews = await getCachedResult('store-reviews' + storeID);
+
+		const reviews = cachedStoreReviews
+			? (cachedStoreReviews as REVIEW[])
+			: await findStoreReviewById(storeID);
+
+		cachResult('store-reviews' + storeID, reviews);
 
 		return res.status(STATUS.OK).json({
-			code: 'REVIEWS_FOUND',
-			message: 'Reviews found',
-			type: 'error',
+			code: STORE_MSG.STORE_INFORMATION_RETRIEVED.CODE,
+			message: STORE_MSG.STORE_INFORMATION_RETRIEVED.MESSAGE,
+			type: 'success',
 			data: reviews,
 		});
 	} catch (error) {

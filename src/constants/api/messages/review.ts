@@ -19,6 +19,10 @@ export const REVIEW_MSG = {
 		CODE: 'REVIEW_NOT_FOUND',
 		MESSAGE: 'Review could not found. Make sure that the review ID is correct',
 	},
+	REVIEWS_FOUND: {
+		CODE: 'REVIEWS_FOUND',
+		MESSAGE: 'Reviews  found.',
+	},
 	DENIED: {
 		CODE: 'REVIEW_DENIED',
 		MESSAGE: 'Product review is not available at this time.',

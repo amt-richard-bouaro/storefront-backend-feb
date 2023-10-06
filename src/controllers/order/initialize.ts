@@ -9,6 +9,12 @@ import { createOrder } from '../../services/Paypal/payPalApi';
 import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { uuid } from '../../helpers';
+import { findShippingDestination } from '../../services/app/order/findOrderDestination';
+import {
+	CUSTOMER_MSG,
+	ORDER_MSG,
+	STORE_MSG,
+} from '../../constants/api/messages';
 
 export const initializeOrder = async (
 	req: Request,
@@ -22,14 +28,24 @@ export const initializeOrder = async (
 
 		ITEMS_TO_BUY.parse(requestBody);
 
+		const destination = await findShippingDestination(requestBody.destination);
+
+		if (!destination) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: ORDER_MSG.DESTINATION_NOT_FOUND.CODE,
+				message: ORDER_MSG.DESTINATION_NOT_FOUND.MESSAGE,
+				type: 'error',
+			});
+		}
+
 		const customerID = req.params.customer_id;
 
-		const customer = await findCustomerById(customerID);
+		const customer = await findCustomerById(customerID, {});
 
 		if (!customer) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'CUSTOMER_NOT_FOUND',
-				message: 'Could not find customer',
+				code: CUSTOMER_MSG.CUSTOMER_NOT_FOUND.CODE,
+				message: CUSTOMER_MSG.CUSTOMER_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -42,8 +58,8 @@ export const initializeOrder = async (
 
 		if (shipping === undefined) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'SHIPPING_ADDRESS_NOT_FOUND',
-				message: "Could not find customer's shipping address",
+				code: ORDER_MSG.SHIPPING_ADDRESS_NOT_FOUND.CODE,
+				message: ORDER_MSG.SHIPPING_ADDRESS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -52,8 +68,8 @@ export const initializeOrder = async (
 
 		if (!store || !store.products) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'STORE_NOT_FOUND',
-				message: 'Could not find store',
+				code: STORE_MSG.NOT_FOUND.CODE,
+				message: STORE_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -67,9 +83,8 @@ export const initializeOrder = async (
 
 		if (unavailbleProducts.length > 0) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'ORDER_FAILED',
-				message:
-					'Could not process order. This may be because products are un available or quantity is insufficient',
+				code: ORDER_MSG.ORDER_FAILED.CODE,
+				message: ORDER_MSG.ORDER_FAILED.MESSAGE,
 				type: 'error',
 				error: unavailbleProducts,
 			});
@@ -88,7 +103,7 @@ export const initializeOrder = async (
 					price: product.price,
 					discount: product.discount,
 					quantity: product.quantity,
-					total: product.total,
+					total: product.total + destination.cost,
 					image: product.image,
 				};
 			} else {
@@ -98,7 +113,7 @@ export const initializeOrder = async (
 					price: product.price,
 					discount: product.discount,
 					quantity: product.quantity,
-					total: product.total,
+					total: product.total + destination.cost,
 					image: product.image,
 					variations: {
 						connect: product.variations,
@@ -109,19 +124,6 @@ export const initializeOrder = async (
 
 		const referenceId = 'STFRNT-' + uuid(10);
 
-		console.log({
-			currency: store.currency || 'USD',
-			total: orderTotal,
-			reference: referenceId,
-			shipping: {
-				address_line_1: shipping.streetAddress,
-				address_line_2: shipping.apartmentNo ?? 'N/A',
-				admin_area_2: shipping.city,
-				admin_area_1: shipping.phone,
-				postal_code: shipping.postalCode,
-				country_code: shipping.countryCode,
-			},
-		});
 		const createdOrder = await createOrder({
 			currency: store.currency || 'USD',
 			total: orderTotal,
@@ -138,8 +140,8 @@ export const initializeOrder = async (
 
 		if (createdOrder.status !== 200) {
 			return res.status(STATUS.INTERNAL_SERVER_ERROR).send({
-				code: 'ORDER_FAILED',
-				message: 'Order has failed',
+				code: ORDER_MSG.NOT_RETURNED.CODE,
+				message: ORDER_MSG.NOT_RETURNED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -157,6 +159,7 @@ export const initializeOrder = async (
 						data: [...orderData],
 					},
 				},
+				destination: destination.id,
 			},
 			include: {
 				items: true,
@@ -165,9 +168,8 @@ export const initializeOrder = async (
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'ORDER_INITIALIZED',
-			message:
-				'Order has successfully been initialized. You can proceed to approve payment',
+			code: ORDER_MSG.PLACED_SUCCESSFULLY.CODE,
+			message: ORDER_MSG.PLACED_SUCCESSFULLY.MESSAGE,
 			type: 'success',
 			data: newOrder,
 		});

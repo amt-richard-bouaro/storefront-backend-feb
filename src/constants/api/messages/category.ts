@@ -20,4 +20,12 @@ export const CATEGORY_MSG = {
 		CODE: 'CATEGORY_NOT_DELETED',
 		MESSAGE: 'Failed to delete category.',
 	},
+	DELETED: {
+		CODE: 'CATEGORY_DELETED',
+		MESSAGE: 'Category deleted.',
+	},
+	CREATED: {
+		CODE: 'CATEGORY_CREATED',
+		MESSAGE: 'Store category created',
+	},
 };

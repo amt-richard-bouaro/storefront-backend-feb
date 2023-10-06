@@ -1,3 +1,4 @@
+import { PRODUCT_MSG } from './../../constants/api/messages/product';
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { NEW_PRODUCT } from '../../validations/product';
@@ -9,15 +10,17 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const requestBody = req.body;
 
-		const body: NEW_PRODUCT = {
-			price: parseFloat(requestBody.price.toString()),
-			name: requestBody.name,
-			quantity: parseInt(requestBody.quantity.toString()),
-			description: requestBody.description,
-			isActive: requestBody.isActive === 'true',
-			category: requestBody.category,
-			variations: JSON.parse(requestBody.variations || '[]'),
-		};
+		const body: NEW_PRODUCT = JSON.parse(requestBody);
+
+		// const body: NEW_PRODUCT = {
+		// 	price: parseFloat(requestBody.price.toString()),
+		// 	name: requestBody.name,
+		// 	quantity: parseInt(requestBody.quantity.toString()),
+		// 	description: requestBody.description,
+		// 	isActive: requestBody.isActive === 'true',
+		// 	category: requestBody.category,
+		// 	variations: JSON.parse(requestBody.variations || '[]'),
+		// };
 
 		NEW_PRODUCT.parse(body);
 
@@ -25,8 +28,8 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!req.files) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PRODUCT_NOT_ADDED',
-				message: 'Please add the product images',
+				code: PRODUCT_MSG.IMAGES_NOT_RECEIVED.CODE,
+				message: PRODUCT_MSG.IMAGES_NOT_RECEIVED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -56,6 +59,7 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 				quantity: body.quantity,
 				category: body.category,
 				description: body.description,
+				discount: body.discount ?? 0,
 				isActive: body.isActive,
 				store: storeID,
 				variations: {
@@ -76,8 +80,8 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'PRODUCT_ADDED',
-			message: 'New product has been successfully added',
+			code: PRODUCT_MSG.PRODUCT_ADD_SUCCESSFUL.CODE,
+			message: PRODUCT_MSG.PRODUCT_ADD_SUCCESSFUL.MESSAGE,
 			type: 'success',
 			data: product,
 		});

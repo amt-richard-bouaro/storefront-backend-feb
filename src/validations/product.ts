@@ -6,6 +6,7 @@ const NEW_PRODUCT = z.object({
 		.min(2, 'Product name must not be less than 2 characters')
 		.nonempty('Please provide a product name'),
 	price: z.number().nonnegative('Product price must not be less than 0.00'),
+	discount: z.number().optional(),
 	quantity: z.number().refine((val) => {
 		if (val < 1) {
 			return false;

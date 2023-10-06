@@ -4,8 +4,10 @@ import { CHANGE_SHIPPING } from '../../validations/order';
 import { findCustomerById } from '../../services/app/customer/findCustomer';
 import { STATUS } from '../../config/statusCode';
 import { findOrderById } from '../../services/app/order/findOrder';
-import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { CUSTOMER_MSG, ORDER_MSG } from '../../constants/api/messages';
+import { findShippingInfo } from '../../services/app/customer/findShipping';
+import { updateOrderShipping } from '../../services/app/order/updateOrderShipping';
 
 export const changeOrderShipping = async (
 	req: Request,
@@ -20,12 +22,12 @@ export const changeOrderShipping = async (
 
 		const orderID = req.params.order_id;
 
-		const customer = await findCustomerById(id);
+		const customer = await findCustomerById(id, {});
 
 		if (!customer) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'CUSTOMER_NOT_FOUND',
-				message: 'Could not find customer',
+				code: CUSTOMER_MSG.CUSTOMER_NOT_FOUND.CODE,
+				message: CUSTOMER_MSG.CUSTOMER_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -34,43 +36,32 @@ export const changeOrderShipping = async (
 
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'ORDER_NOT_FOUND',
-				message: 'Could not find order',
+				code: ORDER_MSG.NOT_FOUND.CODE,
+				message: ORDER_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
-		const shipping = await Database.shipping.findFirst({
-			where: {
-				id: requestBody.shipping,
-			},
-		});
+		const shipping = await findShippingInfo(requestBody.shipping);
 
 		if (!shipping) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'SHIPPING_NOT_FOUND',
-				message: 'Could not find shipping details.',
+				code: ORDER_MSG.SHIPPING_ADDRESS_NOT_FOUND.CODE,
+				message: ORDER_MSG.SHIPPING_ADDRESS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
-		const updateOrderShipping = await Database.order.update({
-			where: {
-				id: order.id,
-			},
-			data: {
-				shipping: shipping.id,
-			},
-			include: {
-				orderShipping: true,
-			},
-		});
+		const updatedOrderShipping = await updateOrderShipping(
+			order.id,
+			shipping.id
+		);
 
 		return res.status(STATUS.OK).json({
-			code: 'ORDER_SHIPPING_UPDATED',
-			message: 'Your order has been updated',
+			code: ORDER_MSG.SHIPPING_ADDRESS_UPDATED.CODE,
+			message: ORDER_MSG.SHIPPING_ADDRESS_UPDATED.MESSAGE,
 			type: 'success',
-			data: updateOrderShipping,
+			data: updatedOrderShipping,
 		});
 	} catch (error) {
 		const err = error as Error;

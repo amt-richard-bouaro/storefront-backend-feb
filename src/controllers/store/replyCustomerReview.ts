@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { REPLY_REVIEW } from '../../validations/product';
-import { Database } from '../../extensions/dbClient';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { findReviewByUniques } from '../../services/app/review/findSingleReview';
+import { REVIEW_MSG, STORE_MSG } from '../../constants/api/messages';
+import { addReply } from '../../services/app/review/addReply';
 
 export const replyCustomerReview = async (
 	req: Request,
@@ -16,32 +18,26 @@ export const replyCustomerReview = async (
 
 		const reviewID = req.params.review_id;
 
-		const review = await Database.review.findFirst({
-			where: {
-				OR: [{ id: reviewID }],
-			},
-		});
+		const review = await findReviewByUniques(reviewID);
 
 		if (!review) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'REVIEW_NOT_FIND',
-				message: 'Could not find review',
+				code: REVIEW_MSG.NOT_FOUND.CODE,
+				message: REVIEW_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
-		await Database.reply.create({
-			data: {
-				comment: requestBody.comment,
-				from: 'Business',
-				store: requestBody.from,
-				review: requestBody.review,
-			},
+		await addReply({
+			comment: requestBody.comment,
+			from: 'Business',
+			store: requestBody.from,
+			review: requestBody.review,
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'REPLY_SENT',
-			message: 'Your reply has been sent to the customer.',
+			code: STORE_MSG.REPLY_SENT.CODE,
+			message: STORE_MSG.REPLY_SENT.MESSAGE,
 			type: 'success',
 		});
 	} catch (error) {

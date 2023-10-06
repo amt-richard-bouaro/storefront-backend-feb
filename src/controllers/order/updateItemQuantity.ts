@@ -5,6 +5,8 @@ import { Database } from '../../extensions/dbClient';
 import { STATUS } from '../../config/statusCode';
 import { updateOrder } from '../../services/Paypal/payPalApi';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { ORDER_MSG } from '../../constants/api/messages';
+import { findOrderById } from '../../services/app/order/findOrder';
 
 export const updateItemQuantity = async (
 	req: Request,
@@ -17,50 +19,42 @@ export const updateItemQuantity = async (
 
 		const requestBody = <CHANGE_ORDER_ITEM_QUANTITY>req.body;
 
-		const order = await Database.order.findFirst({
-			where: {
-				id: orderID,
-			},
-			include: {
-				items: true,
-				storeOrder: {
-					select: {
-						currency: true,
-					},
-				},
-			},
+		const order = await findOrderById(orderID, {
+			items: true,
+			storeOrder: true,
 		});
 
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'Order was not found',
+				code: ORDER_MSG.NOT_FOUND.CODE,
+				message: ORDER_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (order.status === 'Cancelled') {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'Order was cancelled. Cannot update cancelled order.',
+				code: ORDER_MSG.ALREADY_CANCELLED.CODE,
+				message: ORDER_MSG.ALREADY_CANCELLED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (order.paid) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'Order has been processed. Cannot change quantities',
+				code: ORDER_MSG.ALREADY_FULFILLED.CODE,
+				message: `${ORDER_MSG.ALREADY_FULFILLED.MESSAGE} Cannot change quantities`,
 				type: 'error',
 			});
 		}
 
-		const item = order.items.find((item) => item.id === requestBody.id);
+		const item =
+			order.items && order.items.find((item) => item.id === requestBody.id);
 
-		if (item === undefined) {
+		if (!item) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'UPDATE_DENIED',
-				message: 'The provided order item not found',
+				code: ORDER_MSG.ITEMS_NOT_FOUND.CODE,
+				message: ORDER_MSG.ITEMS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -98,12 +92,12 @@ export const updateItemQuantity = async (
 				orderID: order.orderId,
 				amount: updatedOrderItem.newTotal._sum.total,
 				referenceId: order.referenceId,
-				currency: order.storeOrder.currency,
+				currency: order.storeOrder ? order.storeOrder.currency : 'USD',
 			}));
 
 		return res.status(STATUS.OK).json({
-			code: 'PAYMENT',
-			message: 'Payment intent',
+			code: ORDER_MSG.ITEMS_UPDATED.CODE,
+			message: ORDER_MSG.ITEMS_UPDATED.MESSAGE,
 			type: 'success',
 			data: updatedOrderItem.orderItem,
 		});

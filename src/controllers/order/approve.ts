@@ -5,23 +5,16 @@ import { STATUS } from '../../config/statusCode';
 import { productsAvailability } from '../../services/app/product/productAvailable';
 import { captureOrder } from '../../services/Paypal/payPalApi';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { findOrderById } from '../../services/app/order/findOrder';
 
 export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const orderID = req.params.orderID;
 
-		const order = await Database.order.findFirst({
-			where: {
-				orderId: orderID,
-			},
-			include: {
-				items: true,
-				storeOrder: {
-					include: {
-						products: true,
-					},
-				},
-			},
+		const order = await findOrderById(orderID, {
+			storeOrder: true,
+			items: true,
+			products: true,
 		});
 
 		if (!order) {
@@ -49,7 +42,7 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		if (order.items.length === 0) {
+		if (!order.items || order.items.length === 0) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: 'PAYMENT_DENIED',
 				message: 'Order items empty',
@@ -57,7 +50,15 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const storeProducts = order.storeOrder.products ?? [];
+		const storeProducts = order.storeOrder ? order.storeOrder.products : [];
+
+		if (!storeProducts) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: 'PAYMENT_DENIED',
+				message: 'Order items empty',
+				type: 'error',
+			});
+		}
 
 		const orderItems = order.items.map((item) => {
 			return {

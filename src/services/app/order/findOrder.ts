@@ -15,7 +15,12 @@ type status =
 
 export const findOrderById = async (
 	id: string,
-	includes?: { items?: boolean; customerOrder?: boolean },
+	includes?: {
+		items?: boolean;
+		customerOrder?: boolean;
+		storeOrder?: boolean;
+		products?: boolean;
+	},
 	statuses: status[] = [
 		'Pending_Payment',
 		'Delivered',
@@ -41,6 +46,51 @@ export const findOrderById = async (
 		include: {
 			items: includes?.items === true,
 			customerOrder: includes?.customerOrder === true,
+			storeOrder: includes?.storeOrder
+				? {
+						include: {
+							products: includes?.products === true,
+						},
+				  }
+				: false,
+		},
+	});
+
+	return order;
+};
+export const findCancelOrders = async (
+	ids: string[],
+	includes?: {
+		items?: boolean;
+		customerOrder?: boolean;
+		storeOrder?: boolean;
+		products?: boolean;
+	},
+	statuses: status[] = [
+		'Refunded',
+		'Returned',
+		'Cancelled',
+		'Shipped',
+		'Processing',
+		'Completed',
+		'Failed',
+	]
+): Promise<ORDER[] | null> => {
+	const order = await Database.order.findMany({
+		where: {
+			id: { in: ids },
+			AND: {
+				OR: [
+					{
+						status: {
+							notIn: statuses,
+						},
+					},
+					{
+						paid: false,
+					},
+				],
+			},
 		},
 	});
 

@@ -28,10 +28,19 @@ const NEW_STORE = z.object({
 type NEW_STORE = z.infer<typeof NEW_STORE>;
 
 const NEW_CATEGORY = z.object({
-	name: z.string().nonempty('Please provide category name'),
+	names: z
+		.array(z.string().nonempty('Please provide category name'))
+		.nonempty('Please provide category name'),
+});
+type NEW_CATEGORY = z.infer<typeof NEW_CATEGORY>;
+
+const DELETE_CATEGORIES = z.object({
+	categories: z
+		.array(z.string().nonempty('Please provide category id'))
+		.nonempty('Please provide at least one category id to delete'),
 });
 
-type NEW_CATEGORY = z.infer<typeof NEW_CATEGORY>;
+type DELETE_CATEGORIES = z.infer<typeof DELETE_CATEGORIES>;
 
 const TEMPLATE = z.object({
 	options: z.string(),
@@ -60,4 +69,5 @@ export {
 	TEAM_MEMBER,
 	REASON,
 	NEW_CATEGORY,
+	DELETE_CATEGORIES,
 };

@@ -7,6 +7,11 @@ const ITEMS_TO_BUY = z.object({
 		.nonempty(
 			'Please specify the shipping information you want use for this order'
 		),
+	destination: z
+		.string()
+		.nonempty(
+			'Please specify the shipping destination information associated with this order'
+		),
 	items: z
 		.array(
 			z.object({
@@ -25,6 +30,7 @@ const ITEMS_TO_BUY = z.object({
 type ITEMS_TO_BUY_TYPE = {
 	store: string;
 	shipping: string;
+	destination: string;
 	items: {
 		product: string;
 		quantity: number;

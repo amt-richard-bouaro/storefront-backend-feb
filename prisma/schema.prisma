@@ -176,6 +176,7 @@ model Product {
   variations       Variation[] @relation("productVariations")
   reviews          Review[]    @relation("productReviews")
   customerSaves    SavedItem[] @relation("savedProduct")
+  deleted          Boolean     @default(false)
   createdAt        DateTime    @default(now())
   updatedAt        DateTime    @updatedAt
   store            String

@@ -3,6 +3,10 @@ export const STORE_MSG = {
 		CODE: 'STORE_NOT_CREATED',
 		MESSAGE: 'Failed to create store.',
 	},
+	STORE_INFORMATION_RETRIEVED: {
+		CODE: 'STORE_INFORMATION_RETRIEVED',
+		MESSAGE: 'Store information retrieved successfully.',
+	},
 	NOT_CREATED: {
 		CODE: 'STORE_NOT_CREATED',
 		MESSAGE: 'Failed to create store.',
@@ -31,16 +35,20 @@ export const STORE_MSG = {
 		CODE: 'STORE_CREATED_SUCCESSFULLY',
 		MESSAGE: 'Your store has been created successfully.',
 	},
-	
+
 	DELETION_FAILED: {
 		CODE: 'STORE_DELETION_FAILED',
 		MESSAGE: 'Failed to delete store.',
 	},
-	
+
 	PRODUCT_NOT_FOUND: {
 		CODE: 'STORE_PRODUCT_NOT_FOUND',
 		MESSAGE:
 			'Store product could not found. Make sure that the store product ID is correct',
+	},
+	PRODUCT_FOUND: {
+		CODE: 'STORE_PRODUCT_FOUND',
+		MESSAGE: 'Store products found.',
 	},
 	PRODUCT_ALREADY_EXISTS: {
 		CODE: 'STORE_PRODUCT_ALREADY_EXISTS',
@@ -57,5 +65,43 @@ export const STORE_MSG = {
 	PRODUCT_NOT_DELETED: {
 		CODE: 'STORE_PRODUCT_NOT_DELETED',
 		MESSAGE: 'Failed to delete store product.',
+	},
+	IMAGE_UPLOADED: {
+		CODE: 'IMAGE_UPLOADED',
+		MESSAGE: 'Image uploaded.',
+	},
+	IMAGES_NOT_RECEIVED: {
+		CODE: 'IMAGE_NOT_RECEIVED',
+		MESSAGE: 'Images not received.',
+	},
+	IMAGES_NOT_DELETED: {
+		CODE: 'IMAGE_NOT_DELETED',
+		MESSAGE: 'Images not deleted.',
+	},
+	IMAGES_DELETED: {
+		CODE: 'IMAGE_DELETED',
+		MESSAGE: 'Images deleted.',
+	},
+	TEMPLATE_NOT_FOUND: {
+		CODE: 'TEMPLATE_NOT_FOUND',
+		MESSAGE: 'Templates not found',
+	},
+	TEMPLATE_FOUND: {
+		CODE: 'TEMPLATE_FOUND',
+		MESSAGE: 'Template found.',
+	},
+	TEMPLATE_PUBLISHED: {
+		CODE: 'TEMPLATE_PUBLISHED',
+		MESSAGE:
+			"Template successfully published. Now customer will see changes you've made to your site.",
+	},
+	TEMPLATE_UPDATED: {
+		CODE: 'TEMPLATE_UPDATED',
+		MESSAGE:
+			'Template information updated successfully. Feel free to publish the updated information anytime you want.',
+	},
+	REPLY_SENT: {
+		CODE: 'REPLY_SENT',
+		MESSAGE: 'Your reply has been sent to the customer.',
 	},
 };

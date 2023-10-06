@@ -15,6 +15,7 @@ const ORDER_STATUS = [
 	'Completed',
 	'Failed',
 ] as const;
+
 type ORDER = {
 	id: string;
 	amount: number;
@@ -72,6 +73,18 @@ type SHIPPING = {
 	customer: string;
 	customerShipping?: CUSTOMER;
 };
+
+type SHIPPING_DESTINATION = {
+	id: string;
+	name: string;
+	code: string;
+	duration: number;
+	cost: number;
+	store: string;
+	shippingDestinations?: STORE;
+	orders?: ORDER[];
+};
+
 type PAYOUT = {
 	id: string;
 	commission: number;
@@ -85,4 +98,11 @@ type PAYOUT = {
 	updatedAt: Date;
 };
 
-export { ORDER_STATUS, PAYOUT, SHIPPING, ORDER, ORDER_ITEM };
+export {
+	ORDER_STATUS,
+	PAYOUT,
+	SHIPPING,
+	ORDER,
+	ORDER_ITEM,
+	SHIPPING_DESTINATION,
+};
