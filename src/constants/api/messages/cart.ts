@@ -23,6 +23,6 @@ export const CART_MSG = {
 	},
 	ITEM_NOT_REMOVED: {
 		CODE: 'CART_ITEM_NOT_REMOVED',
-		MESSAGE: 'Failed to remove item from cart.',
+		MESSAGE: 'Failed to remove items from cart.',
 	},
 };
