@@ -11,7 +11,7 @@ export const CART_MSG = {
 	},
 	NOT_FOUND: {
 		CODE: 'CART_NOT_FOUND',
-		MESSAGE: 'Cart could not found. Make sure that the cart ID is correct',
+		MESSAGE: '|Cart could not found. Make sure that the cart ID is correct',
 	},
 	ITEM_NOT_ADDED: {
 		CODE: 'CART_ITEM_NOT_ADDED',
