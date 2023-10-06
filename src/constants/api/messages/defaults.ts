@@ -1,0 +1,47 @@
+export const DEFAULTS_MSG = {
+	AVAILABLE_CURRENCIES: {
+		CODE: 'AVAILABLE_CURRENCIES',
+		MESSAGE: 'Available currencies found',
+	},
+	AVAILABLE_DESTINATIONS: {
+		CODE: 'AVAILABLE_DESTINATIONS',
+		MESSAGE: 'Available destinations found',
+	},
+	DESTINATION: {
+		CODE: 'AVAILABLE_DESTINATIONS',
+		MESSAGE: 'Available destinations found',
+	},
+	ADD_SHIPPING_DESTINATION_SUCCESSFUL: {
+		CODE: 'ADD_SHIPPING_DESTINATION_SUCCESSFUL',
+		MESSAGE: 'Shipping destination added successfully.',
+	},
+	ADD_SHIPPING_DESTINATION_FAILED: {
+		CODE: 'ADD_SHIPPING_DESTINATION_FAILED',
+		MESSAGE: 'Failed to add shipping destination.',
+	},
+
+	SHIPPING_DESTINATION_UPDATED_SUCCESSFULLY: {
+		CODE: 'SHIPPING_DESTINATION_UPDATED_SUCCESSFULLY',
+		MESSAGE: 'Shipping destination updated successfully.',
+	},
+	SHIPPING_DESTINATION_UPDATE_FAILED: {
+		CODE: 'SHIPPING_DESTINATION_UPDATE_FAILED',
+		MESSAGE: 'Failed to update shipping destination.',
+	},
+	SHIPPING_DESTINATION_REMOVED_SUCCESSFULLY: {
+		CODE: 'SHIPPING_DESTINATION_REMOVED_SUCCESSFULLY',
+		MESSAGE: 'Shipping destination removed successfully.',
+	},
+	SHIPPING_DESTINATION_REMOVAL_FAILED: {
+		CODE: 'SHIPPING_DESTINATION_REMOVAL_FAILED',
+		MESSAGE: 'Failed to remove shipping destination.',
+	},
+	SHIPPING_DESTINATION_FOUND: {
+		CODE: 'SHIPPING_DESTINATION_FOUND',
+		MESSAGE: 'Shipping destination found successfully.',
+	},
+	SHIPPING_DESTINATION_NOT_FOUND: {
+		CODE: 'SHIPPING_DESTINATION_NOT_FOUND',
+		MESSAGE: 'Shipping destination not found.',
+	},
+};

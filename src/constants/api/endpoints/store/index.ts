@@ -14,4 +14,8 @@ export const STORE = {
 
 	GET_STORE_ORDERS: '/get-all-order/:store_id',
 	GET_STORE: '/:store_id',
+
+	ADD_SHIPPING_DESTINATION: '/add-shipping-destination/:store_id',
+	UPDATE_SHIPPING_DESTINATION: '/update-shipping-destination/:destination_id',
+	DELETE_SHIPPING_DESTINATION: '/delete-shipping-destination/:destination_id',
 };

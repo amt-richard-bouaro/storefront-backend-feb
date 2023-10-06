@@ -9,6 +9,8 @@ import { getTemp } from '../../controllers/store/getStoreTemp';
 import { deleteCategory } from '../../controllers/store/deleteCategory';
 import { addCategory } from '../../controllers/store/addcategory';
 import { STORE } from '../../constants/api/endpoints';
+import { saveDestination } from '../../controllers/store/saveDestination';
+import { updateDestination } from '../../controllers/store/updateDestination';
 
 const store = express.Router();
 
@@ -25,5 +27,7 @@ store.post(STORE.ADD_STORE_CATEGORY, isAuthenticated, addCategory);
 store.delete(STORE.DELETE_STORE_CATEGORY, isAuthenticated, deleteCategory);
 store.patch(STORE.SAVE_TEMPLATE_DRAFT, isAuthenticated, saveTemplate);
 store.patch(STORE.PUBLISH_TEMPLATE, isAuthenticated, publishTemplate);
+store.post(STORE.ADD_SHIPPING_DESTINATION, saveDestination);
+store.patch(STORE.UPDATE_SHIPPING_DESTINATION, updateDestination);
 
 export default store;

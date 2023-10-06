@@ -13,7 +13,7 @@ export const STORE_MSG = {
 	},
 	NOT_FOUND: {
 		CODE: 'STORE_NOT_FOUND',
-		MESSAGE: 'Store could not found. Make sure that the store ID is correct',
+		MESSAGE: 'Store could not be found. Make sure that the store ID is correct',
 	},
 	NOT_UPDATED: {
 		CODE: 'STORE_NOT_UPDATED',
