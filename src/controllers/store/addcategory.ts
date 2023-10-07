@@ -15,7 +15,7 @@ export const addCategory = async (req: Request, res: Response<RESPONSE>) => {
 
 		NEW_CATEGORY.parse(requestBody);
 
-		const storeID = req.params.storeID;
+		const storeID = req.params.store_id;
 
 		const cachedStore = await getCachedResult('with-category' + storeID);
 

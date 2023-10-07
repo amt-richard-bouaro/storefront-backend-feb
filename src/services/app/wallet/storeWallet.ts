@@ -1,0 +1,53 @@
+import { Database } from '../../../extensions/dbClient';
+import { WALLET } from '../../../interfaces/types/wallet';
+
+export const findWallets = async (
+	cusOrStoreID: string
+): Promise<WALLET[] | null> => {
+	const wallets = await Database.wallet.findMany({
+		where: {
+			OR: [{ store: cusOrStoreID }, { customer: cusOrStoreID }],
+		},
+		select: {
+			id: true,
+			name: true,
+			method: true,
+			walletId: true,
+			secret: false,
+			createdAt: true,
+			updatedAt: true,
+		},
+	});
+
+	return wallets;
+};
+
+export const createWallet = async (
+	type: 'Store' | 'Customer',
+	data: {
+		method: 'Card' | 'Paypal';
+		walletId: string;
+		secret: string;
+		name: string;
+		customer?: string;
+		store?: string;
+	}
+): Promise<WALLET | null> => {
+	if (type === 'Store' && !data.store) {
+		return null;
+	}
+
+	if (type === 'Customer' && !data.customer) {
+		return null;
+	}
+
+	const wallets = await Database.wallet.create({
+		data: {
+			...data,
+			store: type === 'Store' ? data.store : null,
+			customer: type === 'Customer' ? data.customer : null,
+		},
+	});
+
+	return wallets;
+};

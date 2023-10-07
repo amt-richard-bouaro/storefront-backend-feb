@@ -10,6 +10,9 @@ export const CUSTOMER = {
 	GET_ORDERS: '/get-orders/:customer_id',
 	GET_CUSTOMER: '/:customer_id',
 
+	ADD_WALLET: '/add-wallet/:customer_id',
+	GET_WALLETS: '/get-wallets/:customer_id',
+
 	ADD_VIEW_PRODUCTS: '/add-to-views/:customer_id',
 	ADD_FAVORITE_PRODUCTS: '/add-to-favorites/:customer_id',
 

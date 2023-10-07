@@ -1,8 +1,9 @@
 import { BUSINESS } from '../business';
-import { CUSTOMER, SAVED_ITEM } from '../customer';
+import { SAVED_ITEM } from '../customer';
 import { ORDER, PAYOUT } from '../order';
 import { CATEGORY, PRODUCT } from '../product';
 import { REPLY } from '../review';
+import { WALLET } from '../wallet';
 
 export type STORE = {
 	id: string;
@@ -14,7 +15,7 @@ export type STORE = {
 	categories?: CATEGORY[];
 	template?: TEMPLATE | null;
 	orders?: ORDER[];
-	visitors?: VISITOR[];
+	wallets?: WALLET[];
 	savedProducts?: SAVED_ITEM[];
 	payments?: PAYOUT[];
 	Replies?: REPLY[];
@@ -36,17 +37,6 @@ export type PROMOTION = {
 	products?: PRODUCT;
 	createdAt: Date;
 	updatedAt: Date;
-};
-
-export type VISITOR = {
-	id: string;
-	liked: boolean;
-	identity: string;
-	store: string;
-	storeVisitor: STORE;
-	customer: string;
-	customrVisit: CUSTOMER;
-	createdAt: Date;
 };
 
 export type TEMPLATE = {

@@ -9,6 +9,7 @@ export const findStoreById = async (
 		orders?: boolean;
 		template?: boolean;
 		reviews?: boolean;
+		wallets?: boolean;
 	}
 ): Promise<STORE | null> => {
 	const store = await Database.store.findFirst({
@@ -50,6 +51,7 @@ export const findStoreById = async (
 			categories: includes?.categories === true,
 			orders: includes?.orders === true,
 			template: includes?.template === true,
+			wallets: includes?.wallets === true,
 		},
 	});
 

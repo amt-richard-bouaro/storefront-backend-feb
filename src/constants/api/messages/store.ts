@@ -128,4 +128,24 @@ export const STORE_MSG = {
 		CODE: 'PROMO_ENDED',
 		MESSAGE: 'Promotion has ended',
 	},
+	PAYMENT_INFO_NOT_FOUND: {
+		CODE: 'PAYMENT_INFO_NOT_FOUND',
+		MESSAGE: 'Payment in formation not found',
+	},
+	PAYMENT_INFO_FOUND: {
+		CODE: 'PAYMENT_INFO_FOUND',
+		MESSAGE: 'Payment in formation found',
+	},
+	PAYMENT_INFO_ADDED: {
+		CODE: 'PAYMENT_INFO_ADDED',
+		MESSAGE: 'Payment in formation added.',
+	},
+	PAYMENT_ALREAD_EXIST: {
+		CODE: 'PAYMENT_INFO_ALREAD_EXIST',
+		MESSAGE: 'Payment information already exists',
+	},
+	PAYMENT_INFO_NOT_ADDED: {
+		CODE: 'PAYMENT_INFO_NOT_ADDED',
+		MESSAGE: 'Payment information could not be added.',
+	},
 };

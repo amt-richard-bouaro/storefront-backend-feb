@@ -12,6 +12,8 @@ import { STORE } from '../../constants/api/endpoints';
 import { saveDestination } from '../../controllers/store/saveDestination';
 import { updateDestination } from '../../controllers/store/updateDestination';
 import { getStoreOrders } from '../../controllers/store/getStoreOrders';
+import { addStoreWallet } from '../../controllers/store/addStoreWallet';
+import { getWallets } from '../../controllers/payment/getWallets';
 
 const store = express.Router();
 
@@ -26,6 +28,8 @@ store.get(STORE.GET_STORE, isAuthenticated, getStore);
 store.get(STORE.GET_TEMPLATE_DRAFT, isAuthenticated, getTemp);
 store.get(STORE.GET_STORE_ORDERS, isAuthenticated, getStoreOrders);
 store.post(STORE.ADD_STORE_CATEGORY, isAuthenticated, addCategory);
+store.post(STORE.ADD_WALLET, isAuthenticated, addStoreWallet);
+store.get(STORE.GET_STORE_WALLETS, isAuthenticated, getWallets);
 store.delete(STORE.DELETE_STORE_CATEGORY, isAuthenticated, deleteCategory);
 store.patch(STORE.SAVE_TEMPLATE_DRAFT, isAuthenticated, saveTemplate);
 store.patch(STORE.PUBLISH_TEMPLATE, isAuthenticated, publishTemplate);

@@ -5,6 +5,9 @@ export const STORE = {
 
 	ADD_PROMOTION: '/add-promotion/:store_id',
 
+	ADD_WALLET: '/add-wallet/:store_id',
+	GET_STORE_WALLETS: '/get-wallets/:store_id',
+
 	SAVE_TEMPLATE_DRAFT: '/save-template-draft/:store_id',
 	PUBLISH_TEMPLATE: '/publish-template/:store_id',
 

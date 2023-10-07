@@ -1,3 +1,4 @@
+import { WALLET } from './wallet/index';
 import { IMAGE, PRODUCT, CATEGORY, VARIATION } from './product/index';
 import {
 	ORDER,
@@ -7,7 +8,7 @@ import {
 	ORDER_ITEM,
 } from './order/index';
 import { REVIEW, REPLY } from './review/index';
-import { STORE, TEMP, TEMPLATE, VISITOR } from './store/index';
+import { STORE, TEMP, TEMPLATE } from './store/index';
 import { CUSTOMER, SAVED_ITEM } from './customer/index';
 import { ACCOUNTS, ACCOUNT_TYPES, USER, CHECKS } from './account/index';
 import { BUSINESS, BUSINESS_ADDRESS } from './business/index';
@@ -27,7 +28,6 @@ export {
 	IMAGE,
 	PRODUCT,
 	PAYOUT,
-	VISITOR,
 	CATEGORY,
 	VARIATION,
 	ORDER_STATUS,
@@ -36,4 +36,5 @@ export {
 	SAVED_ITEM,
 	BUSINESS_ADDRESS,
 	CHECKS,
+	WALLET,
 };

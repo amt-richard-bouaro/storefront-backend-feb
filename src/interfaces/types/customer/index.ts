@@ -2,7 +2,8 @@ import { USER } from '../account';
 import { ORDER, SHIPPING } from '../order';
 import { PRODUCT } from '../product';
 import { REPLY, REVIEW } from '../review';
-import { STORE, VISITOR } from '../store';
+import { STORE } from '../store';
+import { WALLET } from '../wallet';
 
 type CUSTOMER = {
 	id: string;
@@ -13,7 +14,7 @@ type CUSTOMER = {
 	replies?: REPLY[];
 	orders?: ORDER[];
 	savedProducts?: SAVED_ITEM[];
-	visitedStores?: VISITOR[];
+	wallets?: WALLET[];
 	shipping?: SHIPPING[];
 	account?: string;
 	customerAccount?: USER;

@@ -8,6 +8,7 @@ export const findCustomerById = async (
 		replies?: boolean;
 		orders?: boolean;
 		shipping?: boolean;
+		wallets?: boolean;
 	}
 ): Promise<CUSTOMER | null> => {
 	const customer = await Database.customer.findFirst({
@@ -37,6 +38,7 @@ export const findCustomerById = async (
 				  }
 				: false,
 			shipping: includes.shipping === true,
+			wallets: includes.wallets === true,
 		},
 	});
 

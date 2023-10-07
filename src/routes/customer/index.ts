@@ -11,6 +11,7 @@ import { customerReply } from '../../controllers/customer/customerReply';
 import { getFavoriteProducts } from '../../controllers/customer/getFavoriteProducts';
 import { addToViews } from '../../controllers/customer/addToviews';
 import { setLikedProduct } from '../../controllers/customer/setFavoriteProduct';
+import { getWallets } from '../../controllers/payment/getWallets';
 
 const customer = express.Router();
 
@@ -25,6 +26,8 @@ customer.get(
 customer.get(CUSTOMER.GET_REVIEWS, isAuthenticated, getCustomerReviews);
 customer.post(CUSTOMER.REVIEW_PRODUCT, isAuthenticated, reviewProduct);
 customer.post(CUSTOMER.REPLY_REVIEW, isAuthenticated, customerReply);
+customer.post(CUSTOMER.ADD_WALLET, isAuthenticated, customerReply);
+customer.get(CUSTOMER.GET_WALLETS, isAuthenticated, getWallets);
 customer.post(CUSTOMER.ADD_VIEW_PRODUCTS, isAuthenticated, addToViews);
 customer.post(CUSTOMER.ADD_FAVORITE_PRODUCTS, isAuthenticated, setLikedProduct);
 customer.get(

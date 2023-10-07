@@ -60,7 +60,7 @@ model Customer {
   Replies         Reply[]     @relation("customerReply")
   orders          Order[]     @relation("customerOrder")
   savedProduct    SavedItem[] @relation("customerSavedProduct")
-  wallet          Wallet[]    @relation("customerWallet")
+  wallets         Wallet[]    @relation("customerWallet")
   shipping        Shipping[]  @relation("customerShipping")
   account         String      @unique
   customerAccount Account     @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
@@ -111,7 +111,7 @@ model Store {
   categories    Category[]            @relation("storeCategories")
   template      Template?             @relation("storeTemplate")
   orders        Order[]               @relation("storeOrder")
-  wallet        Wallet[]              @relation("storeWallet")
+  wallets       Wallet[]              @relation("storeWallet")
   savedProducts SavedItem[]           @relation("storerSavedProduct")
   payments      Payout[]              @relation("storePayout")
   Replies       Reply[]               @relation("storeReply")
@@ -338,7 +338,7 @@ model Wallet {
   method         Method
   walletId       String
   name           String
-  secret            String?
+  secret         String    @default("not required")
   store          String?
   storeWallet    Store?    @relation("storeWallet", fields: [store], references: [id])
   customer       String?
