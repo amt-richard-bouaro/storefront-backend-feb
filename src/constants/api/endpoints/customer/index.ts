@@ -9,4 +9,9 @@ export const CUSTOMER = {
 	GET_SHIPPING_ADDRESSES: '/add-shipping-address/:customer_id',
 	GET_ORDERS: '/get-orders/:customer_id',
 	GET_CUSTOMER: '/:customer_id',
+
+	ADD_VIEW_PRODUCTS: '/add-to-views/:customer_id',
+	ADD_FAVORITE_PRODUCTS: '/add-to-favorites/:customer_id',
+
+	GET_FAVORITE_PRODUCTS: '/get-favorite-products/:customer_id',
 };

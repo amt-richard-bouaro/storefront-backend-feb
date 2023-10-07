@@ -103,7 +103,7 @@ export const initializeOrder = async (
 					price: product.price,
 					discount: product.discount,
 					quantity: product.quantity,
-					total: product.total + destination.cost,
+					total: product.total,
 					image: product.image,
 				};
 			} else {
@@ -150,7 +150,7 @@ export const initializeOrder = async (
 			data: {
 				customer: customerID,
 				shipping: shipping.id,
-				amount: orderTotal,
+				amount: orderTotal + destination.cost,
 				orderId: createdOrder.json.id,
 				referenceId: referenceId,
 				store: store.id,

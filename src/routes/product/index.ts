@@ -10,6 +10,7 @@ import { getReviews } from '../../controllers/product/getProductReviews';
 import { getProducts } from '../../controllers/product/getProducts';
 import { getSingleProduct } from '../../controllers/product/getSingleProduct';
 import { PRODUCT } from '../../constants/api/endpoints';
+import { updateDiscounts } from '../../controllers/product/updateDiscounts';
 
 const product = express.Router();
 
@@ -26,6 +27,11 @@ product.post(
 	deleteProductImages
 );
 product.patch(PRODUCT.UPDATE_PRODUCT, isAuthenticated, updateProduct);
+product.patch(
+	PRODUCT.UPDATE_PRODUCTS_DISCOUNT,
+	isAuthenticated,
+	updateDiscounts
+);
 product.get(PRODUCT.GET_PRODUCT_REVIEWS, isAuthenticated, getReviews);
 product.get(PRODUCT.GET_STORE_PRODUCTS, isAuthenticated, getProducts);
 product.get(PRODUCT.GET_PRODUCT, isAuthenticated, getSingleProduct);

@@ -17,7 +17,7 @@ export const addCategory = async (req: Request, res: Response<RESPONSE>) => {
 
 		const storeID = req.params.storeID;
 
-		const cachedStore = await getCachedResult(storeID);
+		const cachedStore = await getCachedResult('with-category' + storeID);
 
 		const store = cachedStore
 			? (cachedStore as STORE)
@@ -57,7 +57,7 @@ export const addCategory = async (req: Request, res: Response<RESPONSE>) => {
 
 		const category = await createStoreCategory(categoriesToSave);
 
-		cachResult(storeID, store);
+		cachResult('with-category' + storeID, store);
 
 		return res.status(STATUS.OK).json({
 			code: CATEGORY_MSG.CREATED.CODE,

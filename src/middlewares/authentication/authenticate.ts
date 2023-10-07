@@ -1,9 +1,11 @@
+import { ERROR_MSG } from './../../constants/api/messages/errors';
 import { Request, Response, NextFunction } from 'express';
 import { errorHandler } from '../errorhandlers/exceptions';
 import { ACCOUNTS, CHECKS, USER } from '../../interfaces/types';
 import { REQUEST_WITH_USER, RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { findAccountById } from '../../services/app/account/findAccount';
+import { AUTH_MSG } from '../../constants/api/messages/auth';
 
 export const restrictedTo =
 	(to?: ACCOUNTS[]) =>
@@ -33,10 +35,9 @@ export const restrictedTo =
 			const foundUser = user;
 
 			if (to && !to.includes(foundUser.type)) {
-				return res.status(STATUS.UNAUTHORIZED).json({
-					code: 'UNAUTHORIZED',
-					message:
-						'Restricted Access: You do not have permission to access this resource',
+				return res.status(STATUS.FORBIDDEN).json({
+					code: ERROR_MSG.FORBIDDEN.CODE,
+					message: ERROR_MSG.FORBIDDEN.MESSAGE,
 					type: 'error',
 				});
 			}
@@ -46,15 +47,15 @@ export const restrictedTo =
 				!foundUser.verified ||
 				foundUser.mustChangePassword
 			) {
-				return res.status(STATUS.UNAUTHORIZED).json({
-					code: 'UNAUTHORIZED',
+				return res.status(STATUS.FORBIDDEN).json({
+					code: ERROR_MSG.FORBIDDEN.CODE,
 					message: !foundUser.verified
-						? 'Account is not verified. You can request for verification.'
+						? `${ERROR_MSG.FORBIDDEN.MESSAGE} Account is not verified. You can request for verification.`
 						: foundUser.mustChangePassword
-						? 'You must change your password before you can continue'
+						? `${ERROR_MSG.FORBIDDEN.MESSAGE} You must change your password before you can continue`
 						: !foundUser.isActive
-						? 'Account is not actived.'
-						: 'You are not authorized',
+						? `${ERROR_MSG.FORBIDDEN.MESSAGE} Account is not actived.`
+						: ERROR_MSG.FORBIDDEN.MESSAGE,
 					type: 'error',
 				});
 			}
@@ -154,9 +155,8 @@ export const isAuthenticated = async (
 	try {
 		if (!req.isAuthenticated()) {
 			return res.status(STATUS.UNAUTHORIZED).json({
-				code: 'UNAUTHORIZED',
-				message:
-					'Permission denied. Please make sure you have permission to access this resource',
+				code: ERROR_MSG.UNAUTHORIZED.CODE,
+				message: ERROR_MSG.UNAUTHORIZED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -167,8 +167,8 @@ export const isAuthenticated = async (
 
 		if (!user) {
 			return res.status(STATUS.UNAUTHORIZED).json({
-				code: 'UNAUTHORIZED',
-				message: 'Unauthorized: Could not find any user',
+				code: AUTH_MSG.USER_NOT_FOUND.CODE,
+				message: AUTH_MSG.USER_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}

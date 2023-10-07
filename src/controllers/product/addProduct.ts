@@ -24,7 +24,7 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 
 		NEW_PRODUCT.parse(body);
 
-		const storeID = req.params.storeID;
+		const storeID = req.params.store_id;
 
 		if (!req.files) {
 			return res.status(STATUS.BAD_REQUEST).json({

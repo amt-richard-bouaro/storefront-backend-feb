@@ -11,6 +11,7 @@ import { addCategory } from '../../controllers/store/addcategory';
 import { STORE } from '../../constants/api/endpoints';
 import { saveDestination } from '../../controllers/store/saveDestination';
 import { updateDestination } from '../../controllers/store/updateDestination';
+import { getStoreOrders } from '../../controllers/store/getStoreOrders';
 
 const store = express.Router();
 
@@ -23,6 +24,7 @@ store.post(
 
 store.get(STORE.GET_STORE, isAuthenticated, getStore);
 store.get(STORE.GET_TEMPLATE_DRAFT, isAuthenticated, getTemp);
+store.get(STORE.GET_STORE_ORDERS, isAuthenticated, getStoreOrders);
 store.post(STORE.ADD_STORE_CATEGORY, isAuthenticated, addCategory);
 store.delete(STORE.DELETE_STORE_CATEGORY, isAuthenticated, deleteCategory);
 store.patch(STORE.SAVE_TEMPLATE_DRAFT, isAuthenticated, saveTemplate);

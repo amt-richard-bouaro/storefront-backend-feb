@@ -11,6 +11,7 @@ const NEW_DESTINATION = z.object({
 				.number()
 				.min(1, 'Destination shipping duration should have at least 1 day'),
 			cost: z.number().default(0),
+			isActive: z.boolean().default(true),
 		})
 	),
 });
@@ -22,8 +23,29 @@ const UPDATE_DESTINATION = z.object({
 		.number()
 		.min(1, 'Destination shipping duration should have at least 1 day'),
 	cost: z.number().default(0),
+	isActive: z.boolean(),
 });
 
 type UPDATE_DESTINATION = z.infer<typeof UPDATE_DESTINATION>;
 
-export { NEW_DESTINATION, UPDATE_DESTINATION };
+const PROMOTION = z
+	.object({
+		name: z.string().nonempty('Please provide a name for this promotion'),
+		statement: z
+			.string()
+			.nonempty('Please provide brief note on the promotion'),
+		discount: z
+			.number()
+			.min(0, 'Promotion discount must be greater than 0')
+			.max(0, 'Promotion discount must not be greater than 100'),
+		start: z.date().min(new Date(), 'Promotion must start after creation'),
+		end: z.date().min(new Date(), 'Promotion can only end after creation'),
+	})
+	.refine((promotion) => promotion.start < promotion.end, {
+		message: `Promotion end date must be later than start date`,
+		path: ['end'],
+	});
+
+type PROMOTION = z.infer<typeof PROMOTION>;
+
+export { NEW_DESTINATION, UPDATE_DESTINATION, PROMOTION };

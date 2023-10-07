@@ -3,6 +3,8 @@ export const STORE = {
 
 	ADD_SITE_IMAGE: '/add-site-image/:store_id',
 
+	ADD_PROMOTION: '/add-promotion/:store_id',
+
 	SAVE_TEMPLATE_DRAFT: '/save-template-draft/:store_id',
 	PUBLISH_TEMPLATE: '/publish-template/:store_id',
 

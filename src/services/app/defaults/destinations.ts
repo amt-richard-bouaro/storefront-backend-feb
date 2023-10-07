@@ -62,6 +62,7 @@ export const updateStoreDestination = async (
 	data: {
 		cost: number;
 		duration: number;
+		isActive: boolean;
 	}
 ): Promise<DESTINATION | null> => {
 	const destination = await Database.shippingDestination.update({

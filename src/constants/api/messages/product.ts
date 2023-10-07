@@ -33,7 +33,14 @@ export const PRODUCT_MSG = {
 		CODE: 'PRODUCT_CREATION_FAILED',
 		MESSAGE: 'Failed to create product.',
 	},
-
+	PRODUCTS_NOT_UPDATED: {
+		CODE: 'PRODUCTS_NOT_UPDATED',
+		MESSAGE: 'Failed to update products.',
+	},
+	PRODUCTS_UPDATED: {
+		CODE: 'PRODUCTS_UPDATED',
+		MESSAGE: 'Products were updated successfully.',
+	},
 	IMAGE_NOT_UPLOADED: {
 		CODE: 'IMAGE_NOT_UPLOADED',
 		MESSAGE: 'Image not uploaded.',
@@ -54,5 +61,9 @@ export const PRODUCT_MSG = {
 	PRODUCT_SAVED: {
 		CODE: 'PRODUCT_SAVED',
 		MESSAGE: 'Product saved successfully.',
+	},
+	PRODUCT_NOT_SAVED: {
+		CODE: 'PRODUCT_NOT_SAVED',
+		MESSAGE: 'Products not saved.',
 	},
 };

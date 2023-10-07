@@ -1,10 +1,9 @@
 import { Database } from '../../../extensions/dbClient';
-import { PRODUCT } from '../../../interfaces/types';
 
 export const findProductById = async (
 	id: string,
 	includes: { variations?: boolean; reviews?: boolean; images?: boolean }
-): Promise<PRODUCT | null> => {
+) => {
 	const product = await Database.product.findFirst({
 		where: {
 			id,
@@ -23,8 +22,29 @@ export const findProductById = async (
 						},
 				  }
 				: false,
+			promotionProduct: {
+				select: {
+					discount: true,
+					start: true,
+					end: true,
+					name: true,
+				},
+			},
 		},
 	});
 
 	return product;
+};
+
+export const findExistingProducts = async (
+	productIDs: string[]
+): Promise<string[] | null> => {
+	const existingProducts: string[] = [];
+
+	for (const productID of productIDs) {
+		const exist = await findProductById(productID, {});
+		exist && existingProducts.push(exist.id);
+	}
+
+	return existingProducts;
 };

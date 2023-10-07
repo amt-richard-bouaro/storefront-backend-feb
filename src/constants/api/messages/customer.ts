@@ -55,4 +55,12 @@ export const CUSTOMER_MSG = {
 		CODE: 'REPLY_SENT',
 		MESSAGE: 'Your reply has been sent to the seller.',
 	},
+	SAVED_PRODUCTS_NOT_FOUND: {
+		CODE: 'SAVED_PRODUCTS_NOT_FOUND',
+		MESSAGE: 'Your saved was not found',
+	},
+	SAVED_PRODUCTS_FOUND: {
+		CODE: 'SAVED_PRODUCTS_FOUND',
+		MESSAGE: 'Your saved was found',
+	},
 };

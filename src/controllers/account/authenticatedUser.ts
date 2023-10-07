@@ -10,6 +10,7 @@ export const authenticatedUser = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
+	console.log(req);
 	try {
 		const requestUser = <REQUEST_WITH_USER>req.user;
 

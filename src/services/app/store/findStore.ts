@@ -33,6 +33,14 @@ export const findStoreById = async (
 									},
 								},
 								reviews: includes.reviews === true,
+								promotionProduct: {
+									select: {
+										discount: true,
+										start: true,
+										end: true,
+										name: true,
+									},
+								},
 							},
 							orderBy: {
 								createdAt: 'desc',

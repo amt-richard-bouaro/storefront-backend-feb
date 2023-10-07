@@ -5,6 +5,7 @@ import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findAllOrders } from '../../services/app/order/findAllOrders';
 import { ORDER_MSG } from '../../constants/api/messages';
 import { cachResult, getCachedResult } from '../../extensions/redis';
+import { ORDER } from '../../interfaces/types';
 
 export const getCustomerOrders = async (
 	req: Request,
@@ -18,8 +19,12 @@ export const getCustomerOrders = async (
 		);
 
 		const orders = cachedCustomerOrders
-			? cachedCustomerOrders
-			: await findAllOrders(customerID, { items: true });
+			? (cachedCustomerOrders as ORDER[])
+			: await findAllOrders(customerID, {
+					items: true,
+					shipping: true,
+					store: true,
+			  });
 
 		if (!orders) {
 			return res.status(STATUS.BAD_REQUEST).json({

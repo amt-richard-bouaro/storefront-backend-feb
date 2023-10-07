@@ -20,7 +20,7 @@ export const updateProduct = async (req: Request, res: Response<RESPONSE>) => {
 		const product = await findProductById(productID, {});
 
 		if (!product) {
-			return res.status(STATUS.OK).json({
+			return res.status(STATUS.BAD_REQUEST).json({
 				code: PRODUCT_MSG.NOT_FOUND.CODE,
 				message: PRODUCT_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',

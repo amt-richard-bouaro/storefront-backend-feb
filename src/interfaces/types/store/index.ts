@@ -8,8 +8,7 @@ export type STORE = {
 	id: string;
 	storeName: string;
 	storeType: string;
-	promotion: boolean;
-	promotionDiscount: number;
+	promotions?: PROMOTION[];
 	currency: string;
 	products?: PRODUCT[];
 	categories?: CATEGORY[];
@@ -21,6 +20,20 @@ export type STORE = {
 	Replies?: REPLY[];
 	business: string;
 	businessStore?: BUSINESS;
+	createdAt: Date;
+	updatedAt: Date;
+};
+
+export type PROMOTION = {
+	id: string;
+	name: string;
+	statement: string;
+	discount: number;
+	start: Date;
+	end: Date;
+	store: string;
+	storePromotion?: STORE;
+	products?: PRODUCT;
 	createdAt: Date;
 	updatedAt: Date;
 };

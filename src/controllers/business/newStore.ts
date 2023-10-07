@@ -7,6 +7,7 @@ import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { BUSINESS_MSG } from '../../constants/api/messages/business';
 import { STORE_MSG } from '../../constants/api/messages';
+import { findStoreByName } from '../../services/app/store/findStoreByName';
 
 const defaultTemplate = {
 	options: JSON.stringify({ name: 'default', description: 'not set' }),
@@ -29,12 +30,22 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
+		const storeExist = await findStoreByName(requestBody.storeName.trim());
+
+		if (!storeExist) {
+			return res.status(STATUS.OK).json({
+				code: STORE_MSG.NAME_ALREADY_EXISTS.CODE,
+				message: STORE_MSG.NAME_ALREADY_EXISTS.MESSAGE,
+				type: 'error',
+			});
+		}
+
 		const template = requestBody.template ?? defaultTemplate;
 
 		const store = await Database.store.create({
 			data: {
 				business: businessID,
-				storeName: requestBody.storeName,
+				storeName: requestBody.storeName.trim(),
 				storeType: requestBody.storeType,
 				template: {
 					create: {

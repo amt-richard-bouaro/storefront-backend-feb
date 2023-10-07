@@ -6,7 +6,6 @@ export const ORDER = {
 	REMOVE_ORDER_ITEM: '/remove-item/:order_id',
 
 	GET_ORDER: '/get-single-order/:order_id',
-	GET_STORE_ORDERS: '/get-all-orders/:store_id',
 	CANCEL_ORDERS: '/cancel-orders',
 	CHANGE_ORDER_SHIPPING: '/change-order-shipping/:order_id',
 };

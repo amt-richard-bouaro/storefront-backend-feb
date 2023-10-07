@@ -10,7 +10,7 @@ export const AUTH_MSG = {
 	},
 	USER_NOT_FOUND: {
 		CODE: 'USER_NOT_FOUND',
-		MESSAGE: 'User could not found. Make sure that you are authenticated',
+		MESSAGE: 'User could not be found. Make sure that you are authenticated',
 	},
 	USER_FOUND: {
 		CODE: 'USER_FOUND',

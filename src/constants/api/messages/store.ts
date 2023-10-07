@@ -50,6 +50,10 @@ export const STORE_MSG = {
 		CODE: 'STORE_PRODUCT_FOUND',
 		MESSAGE: 'Store products found.',
 	},
+	NAME_ALREADY_EXISTS: {
+		CODE: 'STORE_NAME_ALREADY_EXISTS',
+		MESSAGE: 'A store with the same name already exists.',
+	},
 	PRODUCT_ALREADY_EXISTS: {
 		CODE: 'STORE_PRODUCT_ALREADY_EXISTS',
 		MESSAGE: 'A store product with the same SKU already exists.',
@@ -103,5 +107,25 @@ export const STORE_MSG = {
 	REPLY_SENT: {
 		CODE: 'REPLY_SENT',
 		MESSAGE: 'Your reply has been sent to the customer.',
+	},
+	PROMO_NOT_CREATED: {
+		CODE: 'PROMO_NOT_CREATED',
+		MESSAGE: 'Failed to create store promo.',
+	},
+	PROMO_CREATED: {
+		CODE: 'PROMO_CREATED',
+		MESSAGE: 'Promotion add to store. Your add product to this promo.',
+	},
+	PROMO_NOT_FOUND: {
+		CODE: 'PROMO_NOT_FOUND',
+		MESSAGE: 'Promotion not found',
+	},
+	PROMO_FOUND: {
+		CODE: 'PROMO_FOUND',
+		MESSAGE: 'Promotion found',
+	},
+	PROMO_ENDED: {
+		CODE: 'PROMO_ENDED',
+		MESSAGE: 'Promotion has ended',
 	},
 };

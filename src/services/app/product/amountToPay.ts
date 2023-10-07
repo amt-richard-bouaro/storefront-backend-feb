@@ -16,9 +16,11 @@ export const totalAmountToPay = (
 		const item = items.find((item) => item.product === product.id);
 
 		if (item !== undefined) {
+			const discountToUse =
+				product.promotionProduct?.discount ?? product.discount;
 			const discount =
-				product.discount > 0
-					? (product.discount / 100) * product.price * item.quantity
+				discountToUse > 0
+					? (discountToUse / 100) * product.price * item.quantity
 					: 0;
 
 			const amount = item.quantity * product.price - discount;
