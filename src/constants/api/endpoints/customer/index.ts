@@ -15,6 +15,7 @@ export const CUSTOMER = {
 
 	ADD_VIEW_PRODUCTS: '/add-to-views/:customer_id',
 	ADD_FAVORITE_PRODUCTS: '/add-to-favorites/:customer_id',
+	UNSET_FAVORITE_PRODUCT: '/unset/:product_id/as-favorite/:customer_id',
 
 	GET_FAVORITE_PRODUCTS: '/get-favorite-products/:customer_id',
 };

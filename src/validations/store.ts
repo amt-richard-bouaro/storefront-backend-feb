@@ -48,4 +48,23 @@ const PROMOTION = z
 
 type PROMOTION = z.infer<typeof PROMOTION>;
 
-export { NEW_DESTINATION, UPDATE_DESTINATION, PROMOTION };
+const REMOVE_PROMO_ITEM = z.object({
+	products: z.string().array().nonempty('Products to remove must not be empty'),
+});
+type REMOVE_PROMO_ITEM = z.infer<typeof REMOVE_PROMO_ITEM>;
+
+const DELETE_SITE_IMAGES = z.object({
+	images: z
+		.array(z.string().nonempty('Please provide image url'))
+		.nonempty('Please provide at least one image url to delete'),
+});
+
+type DELETE_SITE_IMAGES = z.infer<typeof DELETE_SITE_IMAGES>;
+
+export {
+	NEW_DESTINATION,
+	UPDATE_DESTINATION,
+	PROMOTION,
+	DELETE_SITE_IMAGES,
+	REMOVE_PROMO_ITEM,
+};

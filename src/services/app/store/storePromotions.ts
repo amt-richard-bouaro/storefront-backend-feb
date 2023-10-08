@@ -17,11 +17,15 @@ export const saveStorePromotion = async (data: {
 };
 
 export const findPromotionById = async (
-	promoID: string
+	promoID: string,
+	includes?: { products?: boolean }
 ): Promise<PROMOTION | null> => {
 	const promotion = await Database.promotion.findFirst({
 		where: {
 			id: promoID,
+		},
+		include: {
+			products: includes?.products === true,
 		},
 	});
 
@@ -48,4 +52,35 @@ export const setPromoProduct = async (
 	});
 
 	return products;
+};
+
+export const removePromoProduct = async (
+	promoID: string,
+	products: string[]
+): Promise<{ count: number }> => {
+	const unlinkedProducts = await Database.product.updateMany({
+		where: {
+			promotion: promoID,
+			AND: {
+				id: { in: products },
+			},
+		},
+		data: {
+			promotion: undefined,
+		},
+	});
+
+	return unlinkedProducts;
+};
+
+export const deletePromo = async (
+	promoID: string
+): Promise<PROMOTION | null> => {
+	const deletedPromo = await Database.promotion.delete({
+		where: {
+			id: promoID,
+		},
+	});
+
+	return deletedPromo;
 };

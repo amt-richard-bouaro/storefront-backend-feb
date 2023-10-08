@@ -14,6 +14,8 @@ import { updateDestination } from '../../controllers/store/updateDestination';
 import { getStoreOrders } from '../../controllers/store/getStoreOrders';
 import { addStoreWallet } from '../../controllers/store/addStoreWallet';
 import { getWallets } from '../../controllers/payment/getWallets';
+import { removePromoItem } from '../../controllers/store/removePromoItem';
+import { deletePromotion } from '../../controllers/store/deletePromotion';
 
 const store = express.Router();
 
@@ -35,5 +37,7 @@ store.patch(STORE.SAVE_TEMPLATE_DRAFT, isAuthenticated, saveTemplate);
 store.patch(STORE.PUBLISH_TEMPLATE, isAuthenticated, publishTemplate);
 store.post(STORE.ADD_SHIPPING_DESTINATION, saveDestination);
 store.patch(STORE.UPDATE_SHIPPING_DESTINATION, updateDestination);
+store.patch(STORE.REMOVE_PROMOTION_ITEM, removePromoItem);
+store.patch(STORE.UPDATE_SHIPPING_DESTINATION, deletePromotion);
 
 export default store;

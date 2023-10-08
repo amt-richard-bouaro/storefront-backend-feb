@@ -8,7 +8,7 @@ import {
 	ORDER_ITEM,
 } from './order/index';
 import { REVIEW, REPLY } from './review/index';
-import { STORE, TEMP, TEMPLATE } from './store/index';
+import { STORE, TEMP, TEMPLATE, SITE_IMAGE } from './store/index';
 import { CUSTOMER, SAVED_ITEM } from './customer/index';
 import { ACCOUNTS, ACCOUNT_TYPES, USER, CHECKS } from './account/index';
 import { BUSINESS, BUSINESS_ADDRESS } from './business/index';
@@ -37,4 +37,5 @@ export {
 	BUSINESS_ADDRESS,
 	CHECKS,
 	WALLET,
+	SITE_IMAGE,
 };

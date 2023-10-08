@@ -50,7 +50,11 @@ export const addToViews = async (req: Request, res: Response<RESPONSE>) => {
 							customer: customerID,
 							store: availableProduct.store,
 					  })
-					: await setProductAsLiked({ customer: customerID, product });
+					: await setProductAsLiked({
+							customer: customerID,
+							product,
+							liked: true,
+					  });
 			}
 		}
 

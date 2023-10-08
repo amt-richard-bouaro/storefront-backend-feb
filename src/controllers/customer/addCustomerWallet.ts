@@ -9,7 +9,10 @@ import { NEW_WALLET } from '../../validations/wallet';
 import { createWallet } from '../../services/app/wallet/storeWallet';
 import { findCustomerById } from '../../services/app/customer/findCustomer';
 
-export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
+export const addCustomerWallet = async (
+	req: Request,
+	res: Response<RESPONSE>
+) => {
 	try {
 		const requestBody = req.body;
 

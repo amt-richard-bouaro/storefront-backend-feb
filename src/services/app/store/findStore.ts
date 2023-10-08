@@ -1,5 +1,5 @@
 import { Database } from '../../../extensions/dbClient';
-import { STORE } from '../../../interfaces/types';
+import { SITE_IMAGE, STORE } from '../../../interfaces/types';
 
 export const findStoreById = async (
 	id: string,
@@ -56,4 +56,35 @@ export const findStoreById = async (
 	});
 
 	return store;
+};
+export const findStoreSiteImages = async (
+	storeID: string,
+	includes?: { key?: boolean; store?: boolean }
+): Promise<SITE_IMAGE[] | null> => {
+	const siteImages = await Database.siteImage.findMany({
+		where: {
+			store: storeID,
+		},
+		select: {
+			id: true,
+			url: true,
+			name: true,
+			store: includes?.store === true,
+			key: includes?.key === true,
+		},
+	});
+
+	return siteImages;
+};
+
+export const deleteStoreSiteImages = async (
+	siteImages: string[]
+): Promise<{ count: number } | null> => {
+	const deleted = await Database.siteImage.deleteMany({
+		where: {
+			id: { in: siteImages },
+		},
+	});
+
+	return deleted;
 };

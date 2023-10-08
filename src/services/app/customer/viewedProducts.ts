@@ -72,13 +72,14 @@ export const findCustomerSavedProducts = async (customerId: string) => {
 export const setProductAsLiked = async (data: {
 	customer: string;
 	product: string;
+	liked: boolean;
 }): Promise<{ count: number } | null> => {
 	const updated = await Database.savedItem.updateMany({
 		where: {
 			AND: [{ customer: data.customer }, { product: data.product }],
 		},
 		data: {
-			liked: true,
+			liked: data.liked === true,
 		},
 	});
 

@@ -2,8 +2,12 @@ export const STORE = {
 	BASE_ROUTE: '/api/store',
 
 	ADD_SITE_IMAGE: '/add-site-image/:store_id',
+	GET_SITE_IMAGE: '/get-site-images/:store_id',
+	DELETE_SITE_IMAGE: '/delete-site-images/:store_id',
 
 	ADD_PROMOTION: '/add-promotion/:store_id',
+	REMOVE_PROMOTION_ITEM: '/remove-promotion-item/:promo_id',
+	DELETE_PROMOTION: '/delete-promotion/:promo_id',
 
 	ADD_WALLET: '/add-wallet/:store_id',
 	GET_STORE_WALLETS: '/get-wallets/:store_id',

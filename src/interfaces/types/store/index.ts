@@ -34,7 +34,7 @@ export type PROMOTION = {
 	end: Date;
 	store: string;
 	storePromotion?: STORE;
-	products?: PRODUCT;
+	products?: PRODUCT[];
 	createdAt: Date;
 	updatedAt: Date;
 };
@@ -51,4 +51,13 @@ export type TEMP = {
 	options: string;
 	template: string;
 	tempTemplate?: TEMPLATE | null;
+};
+
+export type SITE_IMAGE = {
+	id: string;
+	url: string;
+	name: string;
+	key?: string;
+	store?: string;
+	storeImage?: STORE;
 };
