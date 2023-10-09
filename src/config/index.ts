@@ -1,17 +1,17 @@
+import { SERVER_CONFIG as serverConfig, validateServerConfig } from './server';
+import { S3_BUCKET as s3BucketConfig, validateS3BucketConfig } from './awsS3';
 import {
-	SERVER_CONFIG as serverConfig,
 	GOOGLE_API as googleApiConfig,
-	S3_BUCKET as s3BucketConfig,
-	FACEBOOK_API as facebookApiConfig,
-	PAYPAL_API as PayPalApiConfig,
-} from './main';
-import {
 	validateGoogleApiConfig,
-	validateServerConfig,
-	validateS3BucketConfig,
+} from './google';
+import {
+	FACEBOOK_API as facebookApiConfig,
 	validateFacebookApiConfig,
+} from './facebook';
+import {
+	PAYPAL_API as PayPalApiConfig,
 	validatePayPalApiConfig,
-} from './types';
+} from './paypal';
 
 const SERVER_CONFIG = validateServerConfig(serverConfig);
 const GOOGLE_API = validateGoogleApiConfig(googleApiConfig);
