@@ -9,38 +9,37 @@ import { createOrder } from '../../services/Paypal/payPalApi';
 import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { uuid } from '../../helpers';
-import { findShippingDestination } from '../../services/app/order/findOrderDestination';
+
 import {
 	CUSTOMER_MSG,
 	ORDER_MSG,
 	STORE_MSG,
 } from '../../constants/api/messages';
+// import { findShippingDestination } from '../../services/app/order/findOrderDestination';
 
 export const initializeOrder = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
 	try {
-		console.log(req.body);
-
 		const requestBody = <ITEMS_TO_BUY_TYPE>req.body;
-		console.log(requestBody.store);
 
 		ITEMS_TO_BUY.parse(requestBody);
 
-		const destination = await findShippingDestination(requestBody.destination);
+		// const destination = await findShippingDestination(requestBody.destination);
+		// const destination = await findDestinationByCode(requestBody.destination);
 
-		if (!destination) {
-			return res.status(STATUS.BAD_REQUEST).json({
-				code: ORDER_MSG.DESTINATION_NOT_FOUND.CODE,
-				message: ORDER_MSG.DESTINATION_NOT_FOUND.MESSAGE,
-				type: 'error',
-			});
-		}
+		// if (!destination) {
+		// 	return res.status(STATUS.BAD_REQUEST).json({
+		// 		code: ORDER_MSG.DESTINATION_NOT_FOUND.CODE,
+		// 		message: ORDER_MSG.DESTINATION_NOT_FOUND.MESSAGE,
+		// 		type: 'error',
+		// 	});
+		// }
 
 		const customerID = req.params.customer_id;
 
-		const customer = await findCustomerById(customerID, {});
+		const customer = await findCustomerById(customerID, { shipping: true });
 
 		if (!customer) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -113,7 +112,7 @@ export const initializeOrder = async (
 					price: product.price,
 					discount: product.discount,
 					quantity: product.quantity,
-					total: product.total + destination.cost,
+					total: product.total, //+ destination.cost,
 					image: product.image,
 					variations: {
 						connect: product.variations,
@@ -150,16 +149,17 @@ export const initializeOrder = async (
 			data: {
 				customer: customerID,
 				shipping: shipping.id,
-				amount: orderTotal + destination.cost,
+				amount: orderTotal, //+ destination.cost,
 				orderId: createdOrder.json.id,
 				referenceId: referenceId,
+				currency: store.currency,
 				store: store.id,
 				items: {
 					createMany: {
 						data: [...orderData],
 					},
 				},
-				destination: destination.id,
+				// destination: destination.id,
 			},
 			include: {
 				items: true,
@@ -167,7 +167,7 @@ export const initializeOrder = async (
 			},
 		});
 
-		return res.status(STATUS.OK).json({
+		return res.status(STATUS.CREATED).json({
 			code: ORDER_MSG.PLACED_SUCCESSFULLY.CODE,
 			message: ORDER_MSG.PLACED_SUCCESSFULLY.MESSAGE,
 			type: 'success',

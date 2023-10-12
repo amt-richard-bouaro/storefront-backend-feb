@@ -4,23 +4,18 @@ import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findStoreById } from '../../services/app/store/findStore';
 import { STORE_MSG } from '../../constants/api/messages';
-import { groupVariations } from '../../helpers';
-import { getCachedResult } from '../../extensions/redis';
-import { STORE } from '../../interfaces/types';
+import { groupVariations, getTotalRating, setDiscount } from '../../helpers';
 
 export const getStore = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const storeID = req.params.store_id;
 
-		const cachedStore = await getCachedResult(storeID);
-
-		const store = cachedStore
-			? (cachedStore as STORE)
-			: await findStoreById(storeID, {
-					template: true,
-					products: true,
-					reviews: true,
-			  });
+		const store = await findStoreById(storeID, {
+			template: true,
+			products: true,
+			reviews: true,
+			reply: true,
+		});
 
 		if (!store) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -38,7 +33,11 @@ export const getStore = async (req: Request, res: Response<RESPONSE>) => {
 						store.products.map((product) => {
 							return {
 								...product,
+								discount: product.promotionProduct
+									? setDiscount(product.discount, product.promotionProduct)
+									: product.discount,
 								variations: groupVariations(product.variations ?? []),
+								rating: getTotalRating(product.reviews ?? []),
 							};
 						}),
 			  }

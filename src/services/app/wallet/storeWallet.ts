@@ -17,6 +17,9 @@ export const findWallets = async (
 			createdAt: true,
 			updatedAt: true,
 		},
+		orderBy: {
+			createdAt: 'desc',
+		},
 	});
 
 	return wallets;

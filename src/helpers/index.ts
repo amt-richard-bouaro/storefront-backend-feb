@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { SERVER_CONFIG } from '../config';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { PROMOTION } from '../interfaces/types/store';
 
 export const uuid = (length: number): string => {
 	const characters =
@@ -109,6 +110,16 @@ interface rating {
 }
 export const getTotalRating = (reviews: rating[]): number => {
 	return reviews.length > 0
-		? reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+		? Math.ceil(
+				reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+		  )
 		: 0;
+};
+
+export const setDiscount = (discount: number, promo: PROMOTION): number => {
+	if (!promo || promo.end < new Date()) {
+		return discount;
+	}
+
+	return promo.discount;
 };

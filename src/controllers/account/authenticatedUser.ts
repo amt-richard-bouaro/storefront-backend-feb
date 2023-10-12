@@ -5,19 +5,19 @@ import { REQUEST_WITH_USER, RESPONSE } from '../../interfaces';
 import { findAccountById } from '../../services/app/account/findAccount';
 import { cachResult, getCachedResult } from '../../extensions/redis';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
+import { USER } from '../../interfaces/types';
 
 export const authenticatedUser = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
-	console.log(req);
 	try {
 		const requestUser = <REQUEST_WITH_USER>req.user;
 
-		const cachedResult = await getCachedResult(requestUser.id);
+		const cachedResult = await getCachedResult('auth-user' + requestUser.id);
 
 		const user = cachedResult
-			? cachedResult
+			? (cachedResult as USER)
 			: await findAccountById(requestUser.id);
 
 		if (!user) {
@@ -42,7 +42,7 @@ export const authenticatedUser = async (
 			business: user.business ? user.business.id : null,
 		};
 
-		cachResult(requestUser.id, data, 15);
+		cachResult('auth-user' + requestUser.id, user);
 
 		return res.status(STATUS.OK).json({
 			code: AUTH_MSG.USER_FOUND.CODE,

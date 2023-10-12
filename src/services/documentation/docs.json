@@ -27,7 +27,7 @@
   }
     },
     "schemas": {
-      "ErrorResponse": {
+      "Error_Response": {
         "type": "object",
         "properties": {
           "code": {
@@ -42,7 +42,22 @@
           }
         }
       },
-      "ValidationErrorResponse": {
+      "Success_Response": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "default": "success"
+          }
+        }
+      },
+      "Validation_Error_Response": {
         "type": "object",
         "properties": {
           "code": {
@@ -77,7 +92,94 @@
           }
         }
       },
-    
+      "Business_Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "businessName": {
+            "type": "string"
+          },
+          "businessType": {
+            "type": "string"
+          }
+        }
+      },
+      "Store_Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "storeType": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "business": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Business_Address_Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          },
+          "appartmentNo": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "business": {
+            "type": "string"
+          } 
+        }
+      },
+      "Customer_Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "account": {
+            "type": "string"
+          }
+        }
+      },
       "Account": {
         "type": "object",
         "properties": {
@@ -160,6 +262,907 @@
           }
           }
         }
+      },
+      "STORE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "storeName": {
+            "type": "string"
+          },
+          "storeType": {
+            "type": "string"
+          },
+          "promotions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PROMOTION"
+            }
+          },
+          "currency": {
+            "type": "string"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PRODUCT"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CATEGORY"
+            }
+          },
+          "template": {
+            "$ref": "#/components/schemas/TEMPLATE"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ORDER"
+            }
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WALLET"
+            }
+          },
+          "savedProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SAVED_ITEM"
+            }
+          },
+          "siteImages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SITE_IMAGE"
+            }
+          },
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PAYOUT"
+            }
+          },
+          "Replies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/REPLY"
+            }
+          },
+          "business": {
+            "type": "string"
+          },
+          "businessStore": {
+            "$ref": "#/components/schemas/BUSINESS"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BUSINESS": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "businessName": {
+            "type": "string"
+          },
+          "businessType": {
+            "type": "string"
+          },
+          "stores": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/STORE"
+            }
+          },
+          "addresses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BUSINESS_ADDRESS"
+            }
+          },
+          "businessAccount": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/USER"
+            }
+          }
+        }
+      },
+      "BUSINESS_ADDRESS": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          },
+          "appartmentNo": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "business": {
+            "type": "string"
+          },
+          "businessAddress": {
+            "$ref": "#/components/schemas/BUSINESS"
+          }
+        }
+      },
+      "CUSTOMER": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/REVIEW"
+            }
+          },
+          "replies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/REPLY"
+            }
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ORDER"
+            }
+          },
+          "savedProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SAVED_ITEM"
+            }
+          },
+          "wallets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WALLET"
+            }
+          },
+          "shipping": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SHIPPING"
+            }
+          },
+          "account": {
+            "type": "string"
+          },
+          "customerAccount": {
+            "$ref": "#/components/schemas/USER"
+          }
+        }
+      },
+      "SAVED_ITEM": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "liked": {
+            "type": "boolean"
+          },
+          "savedProduct": {
+            "$ref": "#/components/schemas/PRODUCT"
+          },
+          "customer": {
+            "type": "string"
+          },
+          "customrSavedProduct": {
+            "$ref": "#/components/schemas/CUSTOMER"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storerSavedProduct": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ORDER": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "paid": {
+            "type": "boolean"
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "referenceId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Pending_Payment",
+              "Delivered",
+              "On_Hold",
+              "Refunded",
+              "Returned",
+              "Cancelled",
+              "Shipped",
+              "Processing",
+              "Completed",
+              "Failed"
+            ]
+          },
+          "store": {
+            "type": "string"
+          },
+          "storeOrder": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "customer": {
+            "type": "string"
+          },
+          "customerOrder": {
+            "$ref": "#/components/schemas/CUSTOMER"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ORDER_ITEM"
+            }
+          },
+          "disbursement": {
+            "$ref": "#/components/schemas/PAYOUT"
+          },
+          "shipping": {
+            "type": "string"
+          },
+          "orderShipping": {
+            "$ref": "#/components/schemas/SHIPPING"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ORDER_ITEM": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "total": {
+            "type": "number"
+          },
+          "image": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "variations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VARIATION"
+            }
+          },
+          "product": {
+            "type": "string"
+          },
+          "productOrdered": {
+            "$ref": "#/components/schemas/PRODUCT"
+          },
+          "order": {
+            "type": "string"
+          },
+          "OrderItem": {
+            "$ref": "#/components/schemas/ORDER"
+          }
+        }
+      },
+      "SHIPPING": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          },
+          "apartmentNo": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ORDER"
+            }
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "customer": {
+            "type": "string"
+          },
+          "customerShipping": {
+            "$ref": "#/components/schemas/CUSTOMER"
+          }
+        }
+      },
+      "SHIPPING_DESTINATION": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number"
+          },
+          "cost": {
+            "type": "number"
+          },
+          "store": {
+            "type": "string"
+          },
+          "shippingDestinations": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ORDER"
+            }
+          }
+        }
+      },
+      "PAYOUT": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "commission": {
+            "type": "number"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "payoutId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "string"
+          },
+          "orderPayout": {
+            "$ref": "#/components/schemas/ORDER"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storePayout": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }, 
+      "PRODUCT": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IMAGE"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "reStockLevel": {
+            "type": "number"
+          },
+          "category": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "promotion": {
+            "type": "string"
+          },
+          "promotionProduct": {
+            "$ref": "#/components/schemas/PROMOTION"
+          },
+          "variations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VARIATION"
+            }
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/REVIEW"
+            }
+          },
+          "customerSaves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SAVED_ITEM"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storeProducts": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ORDER_ITEM"
+            }
+          }
+        }
+      },
+      "CATEGORY": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storeCategories": {
+            "$ref": "#/components/schemas/STORE"
+          }
+        }
+      },
+      "IMAGE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "productImage": {
+            "$ref": "#/components/schemas/PRODUCT"
+          }
+        }
+      },
+      "VARIATION": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "productVariations": {
+            "$ref": "#/components/schemas/PRODUCT"
+          },
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ORDER_ITEM"
+            }
+          }
+        }
+      },
+      "PROMOTION": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storePromotion": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PRODUCT"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TEMPLATE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          },
+          "store": {
+            "type": "string"
+          },
+          "temp": {
+            "$ref": "#/components/schemas/TEMP"
+          }
+        }
+      },
+      "TEMP": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string"
+          },
+          "tempTemplate": {
+            "$ref": "#/components/schemas/TEMPLATE"
+          }
+        }
+      },
+      "SITE_IMAGE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storeImage": {
+            "$ref": "#/components/schemas/STORE"
+          }
+        }
+      },
+      "REVIEW": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "product": {
+            "type": "string"
+          },
+          "productReview": {
+            "$ref": "#/components/schemas/PRODUCT"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "remarks": {
+            "type": "string",
+            "enum": ["Disappointing", "Outstanding", "Satisfactory"]
+          },
+          "comment": {
+            "type": "string"
+          },
+          "customer": {
+            "type": "string"
+          },
+          "customerReview": {
+            "$ref": "#/components/schemas/CUSTOMER"
+          },
+          "replies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/REPLY"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "REPLY": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string",
+            "enum": ["Business", "Customer", "Admin"]
+          },
+          "customer": {
+            "type": "string"
+          },
+          "customerReply": {
+            "$ref": "#/components/schemas/CUSTOMER"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storeReply": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "review": {
+            "type": "string"
+          },
+          "reviewReply": {
+            "$ref": "#/components/schemas/REVIEW"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WALLET": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "walletId": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["Card", "Paypal"]
+          },
+          "secret": {
+            "type": "string"
+          },
+          "store": {
+            "type": "string"
+          },
+          "storeWallet": {
+            "$ref": "#/components/schemas/STORE"
+          },
+          "customer": {
+            "type": "string"
+          },
+          "customerWallet": {
+            "$ref": "#/components/schemas/CUSTOMER"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "USER": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Business", "Customer", "Admin"]
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["local", "google", "facebook"]
+          },
+          "providerId": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "password": {
+            "type": "string"
+          },
+          "verificationToken": {
+            "type": "string"
+          },
+          "mustChangePassword": {
+            "type": "boolean"
+          },
+          "canResetPassword": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "customer": {
+            "$ref": "#/components/schemas/CUSTOMER"
+          },
+          "business": {
+            "$ref": "#/components/schemas/BUSINESS"
+          }
+        }
       }
     }
   },
@@ -172,7 +1175,7 @@
     "/api/account/register/local": {
       "post": {
         "tags": ["Account"],
-        "summary": "This endpoint allows a new customer/business create an account within our system. Customers/businesses are users who can interact with our platform to access/promote various services and products. To create a customer account for instance, you need to provide essential information such as their first name, last name, email address,type (Customer) and password (with password confimation). Upon successful creation, the customer will be able to log in and start using our services.",
+        "summary": "This endpoint allows a new customer/business create an account within our system.",
         "requestBody": {
           "required": true,
           "content": {
@@ -246,7 +1249,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                "$ref": "#/components/schemas/ValidationErrorResponse"
+                "$ref": "#/components/schemas/Validation_Error_Response"
                 }
               }
             }
@@ -256,7 +1259,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -266,7 +1269,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -337,7 +1340,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                "$ref": "#/components/schemas/ValidationErrorResponse"
+                "$ref": "#/components/schemas/Validation_Error_Response"
                 }
               }
             }
@@ -347,7 +1350,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -357,7 +1360,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -419,7 +1422,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                "$ref": "#/components/schemas/ValidationErrorResponse"
+                "$ref": "#/components/schemas/Validation_Error_Response"
                 }
               }
             }
@@ -429,7 +1432,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -439,7 +1442,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -504,7 +1507,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                "$ref": "#/components/schemas/ValidationErrorResponse"
+                "$ref": "#/components/schemas/Validation_Error_Response"
                 }
               }
             }
@@ -514,7 +1517,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -524,7 +1527,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -586,7 +1589,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                "$ref": "#/components/schemas/ValidationErrorResponse"
+                "$ref": "#/components/schemas/Validation_Error_Response"
                 }
               }
             }
@@ -596,7 +1599,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -606,7 +1609,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -668,7 +1671,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                "$ref": "#/components/schemas/ValidationErrorResponse"
+                "$ref": "#/components/schemas/Validation_Error_Response"
                 }
               }
             }
@@ -678,7 +1681,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -688,7 +1691,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -731,7 +1734,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                "$ref": "#/components/schemas/ValidationErrorResponse"
+                "$ref": "#/components/schemas/Validation_Error_Response"
                 }
               }
             }
@@ -741,7 +1744,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -751,7 +1754,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -769,7 +1772,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -779,7 +1782,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -822,7 +1825,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -832,7 +1835,4626 @@
             "content": {
               "application/json": {
                 "schema": {
-                 "$ref": "#/components/schemas/ErrorResponse"
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/business/set-business-type/{business_id}": {
+      "patch": {
+        "tags": ["Business"],
+        "summary": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "businessType": {
+                    "type": "string",
+                    "default": "Just Online Store"
+                  }
+                },
+                "required": [
+                  "businessType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "BUSINESS_INFORMATION_UPDATED_SUCCESSFULLY",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/BUSINESS"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/business/create-new-store/{business_id}": {
+      "post": {
+        "tags": ["Business"],
+        "summary": "",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "storeType": {
+                    "type": "string",
+                    "default": "Online"
+                  },
+                  "storeName": {
+                    "type": "string",
+                    "default": "Online"
+                  },
+                  "template": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "options": {
+                        "type": "string"
+                      },
+                      "temp": {
+                        "type": "string"
+                      }
+                    }
+                   
+                  }
+                },
+                "required": [
+                  "storeName",
+                  "storeType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "STORE_CREATED_SUCCESSFULLY",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/STORE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/business/get-stores/{business_id}": {
+      "get": {
+        "tags": ["Business"],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "BUSINESS_STORES_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/STORE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/business/{business_id}": {
+      "get": {
+        "tags": ["Business"],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "BUSINESS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/BUSINESS"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/{customer_id}": {
+      "get": {
+        "tags": ["Customer"],
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "CUSTOMER_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CUSTOMER"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                 "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/add-shipping-address/{customer_id}": {
+      "post": {
+        "tags": ["Customer"],
+        "summary": "Add a shipping address for a specific customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to add a shipping address",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Shipping address information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "countryCode": {
+                    "type": "string"
+                  },
+                  "postalCode": {
+                    "type": "string"
+                  },
+                  "apartmentNo": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "streetAddress": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  }
+                },
+                "required": ["countryCode", "postalCode", "apartmentNo", "phone", "name", "streetAddress", "city", "isActive"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "SHIPPING_ADDRESS_ADDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/SHIPPING"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/get-shipping-addresses/{customer_id}": {
+      "get": {
+        "tags": ["Customer"],
+        "summary": "",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to retrieve shipping addresses",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SHIPPING_ADDRESSES_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SHIPPING"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/get-orders/{customer_id}": {
+      "get": {
+        "tags": ["Customer"],
+        "summary": "",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to retrieve orders",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ORDERS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ORDER"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/get-reviews/{customer_id}": {
+      "get": {
+        "tags": ["Customer"],
+        "summary": "Get reviews for a specific customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to retrieve reviews",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "REVIEWS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/REVIEW"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/review-product/{order_id}": {
+      "post": {
+        "tags": ["Customer"],
+        "summary": "Review a product from a specific order",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the order to review a product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Review information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "remarks": {
+                    "type": "string",
+                    "enum": ["Disappointing", "Outstanding", "Satisfactory"]
+                  },
+                  "comment": {
+                    "type": ["string", "null"]
+                  }
+                },
+                "required": ["product", "rating", "remarks"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "REVIEW_ADDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/REVIEW"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/reply-review/{customer_id}": {
+      "post": {
+        "tags": ["Customer"],
+        "summary": "Reply to a review from a specific customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to reply to a review",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Reply information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  },
+                  "review": {
+                    "type": "string"
+                  }
+                },
+                "required": ["comment", "review"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "REPLY_ADDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/REPLY"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/add-wallet/{customer_id}": {
+      "post": {
+        "tags": ["Customer"],
+        "summary": "Add a wallet for a specific customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to add a wallet",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Wallet information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "method": {
+                    "type": "string",
+                    "enum": ["Card", "Paypal"]
+                  },
+                  "walletId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "secret": {
+                    "type": "string"
+                  }
+                },
+                "required": ["method", "walletId", "name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "WALLET_CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/WALLET"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/get-wallets/{customer_id}": {
+      "get": {
+        "tags": ["Customer"],
+        "summary": "Get all wallets for a specific customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to retrieve wallets",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "WALLETS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/WALLET"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/add-to-views/{customer_id}": {
+      "post": {
+        "tags": ["Customer"],
+        "summary": "Add products to a customer's views",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to add products to views",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Product IDs to add to views",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["products"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "PRODUCTS_ADDED_TO_VIEWS",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/add-to-favorites/{customer_id}": {
+      "patch": {
+        "tags": ["Customer"],
+        "summary": "Add products to a customer's favorites",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to add products to favorites",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Product IDs to add to favorites",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["products"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PRODUCTS_ADDED_TO_FAVORITES",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/remove/{product_id}/from-favorite/{customer_id}": {
+      "patch": {
+        "tags": ["Customer"],
+        "summary": "Remove a product from a customer's favorites",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "ID of the product to remove from favorites",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer from whose favorites to remove the product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PRODUCT_REMOVED_FROM_FAVORITES",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/customer/get-saved-products/{customer_id}": {
+      "get": {
+        "tags": ["Customer"],
+        "summary": "Get saved products for a specific customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to get saved products",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SAVED_PRODUCTS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SAVED_ITEM"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "SAVED_PRODUCTS_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/initialize/{customer_id}": {
+      "post": {
+        "tags": ["Order"],
+        "summary": "Initialize a new order for a specific customer",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "in": "path",
+            "description": "ID of the customer to initialize an order for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Order initialization information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "store": {
+                    "type": "string"
+                  },
+                  "shipping": {
+                    "type": "string"
+                  },
+                  "destination": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "number"
+                        },
+                        "variations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              }
+                            },
+                            "required": ["id"]
+                          }
+                        }
+                      },
+                      "required": ["product", "quantity", "variations"]
+                    }
+                  }
+                },
+                "required": ["store", "shipping", "destination", "items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "ORDER_INITIALIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "UNAUTHORIZED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/approve-payment/{order_id}": {
+      "post": {
+        "tags": ["Order"],
+        "summary": "Approve payment for a specific order",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the order to approve payment for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PAYMENT_APPROVED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ORDER_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/update-item-quantity/{order_id}": {
+      "patch": {
+        "tags": ["Order"],
+        "summary": "Update item quantity for a specific order",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the order to update item quantity for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Item quantity update information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "number"
+                  }
+                },
+                "required": ["id", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ITEM_QUANTITY_UPDATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ORDER_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/remove-items/{order_id}": {
+      "delete": {
+        "tags": ["Order"],
+        "summary": "Remove items from a specific order",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the order to remove items from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Items to be removed from the order",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["items"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ITEMS_REMOVED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ORDER_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/delivered/{order_id}": {
+      "patch": {
+        "tags": ["Order"],
+        "summary": "Set order status as delivered and initialize payout to the seller",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the order to set status as delivered and initialize payout",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ORDER_DELIVERED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ORDER_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/get-single-order/{order_id}": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "Get a single order by its ID",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the order to retrieve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ORDER_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ORDER"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ORDER_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/cancel-orders": {
+      "patch": {
+        "tags": ["Order"],
+        "summary": "Cancel multiple orders",
+        "requestBody": {
+          "description": "Orders to be canceled",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "orders": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["orders"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ORDERS_CANCELLED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/order/change-order-shipping/{order_id}": {
+      "patch": {
+        "tags": ["Order"],
+        "summary": "Change order shipping information",
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "description": "ID of the order to change shipping information for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New shipping information for the order",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "shipping": {
+                    "type": "string"
+                  }
+                },
+                "required": ["shipping"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ORDER_SHIPPING_CHANGED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ORDER_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/add/{store_id}": {
+      "post": {
+        "tags": ["Product"],
+        "summary": "Add a new product to a specific store",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "description": "ID of the store to add the product to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Product information to be added",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "quantity": {
+                    "type": "number"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "discount": {
+                    "type": "number"
+                  },
+                  "variations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["value", "type"]
+                    }
+                  }
+                },
+                "required": ["name", "description", "isActive", "quantity", "category", "price"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PRODUCT_ADDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "STORE_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/delete": {
+      "post": {
+        "tags": ["Product"],
+        "summary": "Delete multiple products",
+        "requestBody": {
+          "description": "Products to be deleted",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["products"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PRODUCTS_DELETED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/update-product/{product_id}": {
+      "patch": {
+        "tags": ["Product"],
+        "summary": "Update product information",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "ID of the product to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "New product information",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "quantity": {
+                    "type": "number"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "discount": {
+                    "type": "number"
+                  },
+                  "variations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["value", "type"]
+                    }
+                  }
+                },
+                "required": ["name", "description", "isActive", "quantity", "category", "price"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PRODUCT_UPDATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PRODUCT_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/update-products-discount": {
+      "patch": {
+        "tags": ["Product"],
+        "summary": "Update discount for multiple products",
+        "requestBody": {
+          "description": "Products and the new discount to be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "discount": {
+                    "type": "number"
+                  }
+                },
+                "required": ["products", "discount"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PRODUCTS_DISCOUNT_UPDATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PRODUCTS_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/get-product-reviews/{product_id}": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get reviews for a specific product",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "ID of the product to retrieve reviews for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PRODUCT_REVIEWS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "product": {
+                          "$ref": "#/components/schemas/PRODUCT"
+                        },
+                        "reviews": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/REVIEW"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PRODUCT_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/get-all-products/{store_id}": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get all products for a specific store",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "description": "ID of the store to retrieve products for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PRODUCTS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PRODUCT"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "STORE_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/product/{product_id}": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Get product details by ID",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "ID of the product to retrieve details for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PRODUCT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PRODUCT"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PRODUCT_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/add-promotion-products/{promo_id}": {
+      "patch": {
+        "tags": ["Product"],
+        "summary": "Add products and categories to a promotion",
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "description": "ID of the promotion",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Array of product IDs to add to the promotion"
+                  },
+                  "categories": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Array of category IDs to add to the promotion"
+                  }
+                },
+                "required": ["products", "categories"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Products and categories added to the promotion successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Promotion not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/store/add-site-image/{store_id}": {
+      "post": {
+        "tags": ["Store"],
+        "summary": "Upload images for website customization",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "description": "ID of the store for which to upload images",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Image upload request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "SITE_IMAGE_UPLOADED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "STORE_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/store/get-site-images/{store_id}": {
+      "get": {
+        "tags": ["Store"],
+        "summary": "Get uploaded images for website customization",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "description": "ID of the store to retrieve uploaded images for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SITE_IMAGES_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          }
+                        },
+                        "required": ["name", "url"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "STORE_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/store/add-promotion/{store_id}": {
+      "post": {
+        "tags": ["Store"],
+        "summary": "Add a promotion for the store",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "description": "ID of the store to add a promotion to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Promotion details",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "end": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "discount": {
+                    "type": "number"
+                  },
+                  "statement": {
+                    "type": "string"
+                  },
+                  "start": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                },
+                "required": ["end", "name", "discount", "statement", "start"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PROMOTION_ADDED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "STORE_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/store/remove-promotion-item/{promo_id}": {
+      "patch": {
+        "tags": ["Store"],
+        "summary": "Remove products from a promotion",
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "description": "ID of the promotion to remove products from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Product IDs to be removed from the promotion",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["products"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PROMOTION_ITEM_REMOVED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PROMOTION_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/store/delete-promotion/{promo_id}": {
+      "delete": {
+        "tags": ["Store"],
+        "summary": "Delete a promotion",
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "description": "ID of the promotion to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PROMOTION_DELETED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PROMOTION_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/store/update-promotion/{promo_id}": {
+      "patch": {
+        "tags": ["Store"],
+        "summary": "Update a promotion by ID",
+        "parameters": [
+          {
+            "name": "promo_id",
+            "in": "path",
+            "description": "ID of the promotion to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "New name for the promotion"
+                  },
+                  "end": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "New end date for the promotion (ISO 8601 format)"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "description": "New discount value for the promotion"
+                  },
+                  "statement": {
+                    "type": "string",
+                    "description": "New statement/description for the promotion"
+                  },
+                  "start": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "New start date for the promotion (ISO 8601 format)"
+                  }
+                },
+                "required": ["name", "end", "discount", "statement", "start"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PROMOTION_UPDATED_SUCCESSFULLY",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Promotion not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/store/get-promotions/{store_id}": {
+      "get": {
+        "tags": ["Store"],
+        "summary": "Get store promotions",
+        "parameters": [
+          {
+            "name": "store_id",
+            "in": "path",
+            "description": "ID of the store",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PROMOTIONS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "default": "success"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PROMOTION"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PROMOTIONS_NOT_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_SERVER_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },   
+"/api/store/get-promotion-products/{promo_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get products under a promotion",
+    "parameters": [
+      {
+        "name": "promo_id",
+        "in": "path",
+        "description": "ID of the promotion",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "PRODUCTS_UNDER_PROMOTION_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PRODUCT"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "PRODUCTS_UNDER_PROMOTION_NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/add-wallet/{store_id}": {
+  "post": {
+    "tags": ["Store"],
+    "summary": "Add a new payment detail for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "description": "ID of the store",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "description": "Payment detail information",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "secret": {
+                "type": "string"
+              },
+              "method": {
+                "type": "string",
+                "enum": ["Card", "Paypal"]
+              },
+              "walletId": {
+                "type": "string"
+              }
+            },
+            "required": ["name", "secret", "method", "walletId"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "PAYMENT_DETAIL_ADDED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WALLET"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "BAD_REQUEST",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Validation_Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-wallets/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get payment details for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "description": "ID of the store",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "WALLETS_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/WALLET"
+                }
+              }
+            }
+          }
+        }
+      }
+      ,
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/save-template-draft/{store_id}": {
+  "post": {
+    "tags": ["Store"],
+    "summary": "Save template draft for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the store"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "string",
+                "description": "Options for the template draft in JSON format"
+              }
+            },
+            "required": ["options"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "TEMPLATE_DRAFT_SAVED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "BAD REQUEST",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Validation_Error_Response"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/publish-template/{store_id}": {
+  "patch": {
+    "tags": ["Store"],
+    "summary": "Publish template for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the store"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "TEMPLATE_PUBLISHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/add-category/{store_id}": {
+  "post": {
+    "tags": ["Store"],
+    "summary": "Add categories to a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the store"
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "names": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["names"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "CATEGORIES_ADDED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/delete-store-category/{category_id}": {
+  "delete": {
+    "tags": ["Store"],
+    "summary": "Delete a store category",
+    "parameters": [
+      {
+        "name": "category_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the category to be deleted"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "CATEGORY_DELETED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-temp/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get template options for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the store to retrieve template options"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "TEMPLATE_OPTIONS_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "options": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-published-template/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get the published template for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the store to retrieve the published template"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "PUBLISHED_TEMPLATE_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "options": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-all-orders/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get all orders for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the store to retrieve orders"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "ORDERS_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/ORDER"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-store/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get store by ID",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "ID of the store to retrieve"
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "STORE_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/STORE"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-all": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get all stores",
+    "responses": {
+      "200": {
+        "description": "STORES_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/STORE"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "UNAUTHORIZED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "FORBIDDEN",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-reviews/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get store product reviews",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "description": "ID of the store",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "REVIEWS_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/REVIEW"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "UNAUTHORIZED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "FORBIDDEN",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/reply-customer/{store_id}": {
+  "post": {
+    "tags": ["Store"],
+    "summary": "Reply to a customer review",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "description": "ID of the store",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "review": {
+                "type": "string",
+                "description": "Review ID"
+              },
+              "comment": {
+                "type": "string",
+                "description": "Reply comment to the review"
+              }
+            },
+            "required": ["review", "comment"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "REPLY_SUCCESS",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "default": "REPLY_SUCCESS"
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Reply posted successfully"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/REPLY"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "BAD_REQUEST",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Validation_Error_Response"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "UNAUTHORIZED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "FORBIDDEN",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/add-shipping-destination/{store_id}": {
+  "post": {
+    "tags": ["Store"],
+    "summary": "Add a new shipping destination for the store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "description": "ID of the store",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "destinations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "isActive": {
+                      "type": "boolean"
+                    },
+                    "duration": {
+                      "type": "number"
+                    },
+                    "cost": {
+                      "type": "number"
+                    }
+                  },
+                  "required": ["code", "name", "isActive", "duration", "cost"]
+                }
+              }
+            },
+            "required": ["destinations"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "SHIPPING_DESTINATIONS_ADDED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "default": "SHIPPING_DESTINATIONS_ADDED"
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Shipping destinations added successfully"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "BAD_REQUEST",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Validation_Error_Response"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/update-shipping-destination/{destination_id}": {
+  "patch": {
+    "tags": ["Store"],
+    "summary": "Update an existing shipping destination for the store",
+    "parameters": [
+      {
+        "name": "destination_id",
+        "in": "path",
+        "description": "ID of the shipping destination",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "requestBody": {
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "isActive": {
+                "type": "boolean"
+              },
+              "duration": {
+                "type": "number"
+              },
+              "cost": {
+                "type": "number"
+              }
+            },
+            "required": ["code", "name", "isActive", "duration", "cost"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "SHIPPING_DESTINATION_UPDATED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "default": "SHIPPING_DESTINATION_UPDATED"
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Shipping destination updated successfully"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "BAD_REQUEST",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Validation_Error_Response"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/delete-shipping-destination/{destination_id}": {
+  "delete": {
+    "tags": ["Store"],
+    "summary": "Delete a shipping destination for the store",
+    "parameters": [
+      {
+        "name": "destination_id",
+        "in": "path",
+        "description": "ID of the shipping destination",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "SHIPPING_DESTINATION_DELETED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "default": "SHIPPING_DESTINATION_DELETED"
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Shipping destination deleted successfully"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+    "/api/defaults/get-all-currencies": {
+      "get": {
+        "tags": ["Defaults"],
+        "summary": "Get information about supported currencies",
+        "responses": {
+          "200": {
+            "description": "SUPPORTED_CURRENCIES_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "code": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["id", "name", "code"]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/defaults/get-all-destinations": {
+      "get": {
+        "tags": ["Defaults"],
+        "summary": "Get information about default shipping destinations",
+        "responses": {
+          "200": {
+            "description": "SHIPPING_DESTINATIONS_FOUND",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "code": {
+                        "type": "string"
+                      },
+                      "cost": {
+                        "type": "number"
+                      },
+                      "duration": {
+                        "type": "number"
+                      }
+                    },
+                    "required": ["id", "name", "code", "cost", "duration"]
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL SERVER ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -840,8 +6462,7 @@
         }
       }
     }
-   
-    
+     
   },
   "tags": []
 }

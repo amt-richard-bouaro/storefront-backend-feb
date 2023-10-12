@@ -6,9 +6,32 @@ export const findStoreReviewById = async (id: string) => {
 			store: id,
 		},
 		select: {
-			replies: true,
+			id: true,
+			replies: {
+				select: {
+					comment: true,
+					from: true,
+					createdAt: true,
+					updatedAt: true,
+					customerReply: {
+						select: {
+							firstName: true,
+							lastName: true,
+						},
+					},
+					storeReply: {
+						select: {
+							storeName: true,
+						},
+					},
+				},
+				orderBy: {
+					createdAt: 'desc',
+				},
+			},
 			productReview: {
 				select: {
+					id: true,
 					name: true,
 					images: {
 						select: {
@@ -23,6 +46,7 @@ export const findStoreReviewById = async (id: string) => {
 					paid: true,
 					orderId: true,
 					status: true,
+					currency: true,
 					items: {
 						select: {
 							name: true,
@@ -47,6 +71,9 @@ export const findStoreReviewById = async (id: string) => {
 			rating: true,
 			remarks: true,
 			comment: true,
+		},
+		orderBy: {
+			createdAt: 'desc',
 		},
 	});
 

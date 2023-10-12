@@ -7,6 +7,7 @@ import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findReviewByUniques } from '../../services/app/review/findSingleReview';
 import { addReply } from '../../services/app/review/addReply';
 import { CUSTOMER_MSG } from '../../constants/api/messages';
+import { findCustomerById } from '../../services/app/customer/findCustomer';
 
 export const customerReply = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -14,9 +15,19 @@ export const customerReply = async (req: Request, res: Response<RESPONSE>) => {
 
 		const requestBody = <REPLY_REVIEW>req.body;
 
-		const reviewID = req.params.review_id;
+		const customerID = req.params.customer_id;
 
-		const review = await findReviewByUniques(reviewID);
+		const customer = await findCustomerById(customerID, { reviews: true });
+
+		if (!customer) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: CUSTOMER_MSG.CUSTOMER_NOT_FOUND.CODE,
+				message: CUSTOMER_MSG.CUSTOMER_NOT_FOUND.MESSAGE,
+				type: 'error',
+			});
+		}
+
+		const review = await findReviewByUniques(requestBody.review);
 
 		if (!review) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -29,7 +40,7 @@ export const customerReply = async (req: Request, res: Response<RESPONSE>) => {
 		await addReply({
 			comment: requestBody.comment,
 			from: 'Customer',
-			customer: requestBody.from,
+			customer: customerID,
 			review: requestBody.review,
 		});
 

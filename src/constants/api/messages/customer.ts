@@ -28,7 +28,7 @@ export const CUSTOMER_MSG = {
 		MESSAGE: 'Your customer information has been updated successfully.',
 	},
 	INFORMATION_UPDATE_FAILED: {
-		CODE: 'BUSINESS_INFORMATION_UPDATE_FAILED',
+		CODE: 'CUSTOMER_INFORMATION_UPDATE_FAILED',
 		MESSAGE: 'Failed to update customer information.',
 	},
 	SHIPPINGS_INFO: {
@@ -62,5 +62,18 @@ export const CUSTOMER_MSG = {
 	SAVED_PRODUCTS_FOUND: {
 		CODE: 'SAVED_PRODUCTS_FOUND',
 		MESSAGE: 'Your saved was found',
+	},
+	PRODUCT_SAVED: {
+		CODE: 'PRODUCT_SAVED',
+		MESSAGE: 'The product was added to your saves.',
+	},
+	PRODUCT_NOT_SAVED: {
+		CODE: 'PRODUCT_NOT_SAVED',
+		MESSAGE:
+			'The product was not added to your saves. Possibly its in your save already.',
+	},
+	PRODUCT_SAVES_UPDATED: {
+		CODE: 'PRODUCT_SAVES_UPDATED',
+		MESSAGE: 'Your saves has been updated',
 	},
 };

@@ -4,7 +4,7 @@ import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findStoreSiteImages } from '../../services/app/store/findStore';
 import { STORE_MSG } from '../../constants/api/messages';
-import { getCachedResult } from '../../extensions/redis';
+import { cachResult, getCachedResult } from '../../extensions/redis';
 import { SITE_IMAGE } from '../../interfaces/types';
 
 export const getSiteImages = async (req: Request, res: Response<RESPONSE>) => {
@@ -26,6 +26,8 @@ export const getSiteImages = async (req: Request, res: Response<RESPONSE>) => {
 		}
 
 		const allSiteImages = siteImages ? siteImages : [];
+
+		cachResult('site-images' + storeID, allSiteImages);
 
 		return res.status(STATUS.OK).json({
 			code: STORE_MSG.STORE_INFORMATION_RETRIEVED.CODE,

@@ -54,6 +54,9 @@ export const findOrderById = async (
 				  }
 				: false,
 		},
+		orderBy: {
+			updatedAt: 'desc',
+		},
 	});
 
 	return order;

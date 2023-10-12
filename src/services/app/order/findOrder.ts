@@ -20,6 +20,8 @@ export const findOrderById = async (
 		customerOrder?: boolean;
 		storeOrder?: boolean;
 		products?: boolean;
+		reviews?: boolean;
+		orderShipping?: boolean;
 	},
 	statuses: status[] = [
 		'Pending_Payment',
@@ -36,7 +38,7 @@ export const findOrderById = async (
 ): Promise<ORDER | null> => {
 	const order = await Database.order.findFirst({
 		where: {
-			OR: [{ id }],
+			OR: [{ id }, { orderId: id }],
 			AND: {
 				status: {
 					in: statuses,
@@ -45,7 +47,17 @@ export const findOrderById = async (
 		},
 		include: {
 			items: includes?.items === true,
-			customerOrder: includes?.customerOrder === true,
+			customerOrder: includes?.customerOrder
+				? {
+						include: {
+							customerAccount: {
+								select: {
+									email: true,
+								},
+							},
+						},
+				  }
+				: false,
 			storeOrder: includes?.storeOrder
 				? {
 						include: {
@@ -53,12 +65,14 @@ export const findOrderById = async (
 						},
 				  }
 				: false,
+			reviews: includes?.reviews === true,
+			orderShipping: includes?.orderShipping === true,
 		},
 	});
 
 	return order;
 };
-export const findCancelOrders = async (
+export const findNonCancellableOrders = async (
 	ids: string[],
 	includes?: {
 		items?: boolean;
@@ -91,6 +105,9 @@ export const findCancelOrders = async (
 					},
 				],
 			},
+		},
+		orderBy: {
+			updatedAt: 'desc',
 		},
 	});
 

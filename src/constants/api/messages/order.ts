@@ -58,6 +58,10 @@ export const ORDER_MSG = {
 		MESSAGE:
 			'Could not process order. This may be because products are un available or quantity is insufficient.',
 	},
+	PAYOUT_FAILED: {
+		CODE: 'PAYOUT_FAILED',
+		MESSAGE: 'Could not process process. You can try again later',
+	},
 	SHIPPING_ADDRESS_NOT_FOUND: {
 		CODE: 'SHIPPING_ADDRESS_NOT_FOUND',
 		MESSAGE: 'Customer shipping was not found.',
@@ -82,5 +86,29 @@ export const ORDER_MSG = {
 	ITEMS_UPDATED: {
 		CODE: 'ORDER_ITEMS_UPDATED',
 		MESSAGE: 'Order items was updated successfully.',
+	},
+	PAYOUT_SUCCESSFUL: {
+		CODE: 'PAYOUT_SUCCESSFUL',
+		MESSAGE: 'Payout successful.',
+	},
+	PAYOUT_PENDING: {
+		CODE: 'PAYOUT_PENDING',
+		MESSAGE: 'Payout is pending.',
+	},
+	PAYOUT_CANCELED: {
+		CODE: 'PAYOUT_CANCELED',
+		MESSAGE: 'Payout canceled.',
+	},
+	PAYOUT_INVALID_ACCOUNT: {
+		CODE: 'PAYOUT_INVALID_ACCOUNT',
+		MESSAGE: 'The account is invalid.',
+	},
+	PAYOUT_INSUFFICIENT_FUNDS: {
+		CODE: 'PAYOUT_INSUFFICIENT_FUNDS',
+		MESSAGE: 'Insufficient funds in the account.',
+	},
+	PAYOUT_LIMIT_EXCEEDED: {
+		CODE: 'PAYOUT_LIMIT_EXCEEDED',
+		MESSAGE: 'The PayPal daily payout limit has been exceeded.',
 	},
 };

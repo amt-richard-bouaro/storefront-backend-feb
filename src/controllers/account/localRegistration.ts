@@ -6,11 +6,12 @@ import { findAccountByEmail } from '../../services/app/account/findAccount';
 import { STATUS } from '../../config/statusCode';
 import { createAccount } from '../../services/app/account/createAccount';
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
-import emailVerification from '../../views/templates/emailVerification';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import { ERROR_MSG } from '../../constants/api/messages';
 import logger from '../../middlewares/logger';
+import ejs from 'ejs';
+import path from 'path';
 
 export const localRegistration = async (
 	req: Request,
@@ -56,11 +57,18 @@ export const localRegistration = async (
 
 		const name = data.businessName ? data.businessName : data.firstName;
 
+		const verificationData = await ejs.renderFile(
+			path.resolve('src/views/templates/emailverification.ejs'),
+			{
+				name,
+				code,
+			}
+		);
 		sendMail(
 			mailOptions({
 				to: email,
 				subject: 'Email Verification',
-				html: emailVerification(name!, code),
+				html: verificationData,
 			}),
 			(err) => {
 				if (err) {

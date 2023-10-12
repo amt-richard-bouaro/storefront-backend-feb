@@ -9,7 +9,6 @@ import { findProductById } from '../../services/app/product/findSingleProduct';
 import {
 	addProductsToFavorite,
 	findCustomerSavedProduct,
-	setProductAsLiked,
 } from '../../services/app/customer/viewedProducts';
 
 export const addToViews = async (req: Request, res: Response<RESPONSE>) => {
@@ -40,21 +39,16 @@ export const addToViews = async (req: Request, res: Response<RESPONSE>) => {
 			const availableProduct = await findProductById(product, {});
 			if (availableProduct) {
 				const hasAlreadySaved = await findCustomerSavedProduct({
-					customer: customerID,
+					customer: customer.id,
 					product,
 				});
 
-				!hasAlreadySaved
-					? productsToAdd.push({
-							product: availableProduct.id,
-							customer: customerID,
-							store: availableProduct.store,
-					  })
-					: await setProductAsLiked({
-							customer: customerID,
-							product,
-							liked: true,
-					  });
+				!hasAlreadySaved &&
+					productsToAdd.push({
+						product: availableProduct.id,
+						customer: customerID,
+						store: availableProduct.store,
+					});
 			}
 		}
 
@@ -63,15 +57,15 @@ export const addToViews = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!result) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: CUSTOMER_MSG.INFORMATION_UPDATE_FAILED.CODE,
-				message: CUSTOMER_MSG.INFORMATION_UPDATE_FAILED.MESSAGE,
+				code: CUSTOMER_MSG.PRODUCT_NOT_SAVED.CODE,
+				message: CUSTOMER_MSG.PRODUCT_NOT_SAVED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		return res.status(STATUS.OK).json({
-			code: CUSTOMER_MSG.INFORMATION_UPDATED_SUCCESSFULLY.CODE,
-			message: CUSTOMER_MSG.INFORMATION_UPDATED_SUCCESSFULLY.MESSAGE,
+			code: CUSTOMER_MSG.PRODUCT_SAVED.CODE,
+			message: CUSTOMER_MSG.PRODUCT_SAVED.MESSAGE,
 			type: 'success',
 		});
 	} catch (error) {

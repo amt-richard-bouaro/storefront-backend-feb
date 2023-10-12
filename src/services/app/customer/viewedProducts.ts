@@ -35,11 +35,13 @@ export const findCustomerSavedProducts = async (customerId: string) => {
 			customer: customerId,
 		},
 		select: {
+			id: true,
 			liked: true,
 			createdAt: true,
 			updatedAt: true,
 			savedProduct: {
 				select: {
+					id: true,
 					name: true,
 					images: {
 						select: {
@@ -54,6 +56,7 @@ export const findCustomerSavedProducts = async (customerId: string) => {
 							value: true,
 						},
 					},
+					isActive: true,
 					category: true,
 					quantity: true,
 					storeProducts: {
@@ -64,22 +67,25 @@ export const findCustomerSavedProducts = async (customerId: string) => {
 				},
 			},
 		},
+		orderBy: {
+			updatedAt: 'desc',
+		},
 	});
 
 	return savedProduct;
 };
 
 export const setProductAsLiked = async (data: {
-	customer: string;
+	customerID: string;
 	product: string;
 	liked: boolean;
 }): Promise<{ count: number } | null> => {
 	const updated = await Database.savedItem.updateMany({
 		where: {
-			AND: [{ customer: data.customer }, { product: data.product }],
+			AND: [{ customer: data.customerID }, { product: data.product }],
 		},
 		data: {
-			liked: data.liked === true,
+			liked: data.liked,
 		},
 	});
 

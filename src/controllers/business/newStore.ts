@@ -23,7 +23,7 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 		const business = await findBusinessById(businessID);
 
 		if (!business) {
-			return res.status(STATUS.OK).json({
+			return res.status(STATUS.BAD_REQUEST).json({
 				code: BUSINESS_MSG.BUSINESS_NOT_FOUND.CODE,
 				message: BUSINESS_MSG.BUSINESS_NOT_FOUND.MESSAGE,
 				type: 'error',
@@ -32,8 +32,8 @@ export const newStore = async (req: Request, res: Response<RESPONSE>) => {
 
 		const storeExist = await findStoreByName(requestBody.storeName.trim());
 
-		if (!storeExist) {
-			return res.status(STATUS.OK).json({
+		if (storeExist) {
+			return res.status(STATUS.BAD_REQUEST).json({
 				code: STORE_MSG.NAME_ALREADY_EXISTS.CODE,
 				message: STORE_MSG.NAME_ALREADY_EXISTS.MESSAGE,
 				type: 'error',

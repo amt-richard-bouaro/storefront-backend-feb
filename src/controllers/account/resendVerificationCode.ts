@@ -3,12 +3,14 @@ import { REQUEST_WITH_USER, RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { jwtGenerator, shortCodeGenerator } from '../../helpers';
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
-import emailVerification from '../../views/templates/emailVerification';
+// import emailVerification from '../../views/templates/emailVerification';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findAccountById } from '../../services/app/account/findAccount';
 import { updateVerificationCode } from '../../services/app/account/updateVerificationCode';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import logger from '../../middlewares/logger';
+import path from 'path';
+import ejs from 'ejs';
 
 export const resendVerificationCode = async (
 	req: Request,
@@ -27,7 +29,7 @@ export const resendVerificationCode = async (
 			});
 		}
 
-		const code = await shortCodeGenerator(6);
+		const code = (await shortCodeGenerator(6)).replaceAll(/\W/, '0');
 
 		const token = jwtGenerator({ email: user.email, code });
 
@@ -38,11 +40,19 @@ export const resendVerificationCode = async (
 				? updatedUser.business!.businessName
 				: updatedUser.customer!.firstName;
 
+		const verificationData = await ejs.renderFile(
+			path.resolve('src/views/templates/resendCode.ejs'),
+			{
+				name,
+				code,
+			}
+		);
+
 		await sendMail(
 			mailOptions({
 				to: user.email,
 				subject: 'Email Verification',
-				html: emailVerification(name, code),
+				html: verificationData,
 			}),
 			(err) => {
 				if (err) {

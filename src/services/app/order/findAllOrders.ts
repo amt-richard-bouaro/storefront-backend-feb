@@ -15,6 +15,12 @@ export const findAllOrders = async (
 			OR: [{ store: id }, { customer: id }],
 		},
 		select: {
+			id: true,
+			orderId: true,
+			amount: true,
+			status: true,
+			currency: true,
+			paid: true,
 			referenceId: false,
 			disbursement: includes?.disbursement
 				? {
@@ -25,13 +31,13 @@ export const findAllOrders = async (
 						},
 				  }
 				: false,
-			orderDestination: {
-				select: {
-					name: true,
-					code: true,
-					cost: true,
-				},
-			},
+			// orderDestination: {
+			// 	select: {
+			// 		name: true,
+			// 		code: true,
+			// 		cost: true,
+			// 	},
+			// },
 			storeOrder: includes?.store
 				? {
 						select: {

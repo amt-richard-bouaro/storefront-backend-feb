@@ -147,7 +147,7 @@ model ShippingDestination {
   cost                 Int
   store                String
   shippingDestinations Store    @relation("shippingDestinations", fields: [store], references: [id], onDelete: Cascade)
-  orders               Order[]  @relation("orderDestination")
+  // orders               Order[]  @relation("orderDestination")
   isActive             Boolean  @default(true)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
@@ -280,6 +280,7 @@ model Order {
   id               String              @id @default(uuid())
   amount           Float
   paid             Boolean             @default(false)
+  currency         String
   orderId          String              @unique
   referenceId      String
   status           Status              @default(Pending_Payment)
@@ -292,8 +293,8 @@ model Order {
   reviews          Review[]            @relation("orderReviews")
   shipping         String
   orderShipping    Shipping            @relation("orderShipping", fields: [shipping], references: [id])
-  destination      String
-  orderDestination ShippingDestination @relation("orderDestination", fields: [destination], references: [id])
+  // destination      String
+  // orderDestination ShippingDestination @relation("orderDestination", fields: [destination], references: [id])
   createdAt        DateTime            @default(now())
   updatedAt        DateTime            @updatedAt
 }
@@ -351,9 +352,9 @@ model Payout {
   id          String   @id @default(uuid())
   commission  Float
   payoutId    String
-  amount      String
+  amount      Float
+  currency    String
   wallet      String
-  batch       String?
   order       String   @unique
   orderPayout Order    @relation("orderPayout", fields: [order], references: [id])
   store       String

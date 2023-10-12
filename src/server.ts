@@ -49,7 +49,7 @@ function server() {
 
 	app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 
-
+	app.set('view engine', 'ejs');
 
 	redisClient.connect().catch(console.error);
 

@@ -4,20 +4,12 @@ import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findStoreTemplate } from '../../services/app/store/findTemplate';
 import { STORE_MSG } from '../../constants/api/messages';
-import { getCachedResult } from '../../extensions/redis';
-import { TEMPLATE } from '../../interfaces/types';
 
 export const getTemp = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const storeID = req.params.store_id;
 
-		const cachesStoreTemplate = await getCachedResult(
-			'store-template' + storeID
-		);
-
-		const template = cachesStoreTemplate
-			? (cachesStoreTemplate as TEMPLATE)
-			: await findStoreTemplate(storeID, { temp: true });
+		const template = await findStoreTemplate(storeID, { temp: true });
 
 		if (!template) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -31,7 +23,7 @@ export const getTemp = async (req: Request, res: Response<RESPONSE>) => {
 			code: STORE_MSG.TEMPLATE_FOUND.CODE,
 			message: STORE_MSG.TEMPLATE_FOUND.MESSAGE,
 			type: 'success',
-			data: template.temp,
+			data: { id: template.temp?.id, options: template.temp?.options },
 		});
 	} catch (error) {
 		const err = error as Error;

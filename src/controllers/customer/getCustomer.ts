@@ -6,10 +6,11 @@ import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { CUSTOMER } from '../../interfaces/types';
 import { cachResult, getCachedResult } from '../../extensions/redis';
-
+import { z } from 'zod';
+const CUSTOMER_ID = z.string().uuid();
 export const getCustomer = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const customerID = req.params.customer_id;
+		const customerID = CUSTOMER_ID.parse(req.params.customer_id);
 
 		const cachedCustomer = await getCachedResult(customerID);
 
@@ -25,8 +26,7 @@ export const getCustomer = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		// cache for 15 minutes
-		cachResult(customerID, customer, 15);
+		cachResult(customerID, customer);
 
 		return res.status(STATUS.OK).json({
 			code: CUSTOMER_MSG.CUSTOMER_FOUND.CODE,

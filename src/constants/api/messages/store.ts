@@ -1,8 +1,4 @@
 export const STORE_MSG = {
-	CREATED: {
-		CODE: 'STORE_NOT_CREATED',
-		MESSAGE: 'Failed to create store.',
-	},
 	STORE_INFORMATION_RETRIEVED: {
 		CODE: 'STORE_INFORMATION_RETRIEVED',
 		MESSAGE: 'Store information retrieved successfully.',
@@ -34,11 +30,6 @@ export const STORE_MSG = {
 	CREATED_SUCCESSFULLY: {
 		CODE: 'STORE_CREATED_SUCCESSFULLY',
 		MESSAGE: 'Your store has been created successfully.',
-	},
-
-	DELETION_FAILED: {
-		CODE: 'STORE_DELETION_FAILED',
-		MESSAGE: 'Failed to delete store.',
 	},
 
 	PRODUCT_NOT_FOUND: {
@@ -130,15 +121,15 @@ export const STORE_MSG = {
 	},
 	PAYMENT_INFO_NOT_FOUND: {
 		CODE: 'PAYMENT_INFO_NOT_FOUND',
-		MESSAGE: 'Payment in formation not found',
+		MESSAGE: 'Payment information not found',
 	},
 	PAYMENT_INFO_FOUND: {
 		CODE: 'PAYMENT_INFO_FOUND',
-		MESSAGE: 'Payment in formation found',
+		MESSAGE: 'Payment information found',
 	},
 	PAYMENT_INFO_ADDED: {
 		CODE: 'PAYMENT_INFO_ADDED',
-		MESSAGE: 'Payment in formation added.',
+		MESSAGE: 'Payment information added.',
 	},
 	PAYMENT_ALREAD_EXIST: {
 		CODE: 'PAYMENT_INFO_ALREAD_EXIST',

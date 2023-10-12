@@ -1,6 +1,7 @@
 import { STORE } from '../store';
 import { CUSTOMER } from '../customer';
 import { PRODUCT } from '../product';
+import { ORDER } from '../order';
 
 type REVIEW = {
 	id: string;
@@ -11,6 +12,8 @@ type REVIEW = {
 	comment: string | null;
 	customer: string;
 	customerReview?: CUSTOMER;
+	order: string;
+	orderReview?: ORDER;
 	replies?: REPLY[];
 	createdAt: Date;
 	updatedAt: Date;

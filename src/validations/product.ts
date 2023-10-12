@@ -58,7 +58,7 @@ type REVIEW_PRODUCT = z.infer<typeof REVIEW_PRODUCT>;
 
 const REPLY_REVIEW = z.object({
 	comment: z.string(),
-	from: z.string(),
+	// from: z.string(),
 	review: z.string(),
 });
 

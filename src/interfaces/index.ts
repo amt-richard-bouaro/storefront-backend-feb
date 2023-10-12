@@ -12,7 +12,8 @@ type EMAIL_SUBJECT =
 	| 'Reset Password Confirmation'
 	| 'Password Reset'
 	| 'Reset Password Request'
-	| 'Email Verified';
+	| 'Email Verified'
+	| 'Order Notification';
 interface MAIL_OPTIONS {
 	from?: {
 		name: string;

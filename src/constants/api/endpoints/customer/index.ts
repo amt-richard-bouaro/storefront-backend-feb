@@ -3,10 +3,10 @@ export const CUSTOMER = {
 
 	ADD_SHIPPING_ADDRESS: '/add-shipping-address/:customer_id',
 	REVIEW_PRODUCT: '/review-product/:order_id',
-	REPLY_REVIEW: '/review-reply/:order_id',
+	REPLY_REVIEW: '/reply-review/:review_id',
 
 	GET_REVIEWS: '/get-reviews/:customer_id',
-	GET_SHIPPING_ADDRESSES: '/add-shipping-address/:customer_id',
+	GET_SHIPPING_ADDRESSES: '/get-shipping-addresses/:customer_id',
 	GET_ORDERS: '/get-orders/:customer_id',
 	GET_CUSTOMER: '/:customer_id',
 
@@ -15,7 +15,7 @@ export const CUSTOMER = {
 
 	ADD_VIEW_PRODUCTS: '/add-to-views/:customer_id',
 	ADD_FAVORITE_PRODUCTS: '/add-to-favorites/:customer_id',
-	UNSET_FAVORITE_PRODUCT: '/unset/:product_id/as-favorite/:customer_id',
+	UNSET_FAVORITE_PRODUCT: '/remove/:product_id/from-favorite/:customer_id',
 
-	GET_FAVORITE_PRODUCTS: '/get-favorite-products/:customer_id',
+	GET_SAVED_PRODUCTS: '/get-saved-products/:customer_id',
 };

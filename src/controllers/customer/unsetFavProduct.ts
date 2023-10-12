@@ -30,7 +30,7 @@ export const unsetLikedProduct = async (
 		}
 
 		const unliked = await setProductAsLiked({
-			customer: customerID,
+			customerID,
 			product: productID,
 			liked: true,
 		});

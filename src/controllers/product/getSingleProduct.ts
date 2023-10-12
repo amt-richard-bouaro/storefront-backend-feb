@@ -4,7 +4,7 @@ import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findProductById } from '../../services/app/product/findSingleProduct';
 import { PRODUCT_MSG, STORE_MSG } from '../../constants/api/messages';
-import { getTotalRating, groupVariations } from '../../helpers';
+import { getTotalRating, groupVariations, setDiscount } from '../../helpers';
 
 export const getSingleProduct = async (
 	req: Request,
@@ -17,10 +17,11 @@ export const getSingleProduct = async (
 			variations: true,
 			reviews: true,
 			images: true,
+			replies: true,
 		});
 
 		if (!product) {
-			return res.status(STATUS.OK).json({
+			return res.status(STATUS.BAD_REQUEST).json({
 				code: PRODUCT_MSG.NOT_FOUND.CODE,
 				message: PRODUCT_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
@@ -29,6 +30,9 @@ export const getSingleProduct = async (
 
 		const newProduct = {
 			...product,
+			discount: product.promotionProduct
+				? setDiscount(product.discount, product.promotionProduct)
+				: product.discount,
 			variations: groupVariations(product.variations ?? []),
 			rating: getTotalRating(product.reviews ?? []),
 		};

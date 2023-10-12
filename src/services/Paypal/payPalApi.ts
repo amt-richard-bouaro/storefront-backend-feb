@@ -81,13 +81,12 @@ export const createOrder = async (data: {
 
 	const res = await handleResponse(response);
 
-	// console.log(res);
-
 	return res;
 };
 
 export const payoutStore = async (data: {
 	amount: string;
+	currency: string;
 	receiver: string;
 	orderId: string;
 	reference: string;
@@ -101,11 +100,11 @@ export const payoutStore = async (data: {
 			{
 				receiver: data.receiver,
 				amount: {
-					currency: 'USD',
+					currency: data.currency,
 					value: data.amount,
 				},
 				recipient_type: 'EMAIL',
-				note: 'Thanks for your patronage!',
+				note: 'Thanks you for doing patronizing StoreFront!',
 				sender_item_id: data.orderId,
 				recipient_wallet: 'PayPal',
 			},

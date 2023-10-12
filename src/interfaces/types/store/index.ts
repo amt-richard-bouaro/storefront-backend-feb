@@ -17,6 +17,7 @@ export type STORE = {
 	orders?: ORDER[];
 	wallets?: WALLET[];
 	savedProducts?: SAVED_ITEM[];
+	siteImages?: SITE_IMAGE[];
 	payments?: PAYOUT[];
 	Replies?: REPLY[];
 	business: string;

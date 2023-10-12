@@ -10,7 +10,10 @@ import {
 } from '../../services/app/store/storePromotions';
 import { STORE_MSG } from '../../constants/api/messages';
 
-export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
+export const addProductsToPromo = async (
+	req: Request,
+	res: Response<RESPONSE>
+) => {
 	try {
 		const requestBody = req.body;
 

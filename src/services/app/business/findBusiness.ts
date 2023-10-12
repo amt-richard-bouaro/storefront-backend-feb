@@ -21,6 +21,7 @@ export const findBusinessById = async (
 								  }
 								: false,
 						},
+						orderBy: { createdAt: 'desc' },
 				  }
 				: false,
 		},

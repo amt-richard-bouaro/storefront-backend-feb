@@ -12,6 +12,7 @@ export const deleteProductsById = async (
 
 		data: {
 			deleted: true,
+			isActive: false,
 		},
 	});
 

@@ -50,4 +50,17 @@ type VARIATION = {
 	orders?: ORDER_ITEM[];
 };
 
-export { VARIATION, PRODUCT, CATEGORY, IMAGE };
+type LIKED_PRODUCT = {
+	id: string;
+	name: string;
+	quantity: number;
+	category: string;
+	price: number;
+	discount: number;
+	isActive: boolean;
+	images: { url: string }[];
+	variations: { type: string; value: string }[];
+	storeProducts: { storeName: string };
+};
+
+export { VARIATION, PRODUCT, CATEGORY, IMAGE, LIKED_PRODUCT };

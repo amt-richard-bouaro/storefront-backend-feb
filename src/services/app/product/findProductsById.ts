@@ -10,6 +10,9 @@ export const findProductsById = async (
 				in: productIDs,
 			},
 		},
+		orderBy: {
+			updatedAt: 'desc',
+		},
 	});
 
 	return products;

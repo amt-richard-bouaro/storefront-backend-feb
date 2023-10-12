@@ -37,9 +37,9 @@ const PROMOTION = z
 		discount: z
 			.number()
 			.min(0, 'Promotion discount must be greater than 0')
-			.max(0, 'Promotion discount must not be greater than 100'),
-		start: z.date().min(new Date(), 'Promotion must start after creation'),
-		end: z.date().min(new Date(), 'Promotion can only end after creation'),
+			.max(100, 'Promotion discount must not be greater than 100'),
+		start: z.date(),
+		end: z.date(),
 	})
 	.refine((promotion) => promotion.start < promotion.end, {
 		message: `Promotion end date must be later than start date`,
@@ -61,10 +61,17 @@ const DELETE_SITE_IMAGES = z.object({
 
 type DELETE_SITE_IMAGES = z.infer<typeof DELETE_SITE_IMAGES>;
 
+const ADD_SITE_IMAGE = z.object({
+	name: z.string().nonempty('Please provide image name'),
+});
+
+type ADD_SITE_IMAGE = z.infer<typeof ADD_SITE_IMAGE>;
+
 export {
 	NEW_DESTINATION,
 	UPDATE_DESTINATION,
 	PROMOTION,
 	DELETE_SITE_IMAGES,
 	REMOVE_PROMO_ITEM,
+	ADD_SITE_IMAGE,
 };

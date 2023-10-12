@@ -15,6 +15,9 @@ export const findStoreDestinations = async (
 		where: {
 			store: storeID,
 		},
+		orderBy: {
+			createdAt: 'desc',
+		},
 	});
 	return destinations;
 };

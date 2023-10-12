@@ -16,6 +16,26 @@ export const saveStorePromotion = async (data: {
 	return promotion;
 };
 
+export const updateStorePromotion = async (
+	promoID: string,
+	data: {
+		name: string;
+		statement: string;
+		discount: number;
+		start: Date;
+		end: Date;
+	}
+): Promise<PROMOTION | null> => {
+	const promotion = await Database.promotion.update({
+		where: {
+			id: promoID,
+		},
+		data,
+	});
+
+	return promotion;
+};
+
 export const findPromotionById = async (
 	promoID: string,
 	includes?: { products?: boolean }
@@ -25,7 +45,44 @@ export const findPromotionById = async (
 			id: promoID,
 		},
 		include: {
+			products: includes?.products
+				? {
+						include: {
+							images: {
+								select: {
+									url: true,
+								},
+							},
+						},
+				  }
+				: false,
+		},
+		orderBy: {
+			updatedAt: 'desc',
+		},
+	});
+
+	return promotion;
+};
+
+export const findPromotions = async (
+	storeID: string,
+	includes?: { products?: boolean }
+): Promise<PROMOTION[] | null> => {
+	const promotion = await Database.promotion.findMany({
+		where: {
+			store: storeID,
+			AND: {
+				end: {
+					gt: new Date(),
+				},
+			},
+		},
+		include: {
 			products: includes?.products === true,
+		},
+		orderBy: {
+			createdAt: 'desc',
 		},
 	});
 

@@ -7,9 +7,10 @@ import { CODE } from '../../validations/account';
 import { findAccountById } from '../../services/app/account/findAccount';
 import { extractJwtPayload } from '../../helpers';
 import { verifyAccount } from '../../services/app/account/verifyAccount';
-import emailVerified from '../../views/templates/emailVerified';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import logger from '../../middlewares/logger';
+import ejs from 'ejs';
+import path from 'path';
 export const accountVerification = async (
 	req: Request,
 	res: Response<RESPONSE>
@@ -56,11 +57,18 @@ export const accountVerification = async (
 				? verifiedUser.business!.businessName
 				: verifiedUser.customer!.firstName;
 
+		const verifiedInfo = await ejs.renderFile(
+			path.resolve('src/views/templates/resetPassword.ejs'),
+			{
+				name: user,
+			}
+		);
+
 		await sendMail(
 			mailOptions({
 				to: verifiedUser.email,
 				subject: 'Email Verified',
-				html: emailVerified(user),
+				html: verifiedInfo,
 			}),
 			(err) => {
 				if (err) {
