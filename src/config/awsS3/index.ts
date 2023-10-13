@@ -15,7 +15,6 @@ export const s3Cofig = S3_BUCKET_SCHEMA.safeParse({
 });
 
 if (!s3Cofig.success) {
-	console.log(s3Cofig.error.issues);
 	throw new Error(`Invalid s3 bucket config: ${s3Cofig.error}`);
 }
 

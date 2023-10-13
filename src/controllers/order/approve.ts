@@ -82,7 +82,6 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		console.log(unavailbleProducts);
 		const makePayment = await captureOrder(order.orderId);
 
 		if (makePayment.status !== STATUS.CREATED) {

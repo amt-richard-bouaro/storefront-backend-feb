@@ -14,7 +14,6 @@ export const faceBookApiConfig = FACEBOOK_API_SCHEMA.safeParse({
 });
 
 if (!faceBookApiConfig.success) {
-	console.log(faceBookApiConfig.error.issues);
 	throw new Error(`Invalid facebook api config: ${faceBookApiConfig.error}`);
 }
 

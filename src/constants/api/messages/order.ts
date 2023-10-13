@@ -111,4 +111,12 @@ export const ORDER_MSG = {
 		CODE: 'PAYOUT_LIMIT_EXCEEDED',
 		MESSAGE: 'The PayPal daily payout limit has been exceeded.',
 	},
+	SHIPPED: {
+		CODE: 'ORDER_SHIPPED',
+		MESSAGE: 'The order has been shipped',
+	},
+	NOT_SHIPPED: {
+		CODE: 'ORDER_NOT_SHIPPED',
+		MESSAGE: 'The order status could not be changed.',
+	},
 };

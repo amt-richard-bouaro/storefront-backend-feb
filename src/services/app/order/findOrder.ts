@@ -1,5 +1,5 @@
 import { Database } from '../../../extensions/dbClient';
-import { ORDER } from '../../../interfaces/types';
+import { ORDER, PAYOUT } from '../../../interfaces/types';
 
 type status =
 	| 'Pending_Payment'
@@ -112,4 +112,16 @@ export const findNonCancellableOrders = async (
 	});
 
 	return order;
+};
+
+export const findOrderPayoutById = async (
+	orderID: string
+): Promise<PAYOUT | null> => {
+	const payout = await Database.payout.findFirst({
+		where: {
+			order: orderID,
+		},
+	});
+
+	return payout;
 };

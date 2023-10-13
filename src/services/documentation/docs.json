@@ -3648,6 +3648,67 @@
         }
       }
     },
+    "/api/order/shipped/{order_id}": {
+  "patch": {
+    "tags": ["Order"],
+    "summary": "Set order status as shipped and update order information",
+    "parameters": [
+      {
+        "name": "order_id",
+        "in": "path",
+        "description": "ID of the order to set status as shipped and update order information",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "ORDER_SHIPPED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "ORDER_NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL SERVER ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
     "/api/order/get-single-order/{order_id}": {
       "get": {
         "tags": ["Order"],
@@ -6341,6 +6402,87 @@
                 "type": {
                   "type": "string",
                   "default": "success"
+                }
+              }
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-payouts/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Retrieve Payout Information for a Store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "description": "ID of the store to retrieve payouts for",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "SHIPPING_PAYOUTS_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "default": "SHIPPING_PAYOUTS_FOUND"
+                },
+                "message": {
+                  "type": "string",
+                  "default": "Payouts retrieved successfully"
+                },
+                "payouts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "transactionId": {
+                        "type": "string",
+                        "default": "12345"
+                      },
+                      "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "default": 100.00
+                      },
+                      "date": {
+                        "type": "string",
+                        "format": "date",
+                        "default": "2023-10-12"
+                      }
+                    }
+                  }
                 }
               }
             }

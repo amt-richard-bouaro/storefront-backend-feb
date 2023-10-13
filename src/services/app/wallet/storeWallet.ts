@@ -30,7 +30,7 @@ export const createWallet = async (
 	data: {
 		method: 'Card' | 'Paypal';
 		walletId: string;
-		secret: string;
+		secret?: string;
 		name: string;
 		customer?: string;
 		store?: string;
@@ -47,8 +47,8 @@ export const createWallet = async (
 	const wallets = await Database.wallet.create({
 		data: {
 			...data,
-			store: type === 'Store' ? data.store : null,
-			customer: type === 'Customer' ? data.customer : null,
+			store: type === 'Store' && data.store ? data.store : null,
+			customer: type === 'Customer' && data.customer ? data.customer : null,
 		},
 	});
 

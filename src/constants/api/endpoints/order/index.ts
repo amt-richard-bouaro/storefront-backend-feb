@@ -5,6 +5,7 @@ export const ORDER = {
 	UPDATE_ORDER_ITEM: '/update-item-quantity/:order_id',
 	REMOVE_ORDER_ITEMS: '/remove-items/:order_id',
 	SET_ORDER_AS_DELIVERED: '/delivered/:order_id',
+	SET_ORDER_AS_SHIIPED: '/shipped/:order_id',
 
 	GET_ORDER: '/get-single-order/:order_id',
 	CANCEL_ORDERS: '/cancel-orders',

@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { STATUS } from '../../config/statusCode';
-import { cachResult, getCachedResult } from '../../extensions/redis';
 import { findStoreById } from '../../services/app/store/findStore';
-import { STORE } from '../../interfaces/types';
 import { ERROR_MSG, STORE_MSG } from '../../constants/api/messages';
 import { NEW_WALLET } from '../../validations/wallet';
 import { createWallet } from '../../services/app/wallet/storeWallet';
@@ -17,15 +15,11 @@ export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
 
 		const body = <NEW_WALLET>requestBody;
 
-		const storeID = req.params.store_d;
+		const storeID = req.params.store_id;
 
-		const cachedStoreWallet = await getCachedResult('my-all-wallets' + storeID);
+		const storeWithWallets = await findStoreById(storeID, { wallets: true });
 
-		const storeWallets = cachedStoreWallet
-			? (cachedStoreWallet as STORE)
-			: await findStoreById(storeID, { wallets: true });
-
-		if (!storeWallets) {
+		if (!storeWithWallets) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: STORE_MSG.NOT_FOUND.CODE,
 				message: STORE_MSG.NOT_FOUND.MESSAGE,
@@ -33,7 +27,7 @@ export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const walletExist = storeWallets.wallets?.find((wallet) => {
+		const walletExist = storeWithWallets.wallets?.find((wallet) => {
 			if (wallet.walletId === body.walletId && wallet.method === body.method) {
 				return wallet;
 			}
@@ -47,9 +41,12 @@ export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const createdWallet = await createWallet('Store', body);
+		const createdStoreWallet = await createWallet('Store', {
+			...body,
+			store: storeWithWallets.id,
+		});
 
-		if (!createdWallet) {
+		if (!createdStoreWallet) {
 			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
 				code: ERROR_MSG.INTERNAL_SERVER_ERROR.CODE,
 				message: ERROR_MSG.INTERNAL_SERVER_ERROR.MESSAGE,
@@ -57,15 +54,13 @@ export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		storeWallets.wallets?.push(createdWallet);
-
-		cachResult('my-all-wallets' + storeID, storeWallets);
+		storeWithWallets.wallets?.push(createdStoreWallet);
 
 		return res.status(STATUS.OK).json({
 			code: STORE_MSG.PAYMENT_INFO_ADDED.CODE,
 			message: STORE_MSG.PAYMENT_INFO_ADDED.MESSAGE,
 			type: 'success',
-			data: createdWallet,
+			data: createdStoreWallet,
 		});
 	} catch (error) {
 		const err = error as Error;

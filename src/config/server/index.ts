@@ -37,8 +37,6 @@ const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 });
 
 if (!serverConfig.success) {
-	console.log(serverConfig.error.issues);
-
 	throw new Error(`Invalid server config: ${serverConfig.error}`);
 }
 

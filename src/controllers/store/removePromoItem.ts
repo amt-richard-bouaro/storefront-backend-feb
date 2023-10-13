@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
-import { ORDER_MSG } from '../../constants/api/messages';
+import { STORE_MSG } from '../../constants/api/messages';
 
 import {
 	findPromotionById,
@@ -23,12 +23,12 @@ export const removePromoItem = async (
 
 		const { products } = <REMOVE_PROMO_ITEM>requestBody;
 
-		const promotion = await findPromotionById(promoID);
+		const promotion = await findPromotionById(promoID, { products: true });
 
 		if (!promotion) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: ORDER_MSG.NOT_RETURNED.CODE,
-				message: ORDER_MSG.NOT_RETURNED.MESSAGE,
+				code: STORE_MSG.PROMO_NOT_FOUND.CODE,
+				message: STORE_MSG.PROMO_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -44,8 +44,8 @@ export const removePromoItem = async (
 
 		if (productsToBeDeleted.length === 0) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: ORDER_MSG.NOT_RETURNED.CODE,
-				message: ORDER_MSG.NOT_RETURNED.MESSAGE,
+				code: STORE_MSG.PROMO_PRODUCT_NOT_REMOVED.CODE,
+				message: STORE_MSG.PROMO_PRODUCT_NOT_REMOVED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -53,8 +53,8 @@ export const removePromoItem = async (
 		await removePromoProduct(promoID, productsToBeDeleted);
 
 		return res.status(STATUS.OK).json({
-			code: ORDER_MSG.ORDERS_FOUND.CODE,
-			message: ORDER_MSG.ORDERS_FOUND.MESSAGE,
+			code: STORE_MSG.PROMO_PRODUCT_REMOVED.CODE,
+			message: STORE_MSG.PROMO_PRODUCT_REMOVED.MESSAGE,
 			type: 'success',
 		});
 	} catch (error) {

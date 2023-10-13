@@ -13,16 +13,23 @@ import { changeOrderShipping } from '../../controllers/order/changeOrderShipping
 import { ORDER } from '../../constants/api/endpoints';
 import { orderDelivered } from '../../controllers/order/orderDelivered';
 import { sendInvoice } from '../../controllers/payment/invoice';
+import { orderShipped } from '../../controllers/order/orderShipped';
 
 const order = express.Router();
 
 order.post(ORDER.INITIALIZE_ORDER, initializeOrder);
 order.post(ORDER.APPROVE_ORDER_PAYMENT, approveOrder);
-order.post(
+order.patch(
 	ORDER.SET_ORDER_AS_DELIVERED,
 	isAuthenticated,
 	restrictedTo(['Business']),
 	orderDelivered
+);
+order.patch(
+	ORDER.SET_ORDER_AS_SHIIPED,
+	isAuthenticated,
+	restrictedTo(['Business']),
+	orderShipped
 );
 order.patch(
 	ORDER.UPDATE_ORDER_ITEM,

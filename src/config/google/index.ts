@@ -11,7 +11,6 @@ const googleApiConfig = GOOGLE_API_SCHEMA.safeParse({
 });
 
 if (!googleApiConfig.success) {
-	console.log(googleApiConfig.error.issues);
 	throw new Error(`Invalid google api config: ${googleApiConfig.error}`);
 }
 

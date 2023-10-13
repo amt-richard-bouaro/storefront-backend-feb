@@ -115,6 +115,18 @@ export const STORE_MSG = {
 		CODE: 'PROMO_FOUND',
 		MESSAGE: 'Promotion found',
 	},
+	PROMO_PRODUCT_REMOVED: {
+		CODE: 'PROMO_PRODUCT_REMOVED',
+		MESSAGE: 'Promotion products removed',
+	},
+	PROMO_PRODUCT_NOT_REMOVED: {
+		CODE: 'PROMO_PRODUCT_NOT_REMOVED',
+		MESSAGE: 'Promotion products not removed',
+	},
+	PROMO_PRODUCT_ADDED: {
+		CODE: 'PROMO_PRODUCT_ADDED',
+		MESSAGE: 'Promotion products added',
+	},
 	PROMO_ENDED: {
 		CODE: 'PROMO_ENDED',
 		MESSAGE: 'Promotion has ended',

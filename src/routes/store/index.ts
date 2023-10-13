@@ -26,6 +26,7 @@ import { updatedPromotion } from '../../controllers/store/updatePromotion';
 import { getAllStores } from '../../controllers/store/allStores';
 import { getStoreReviews } from '../../controllers/store/getStoreReviews';
 import { replyCustomerReview } from '../../controllers/store/replyCustomerReview';
+import { getStorePayouts } from '../../controllers/store/getStorePayouts';
 
 const store = express.Router();
 
@@ -158,6 +159,12 @@ store.patch(
 	imageUpload.single('image'),
 	restrictedTo(['Business']),
 	addSiteImage
+);
+store.get(
+	STORE.GET_PAYOUTS,
+	isAuthenticated,
+	restrictedTo(['Business']),
+	getStorePayouts
 );
 
 export default store;

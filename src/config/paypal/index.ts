@@ -13,7 +13,6 @@ const paypalConfig = PAYPAL_API_SCHEMA.safeParse({
 });
 
 if (!paypalConfig.success) {
-	console.log(paypalConfig.error.issues);
 	throw new Error(`Invalid paypal config: ${paypalConfig.error}`);
 }
 

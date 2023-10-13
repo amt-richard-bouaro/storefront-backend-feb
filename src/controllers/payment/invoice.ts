@@ -6,6 +6,7 @@ import { STORE_MSG } from '../../constants/api/messages';
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
 import path from 'path';
 import ejs from 'ejs';
+import { getCapturedOrder } from '../../services/Paypal/payPalApi';
 
 export const sendInvoice = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -79,10 +80,13 @@ export const sendInvoice = async (req: Request, res: Response<RESPONSE>) => {
 			);
 		}
 
+		const info = await getCapturedOrder('9F2530559W1984603');
+
 		return res.status(STATUS.OK).json({
 			code: STORE_MSG.PAYMENT_INFO_FOUND.CODE,
 			message: STORE_MSG.PAYMENT_INFO_FOUND.MESSAGE,
 			type: 'success',
+			data: info.json.payer,
 		});
 	} catch (error) {
 		const err = error as Error;

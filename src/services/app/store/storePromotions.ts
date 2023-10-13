@@ -123,7 +123,7 @@ export const removePromoProduct = async (
 			},
 		},
 		data: {
-			promotion: undefined,
+			promotion: null,
 		},
 	});
 

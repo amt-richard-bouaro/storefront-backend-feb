@@ -177,7 +177,7 @@ export const captureOrder = async (orderID: string) => {
 	return handleResponse(response);
 };
 
-export const getOrder = async (orderID: string) => {
+export const getCapturedOrder = async (orderID: string) => {
 	const accessToken = await generateAccessToken();
 
 	const url = `${PAYPAL_API.BASE_URL}/v2/checkout/orders/${orderID}`;

@@ -2,9 +2,12 @@ import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
-import { findOrderById } from '../../services/app/order/findOrder';
+import {
+	findOrderById,
+	findOrderPayoutById,
+} from '../../services/app/order/findOrder';
 import { ORDER_MSG } from '../../constants/api/messages';
-import { payoutStore } from '../../services/Paypal/payPalApi';
+import { getCapturedOrder, payoutStore } from '../../services/Paypal/payPalApi';
 import { findStoreById } from '../../services/app/store/findStore';
 import { setOrderStatus } from '../../services/app/order/setOrderStatus';
 import { savePayout } from '../../services/app/order/payouts';
@@ -17,12 +20,24 @@ export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const orderID = req.params.order_id;
 
-		const order = await findOrderById(orderID);
+		const order = await findOrderById(orderID, {}, ['Processing', 'Shipped']);
 
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: ORDER_MSG.NOT_FOUND.CODE,
-				message: ORDER_MSG.NOT_FOUND.MESSAGE,
+				message:
+					ORDER_MSG.NOT_FOUND.MESSAGE +
+					' Or the order is in processing or shipped',
+				type: 'error',
+			});
+		}
+
+		const orderHasPayout = await findOrderPayoutById(order.id);
+
+		if (orderHasPayout) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: ORDER_MSG.NOT_FOUND.CODE,
+				message: 'Order has payout already',
 				type: 'error',
 			});
 		}
@@ -47,8 +62,8 @@ export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!changeOrderStatus) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: ORDER_MSG.PAYOUT_INVALID_ACCOUNT.CODE,
-				message: ORDER_MSG.PAYOUT_INVALID_ACCOUNT.MESSAGE,
+				code: ORDER_MSG.NOT_FULFILLED.CODE,
+				message: ORDER_MSG.NOT_FULFILLED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -60,41 +75,6 @@ export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 			orderShipping: true,
 		});
 
-		const invoice = updatedOrder
-			? {
-					customer: updatedOrder.customerOrder,
-					items: updatedOrder.items,
-					total: updatedOrder.amount,
-					status: updatedOrder.status,
-					shipping: updatedOrder.orderShipping,
-					paid: updatedOrder.paid,
-					curreny: updatedOrder.currency,
-					orderID: updatedOrder.orderId,
-			  }
-			: null;
-
-		if (invoice && invoice.customer?.customerAccount?.email) {
-			const invoiceData = await ejs.renderFile(
-				path.resolve('src/views/templates/invoice.ejs'),
-				{
-					data: invoice,
-				}
-			);
-
-			await sendMail(
-				mailOptions({
-					to: invoice.customer.customerAccount.email,
-					subject: 'Order Notification',
-					html: invoiceData,
-				}),
-				(err) => {
-					if (err) {
-						logger.error(err);
-					}
-				}
-			);
-		}
-
 		const payout =
 			changeOrderStatus &&
 			(await payoutStore({
@@ -105,7 +85,7 @@ export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 				orderId: order.orderId,
 			}));
 
-		if (payout.status !== 204) {
+		if (payout.status !== 201) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: ORDER_MSG.PAYOUT_FAILED.CODE,
 				message: ORDER_MSG.PAYOUT_FAILED.MESSAGE,
@@ -114,14 +94,62 @@ export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 		}
 
 		await savePayout({
-			commission: (order.amount * 15) / 100,
+			commission: 15,
 			payoutId: order.referenceId,
 			amount: order.amount - (order.amount * 15) / 100,
 			currency: order.currency,
 			wallet: paypalWallet.walletId,
-			order: order.orderId,
+			order: order.id,
 			store: order.store,
 		});
+
+		const paymentInfo = await getCapturedOrder(order.orderId);
+
+		const payer =
+			paymentInfo.status === 200
+				? {
+						email: paymentInfo.json.payer.email_address,
+						givenName: paymentInfo.json.payer.name.given_name,
+						surname: paymentInfo.json.payer.name.surname,
+				  }
+				: null;
+
+		const invoice = updatedOrder
+			? {
+					customerName: `${updatedOrder.customerOrder?.firstName} ${updatedOrder.customerOrder?.lastName}`,
+					customerEmail: updatedOrder.customerOrder?.customerAccount?.email,
+					items: updatedOrder.items,
+					total: updatedOrder.amount,
+					status: updatedOrder.status,
+					shipping: updatedOrder.orderShipping,
+					paid: updatedOrder.paid,
+					currency: updatedOrder.currency,
+					orderID: updatedOrder.orderId,
+					payer,
+			  }
+			: null;
+
+		if (invoice) {
+			const invoiceData = await ejs.renderFile(
+				path.resolve('src/views/templates/invoice.ejs'),
+				{
+					data: invoice,
+				}
+			);
+
+			await sendMail(
+				mailOptions({
+					to: invoice.customerEmail!,
+					subject: 'Order Notification',
+					html: invoiceData,
+				}),
+				(err) => {
+					if (err) {
+						logger.error(err);
+					}
+				}
+			);
+		}
 
 		return res.status(STATUS.OK).json({
 			code: ORDER_MSG.PAYOUT_SUCCESSFUL.CODE,

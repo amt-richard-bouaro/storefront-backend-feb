@@ -28,6 +28,8 @@ export const STORE = {
 	GET_STORE: '/get-store/:store_id',
 	GET_STORES: '/get-all',
 
+	GET_PAYOUTS: '/get-payouts/:store_id',
+
 	GET_STORE_REVIEWS: '/get-reviews/:store_id',
 	REPLY_REVIEW: '/reply-customer/:store_id',
 
