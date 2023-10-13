@@ -5,6 +5,9 @@ export const PRODUCT = {
 	DELETE_PRODUCTS: '/delete',
 	DELETE_PRODUCT_IMAGES: '/delete-images',
 	UPDATE_PRODUCT: '/update-product/:product_id',
+	UPDATE_PRODUCTS_DISCOUNT: '/update-products-discount',
+
+	ADD_PRODUCTS_PROMOTION: '/add-promotion-products/:promo_id',
 
 	REVIEW_PRODUCT: '/review-product/:order_id',
 	GET_PRODUCT_REVIEWS: '/get-product-reviews/:product_id',

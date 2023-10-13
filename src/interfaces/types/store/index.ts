@@ -1,22 +1,23 @@
 import { BUSINESS } from '../business';
-import { CUSTOMER, SAVED_ITEM } from '../customer';
+import { SAVED_ITEM } from '../customer';
 import { ORDER, PAYOUT } from '../order';
 import { CATEGORY, PRODUCT } from '../product';
 import { REPLY } from '../review';
+import { WALLET } from '../wallet';
 
 export type STORE = {
 	id: string;
 	storeName: string;
 	storeType: string;
-	promotion: boolean;
-	promotionDiscount: number;
+	promotions?: PROMOTION[];
 	currency: string;
 	products?: PRODUCT[];
 	categories?: CATEGORY[];
 	template?: TEMPLATE | null;
 	orders?: ORDER[];
-	visitors?: VISITOR[];
+	wallets?: WALLET[];
 	savedProducts?: SAVED_ITEM[];
+	siteImages?: SITE_IMAGE[];
 	payments?: PAYOUT[];
 	Replies?: REPLY[];
 	business: string;
@@ -25,15 +26,18 @@ export type STORE = {
 	updatedAt: Date;
 };
 
-export type VISITOR = {
+export type PROMOTION = {
 	id: string;
-	liked: boolean;
-	identity: string;
+	name: string;
+	statement: string;
+	discount: number;
+	start: Date;
+	end: Date;
 	store: string;
-	storeVisitor: STORE;
-	customer: string;
-	customrVisit: CUSTOMER;
+	storePromotion?: STORE;
+	products?: PRODUCT[];
 	createdAt: Date;
+	updatedAt: Date;
 };
 
 export type TEMPLATE = {
@@ -48,4 +52,13 @@ export type TEMP = {
 	options: string;
 	template: string;
 	tempTemplate?: TEMPLATE | null;
+};
+
+export type SITE_IMAGE = {
+	id: string;
+	url: string;
+	name: string;
+	key?: string;
+	store?: string;
+	storeImage?: STORE;
 };

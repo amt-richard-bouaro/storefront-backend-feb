@@ -11,4 +11,10 @@ const CUSTOMER_SHIPPING = z.object({
 	isActive: z.boolean().default(true),
 });
 
-export { CUSTOMER_SHIPPING };
+const VIEW_PRODUCTS = z.object({
+	products: z.string().array(),
+});
+
+type VIEW_PRODUCTS = z.infer<typeof VIEW_PRODUCTS>;
+
+export { CUSTOMER_SHIPPING, VIEW_PRODUCTS };

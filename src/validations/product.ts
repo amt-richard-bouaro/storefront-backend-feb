@@ -6,7 +6,11 @@ const NEW_PRODUCT = z.object({
 		.min(2, 'Product name must not be less than 2 characters')
 		.nonempty('Please provide a product name'),
 	price: z.number().nonnegative('Product price must not be less than 0.00'),
-	discount: z.number().optional(),
+	discount: z
+		.number()
+		.min(0, 'Discount should be minimum value of 0')
+		.max(100, 'Discount should be maximum value of 100')
+		.optional(),
 	quantity: z.number().refine((val) => {
 		if (val < 1) {
 			return false;
@@ -54,11 +58,29 @@ type REVIEW_PRODUCT = z.infer<typeof REVIEW_PRODUCT>;
 
 const REPLY_REVIEW = z.object({
 	comment: z.string(),
-	from: z.string(),
+	// from: z.string(),
 	review: z.string(),
 });
 
 type REPLY_REVIEW = z.infer<typeof REPLY_REVIEW>;
+
+const UPDATE_DISCOUNTS = z.object({
+	products: z
+		.string()
+		.array()
+		.nonempty('Products to update their discount cannot be empty'),
+	discount: z
+		.number()
+		.min(0, 'Discount should be minimum value of 0')
+		.max(100, 'Discount should be maximum value of 100'),
+});
+type UPDATE_DISCOUNTS = z.infer<typeof UPDATE_DISCOUNTS>;
+
+const UPDATE_PRODUCT_PROMOTION = z.object({
+	products: z.string().array(),
+	categories: z.string().array(),
+});
+type UPDATE_PRODUCT_PROMOTION = z.infer<typeof UPDATE_PRODUCT_PROMOTION>;
 
 export {
 	NEW_PRODUCT,
@@ -66,4 +88,6 @@ export {
 	IMAGES_TO_DELETE,
 	REVIEW_PRODUCT,
 	REPLY_REVIEW,
+	UPDATE_DISCOUNTS,
+	UPDATE_PRODUCT_PROMOTION,
 };

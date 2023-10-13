@@ -1,5 +1,6 @@
 import { CUSTOMER } from '../customer';
 import { PRODUCT, VARIATION } from '../product';
+import { REVIEW } from '../review';
 import { STORE } from '../store';
 
 const ORDER_STATUS = [
@@ -37,8 +38,10 @@ type ORDER = {
 	storeOrder?: STORE;
 	customer: string;
 	customerOrder?: CUSTOMER;
+	currency: string;
 	items?: ORDER_ITEM[];
 	disbursement?: PAYOUT;
+	reviews?: REVIEW[];
 	shipping: string;
 	orderShipping?: SHIPPING;
 	createdAt: Date;
@@ -88,12 +91,14 @@ type SHIPPING_DESTINATION = {
 type PAYOUT = {
 	id: string;
 	commission: number;
+	amount: number;
+	currency: string;
 	payoutId: string;
 	batch?: string;
 	order: string;
-	orderPayout: ORDER;
+	orderPayout?: ORDER;
 	store: string;
-	storePayout: STORE;
+	storePayout?: STORE;
 	createdAt: Date;
 	updatedAt: Date;
 };

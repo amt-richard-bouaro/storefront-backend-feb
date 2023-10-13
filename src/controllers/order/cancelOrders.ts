@@ -3,7 +3,7 @@ import { RESPONSE } from '../../interfaces';
 import { CANCEL_ORDERS } from '../../validations/order';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
-import { findCancelOrders } from '../../services/app/order/findOrder';
+import { findNonCancellableOrders } from '../../services/app/order/findOrder';
 import { cancelManyOrders } from '../../services/app/order/cancelOrder';
 import { ORDER_MSG } from '../../constants/api/messages';
 
@@ -13,7 +13,7 @@ export const cancelOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		const requestBody = <CANCEL_ORDERS>req.body;
 
-		const orders = await findCancelOrders(requestBody.orders);
+		const orders = await findNonCancellableOrders(requestBody.orders);
 
 		if (!orders || orders.length === 0) {
 			return res.status(STATUS.BAD_REQUEST).json({

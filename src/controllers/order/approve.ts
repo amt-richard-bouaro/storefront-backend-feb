@@ -6,6 +6,7 @@ import { productsAvailability } from '../../services/app/product/productAvailabl
 import { captureOrder } from '../../services/Paypal/payPalApi';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findOrderById } from '../../services/app/order/findOrder';
+import { ORDER_MSG } from '../../constants/api/messages';
 
 export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -19,33 +20,32 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!order) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PAYMENT_DENIED',
-				message: 'Order not found.',
+				code: ORDER_MSG.NOT_FOUND.CODE,
+				message: ORDER_MSG.NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (order.status === 'Cancelled') {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PAYMENT_DENIED',
-				message:
-					'Order was cancelled. Payment cannot be accepted for cancelled order.',
+				code: ORDER_MSG.ALREADY_CANCELLED.CODE,
+				message: ORDER_MSG.ALREADY_CANCELLED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (order.paid) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PAYMENT_DENIED',
-				message: 'Currently not accepting any payment. Order paid for already',
+				code: ORDER_MSG.ALREADY_FULFILLED.CODE,
+				message: ORDER_MSG.ALREADY_FULFILLED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		if (!order.items || order.items.length === 0) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PAYMENT_DENIED',
-				message: 'Order items empty',
+				code: ORDER_MSG.ITEMS_NOT_FOUND.CODE,
+				message: ORDER_MSG.ITEMS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -54,8 +54,8 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (!storeProducts) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PAYMENT_DENIED',
-				message: 'Order items empty',
+				code: ORDER_MSG.ITEMS_NOT_FOUND.CODE,
+				message: ORDER_MSG.ITEMS_NOT_FOUND.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -75,8 +75,8 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (unavailbleProducts.length > 0) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PAYMENT_DENIED',
-				message: 'Could not process payment. Items not available',
+				code: ORDER_MSG.ITEMS_NOT_FOUND.CODE,
+				message: ORDER_MSG.ITEMS_NOT_FOUND.MESSAGE,
 				type: 'error',
 				error: unavailbleProducts,
 			});
@@ -86,9 +86,8 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 
 		if (makePayment.status !== STATUS.CREATED) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: 'PAYMENT_FAILED',
-				message:
-					'Error occurred while trying to process payment. Paypal could not process the payment.',
+				code: ORDER_MSG.PAYMENT_FAILED.CODE,
+				message: ORDER_MSG.PAYMENT_FAILED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -121,8 +120,8 @@ export const approveOrder = async (req: Request, res: Response<RESPONSE>) => {
 		});
 
 		return res.status(STATUS.OK).json({
-			code: 'PAYMENT_APPROVED',
-			message: 'Payment made successfully',
+			code: ORDER_MSG.PLACED_SUCCESSFULLY.CODE,
+			message: ORDER_MSG.PLACED_SUCCESSFULLY.MESSAGE,
 			type: 'success',
 			data: updateOrder,
 		});

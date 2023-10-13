@@ -1,26 +1,23 @@
 import { z } from 'zod';
 
-export const S3_BUCKET = {
+const S3_BUCKET_SCHEMA = z.object({
+	REGION: z.string().trim().nonempty('S3 region cannot be empty'),
+	NAME: z.string().trim().nonempty('S3  name cannot be empty'),
+	ACCESS_KEY: z.string().trim().nonempty('S3 access_key cannot be empty'),
+	SECRET_KEY: z.string().trim().nonempty('S3 secrete_key cannot be empty'),
+});
+
+export const s3Cofig = S3_BUCKET_SCHEMA.safeParse({
 	REGION: process.env.AWS_BUCKET_REGION!,
 	NAME: process.env.AWS_BUCKET_NAME!,
 	ACCESS_KEY: process.env.AWS_ACCESS_KEY_ID!,
 	SECRET_KEY: process.env.AWS_SECRET_ACCESS_KEY!,
-};
-
-const S3_BUCKET_SCHEMA = z.object({
-	REGION: z.string().nonempty('S3 region cannot be empty'),
-	NAME: z.string().nonempty('S3  name cannot be empty'),
-	ACCESS_KEY: z.string().nonempty('S3 access_key cannot be empty'),
-	SECRET_KEY: z.string().nonempty('S3 secrete_key cannot be empty'),
 });
 
-type S3_BUCKET_SCHEMA = z.infer<typeof S3_BUCKET_SCHEMA>;
-export const validateS3BucketConfig = (config: S3_BUCKET_SCHEMA) => {
-	const result = S3_BUCKET_SCHEMA.safeParse(config);
+if (!s3Cofig.success) {
+	throw new Error(`Invalid s3 bucket config: ${s3Cofig.error}`);
+}
 
-	if (!result.success) {
-		throw new Error(`Invalid S3 bucket config: ${result.error}`);
-	}
+const S3_BUCKET = s3Cofig.data;
 
-	return config;
-};
+export default S3_BUCKET;

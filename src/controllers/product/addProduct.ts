@@ -10,21 +10,22 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const requestBody = req.body;
 
-		const body: NEW_PRODUCT = JSON.parse(requestBody);
+		const price: string = requestBody.price;
+		const numberToFixed = parseFloat(price).toFixed(2);
 
-		// const body: NEW_PRODUCT = {
-		// 	price: parseFloat(requestBody.price.toString()),
-		// 	name: requestBody.name,
-		// 	quantity: parseInt(requestBody.quantity.toString()),
-		// 	description: requestBody.description,
-		// 	isActive: requestBody.isActive === 'true',
-		// 	category: requestBody.category,
-		// 	variations: JSON.parse(requestBody.variations || '[]'),
-		// };
+		const body: NEW_PRODUCT = {
+			price: parseFloat(numberToFixed),
+			name: requestBody.name,
+			quantity: parseInt(requestBody.quantity.toString()),
+			description: requestBody.description,
+			isActive: requestBody.isActive === 'true',
+			category: requestBody.category,
+			variations: JSON.parse(requestBody.variations || '[]'),
+		};
 
 		NEW_PRODUCT.parse(body);
 
-		const storeID = req.params.storeID;
+		const storeID = req.params.store_id;
 
 		if (!req.files) {
 			return res.status(STATUS.BAD_REQUEST).json({

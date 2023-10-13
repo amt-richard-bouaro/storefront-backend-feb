@@ -1,51 +1,45 @@
 import { z } from 'zod';
 
-export const SERVER_CONFIG = {
+const SERVER_CONFIG_SCHEMA = z.object({
+	PORT: z.number().default(4455),
+	NODE_ENV: z
+		.enum(['development', 'production', 'test'])
+		.default('development'),
+	SALT_VALUE: z.number().default(10),
+	JWT_SECRET: z.string().trim().min(1),
+	SESSION_SECRET: z.string().trim().min(1),
+	CLIENT_ORIGIN: z.string().url(),
+	ORIGIN: z.string().url(),
+	ALLOWED_ORIGINS: z.array(z.string().url()),
+	EMAIL_ADDRESS: z.string().email().trim(),
+	EMAIL_PASSWORD: z.string().trim(),
+	EMAIL_SERVICE: z.string().trim(),
+	EMAIL_HOST: z.string().trim().min(1),
+	EMAIL_PORT: z.number().default(435),
+	REDIS_URL: z.string().url(),
+});
+
+const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	PORT: parseInt(process.env.PORT!),
-	NODE_ENV: process.env.NODE_ENV! ?? 'development',
+	NODE_ENV: process.env.NODE_ENV,
 	SALT_VALUE: parseInt(process.env.SALT_VALUE!),
 	JWT_SECRET: process.env.JWT_SECRET!,
 	SESSION_SECRET: process.env.SESSION_SECRET!,
 	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN!,
 	ORIGIN: process.env.ORIGIN!,
-	ALLOWED_ORIGINS: [
-		process.env.CLIENT_ORIGIN!,
-		process.env.ORIGIN!,
-		'http://localhost:5173',
-	],
+	ALLOWED_ORIGINS: [process.env.CLIENT_ORIGIN!, process.env.ORIGIN!],
 	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS!,
 	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD!,
 	EMAIL_SERVICE: process.env.EMAIL_SERVICE!,
 	EMAIL_HOST: process.env.EMAIL_HOST!,
 	EMAIL_PORT: parseInt(process.env.EMAIL_PORT!),
 	REDIS_URL: process.env.REDIS_URL!,
-};
-
-const SERVER_CONFIG_SCHEMA = z.object({
-	PORT: z.number().min(3000).max(9000),
-	NODE_ENV: z.string(),
-	SALT_VALUE: z.number().min(10).max(20),
-	JWT_SECRET: z.string(),
-	SESSION_SECRET: z.string(),
-	CLIENT_ORIGIN: z.string(),
-	ORIGIN: z.string(),
-	ALLOWED_ORIGINS: z.array(z.string()),
-	EMAIL_ADDRESS: z.string().email(),
-	EMAIL_PASSWORD: z.string(),
-	EMAIL_SERVICE: z.string(),
-	EMAIL_HOST: z.string(),
-	EMAIL_PORT: z.number().min(1).max(1000),
-	REDIS_URL: z.string(),
 });
 
-type SERVER_CONFIG_SCHEMA = z.infer<typeof SERVER_CONFIG_SCHEMA>;
+if (!serverConfig.success) {
+	throw new Error(`Invalid server config: ${serverConfig.error}`);
+}
 
-export const validateServerConfig = (config: SERVER_CONFIG_SCHEMA) => {
-	const result = SERVER_CONFIG_SCHEMA.safeParse(config);
+const SERVER_CONFIG = serverConfig.data;
 
-	if (!result.success) {
-		throw new Error(`Invalid server config: ${result.error}`);
-	}
-
-	return config;
-};
+export default SERVER_CONFIG;

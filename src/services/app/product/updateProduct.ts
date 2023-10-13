@@ -23,3 +23,21 @@ export const updateProductById = async (
 
 	return product;
 };
+
+export const updateProductsDiscount = async (
+	productIDs: string[],
+	discount: number
+): Promise<{ count: number }> => {
+	const product = await Database.product.updateMany({
+		where: {
+			id: {
+				in: productIDs,
+			},
+		},
+		data: {
+			discount,
+		},
+	});
+
+	return product;
+};

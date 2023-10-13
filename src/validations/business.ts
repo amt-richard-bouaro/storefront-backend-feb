@@ -55,19 +55,11 @@ const TEAM_MEMBER = z.object({
 
 type TEAM_MEMBER = z.infer<typeof TEAM_MEMBER>;
 
-const REASON = z.object({
-	title: z.string().nonempty('Please provide a title for this reason'),
-	paragraph: z.string().nonempty('Please provide brief note on the reason'),
-});
-
-type REASON = z.infer<typeof REASON>;
-
 export {
 	BUSINESS_TYPE,
 	TEMPLATE,
 	NEW_STORE,
 	TEAM_MEMBER,
-	REASON,
 	NEW_CATEGORY,
 	DELETE_CATEGORIES,
 };

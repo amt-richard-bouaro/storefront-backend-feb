@@ -5,6 +5,7 @@ import productEndpoints from './product';
 import orderEndpoints from './order';
 import storeEndpoints from './store';
 import customerEndpoints from './customer';
+import defaultEndpoints from './defaults';
 import {
 	ACCOUNT,
 	BUSINESS,
@@ -13,6 +14,7 @@ import {
 	PRODUCT,
 	STORE,
 } from '../constants/api/endpoints';
+import { DEFAULTS } from '../constants/api/endpoints/defaults';
 
 function routes(app: Express) {
 	app.get('/', (req, res) => {
@@ -30,6 +32,8 @@ function routes(app: Express) {
 	app.use(ORDER.BASE_ROUTE, orderEndpoints);
 
 	app.use(CUSTOMER.BASE_ROUTE, customerEndpoints);
+
+	app.use(DEFAULTS.BASE_ROUTE, defaultEndpoints);
 }
 
 export default routes;

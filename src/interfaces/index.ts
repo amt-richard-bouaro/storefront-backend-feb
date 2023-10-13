@@ -12,7 +12,8 @@ type EMAIL_SUBJECT =
 	| 'Reset Password Confirmation'
 	| 'Password Reset'
 	| 'Reset Password Request'
-	| 'Email Verified';
+	| 'Email Verified'
+	| 'Order Notification';
 interface MAIL_OPTIONS {
 	from?: {
 		name: string;
@@ -41,4 +42,25 @@ interface REQUEST_WITH_USER {
 	business: string | undefined;
 }
 
-export { RESPONSE, MAIL_OPTIONS, REQUEST_WITH_USER, userSerialization };
+interface DESTINATION {
+	id: string;
+	name: string;
+	code: string;
+	duration: number;
+	cost: number;
+}
+
+interface CURRENCY {
+	id: string;
+	name: string;
+	code: string;
+}
+
+export {
+	RESPONSE,
+	MAIL_OPTIONS,
+	REQUEST_WITH_USER,
+	userSerialization,
+	DESTINATION,
+	CURRENCY,
+};

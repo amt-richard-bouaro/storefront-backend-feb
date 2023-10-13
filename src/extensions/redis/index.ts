@@ -9,7 +9,7 @@ export const getCachedResult = async (id: string) => {
 export const cachResult = async (
 	id: string,
 	payload: object | [],
-	expiresIn: number = 15
+	expiresIn: number = 1
 ) => {
 	await redisClient.set(id, JSON.stringify(payload));
 	await redisClient.expire(id, expiresIn);

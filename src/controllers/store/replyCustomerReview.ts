@@ -6,6 +6,7 @@ import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { findReviewByUniques } from '../../services/app/review/findSingleReview';
 import { REVIEW_MSG, STORE_MSG } from '../../constants/api/messages';
 import { addReply } from '../../services/app/review/addReply';
+import { findStoreById } from '../../services/app/store/findStore';
 
 export const replyCustomerReview = async (
 	req: Request,
@@ -16,9 +17,19 @@ export const replyCustomerReview = async (
 
 		const requestBody = <REPLY_REVIEW>req.body;
 
-		const reviewID = req.params.review_id;
+		const storeID = req.params.store_id;
 
-		const review = await findReviewByUniques(reviewID);
+		const store = await findStoreById(storeID, {});
+
+		if (!store) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: STORE_MSG.NOT_FOUND.CODE,
+				message: STORE_MSG.NOT_FOUND.MESSAGE,
+				type: 'error',
+			});
+		}
+
+		const review = await findReviewByUniques(requestBody.review);
 
 		if (!review) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -31,8 +42,8 @@ export const replyCustomerReview = async (
 		await addReply({
 			comment: requestBody.comment,
 			from: 'Business',
-			store: requestBody.from,
-			review: requestBody.review,
+			store: storeID,
+			review: review.id,
 		});
 
 		return res.status(STATUS.OK).json({

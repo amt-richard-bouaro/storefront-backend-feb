@@ -1,22 +1,22 @@
 import { z } from 'zod';
 
-export const FACEBOOK_API = {
-	CLIENT_ID: process.env.FACEBOOK_CLIENT_ID!,
-	CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET!,
-};
-
 const FACEBOOK_API_SCHEMA = z.object({
-	CLIENT_ID: z.string().nonempty('Facebook Client ID is required'),
-	CLIENT_SECRET: z.string().nonempty('Facebook Client Secret is required'),
+	CLIENT_ID: z.string().trim().nonempty('Facebook Client ID is required'),
+	CLIENT_SECRET: z
+		.string()
+		.trim()
+		.nonempty('Facebook Client Secret is required'),
 });
 
-type FACEBOOK_API_SCHEMA = z.infer<typeof FACEBOOK_API_SCHEMA>;
-export const validateFacebookApiConfig = (config: FACEBOOK_API_SCHEMA) => {
-	const result = FACEBOOK_API_SCHEMA.safeParse(config);
+export const faceBookApiConfig = FACEBOOK_API_SCHEMA.safeParse({
+	CLIENT_ID: process.env.FACEBOOK_CLIENT_ID!,
+	CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET!,
+});
 
-	if (!result.success) {
-		throw new Error(`Invalid Facebook API config: ${result.error}`);
-	}
+if (!faceBookApiConfig.success) {
+	throw new Error(`Invalid facebook api config: ${faceBookApiConfig.error}`);
+}
 
-	return config;
-};
+const FACEBOOK_API = faceBookApiConfig.data;
+
+export default FACEBOOK_API;

@@ -1,89 +1,5 @@
-const emailVerified = (name: string) => {
-	return `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <title>Storefront</title>
-  </head>
-  <body>
-    <div
-      class="headerContainer"
-      style="
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        margin-top: 4.5rem;
-      "
-    >
-      <div
-        class="header"
-        style="
-          color: var(--Primary, #0085ff);
-          text-align: center;
-          font-family: 'Poppins';
-          font-size: 1.5rem;
-          font-style: normal;
-          font-weight: 900;
-          line-height: normal;
-        "
-      >
-        Storefront
-      </div>
-      <p
-        class="reset"
-        style="
-          color: var(--colors-primary-slate-900, #1c222b);
-          text-align: center;
-          font-family: Inter;
-          font-size: 1.5rem;
-          font-style: normal;
-          font-weight: 700;
-          line-height: 2.25rem;
-          letter-spacing: -0.03125rem;
-        "
-      >
-        Hello ${name}, </br> Your account has been verified.
-         
-      </p>
-    </div>
-
-    <div
-      class="body"
-      style="
-        color: var(--colors-primary-slate-700, #3d4a5c);
-        text-align: center;
-        font-family: 'Inter';
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 1.75rem;
-        letter-spacing: -0.01875rem;
-        max-width: 32rem;
-        align-items: center;
-        margin: auto;
-      "
-    >
-      Now you can login to activate your account
-      <br />
-      <br />
-      Choose a strong and unique password for enhanced account security. If you
-      have any questions or need assistance, contact our support team. We're
-      here to help.
-    </div>
-
-    <hr
+ <hr
       class="line"
       style="
         margin-top: 3.5rem;
@@ -164,8 +80,7 @@ const emailVerified = (name: string) => {
         </defs>
       </svg>
     </div>
-
-    <div
+<div
       class="footer"
       style="
         margin-top: 1rem;
@@ -187,7 +102,4 @@ const emailVerified = (name: string) => {
       A better company begins with a personalized employee experience.
     </div>
   </body>
-</html>`;
-};
-
-export default emailVerified;
+</html>

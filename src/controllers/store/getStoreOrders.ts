@@ -15,7 +15,12 @@ export const getStoreOrders = async (req: Request, res: Response<RESPONSE>) => {
 
 		const orders = cachedStoreOrders
 			? (cachedStoreOrders as Order[])
-			: await findAllOrders(storeID, { items: true });
+			: await findAllOrders(storeID, {
+					items: true,
+					shipping: true,
+					customer: true,
+					disbursement: true,
+			  });
 
 		if (!orders) {
 			return res.status(STATUS.BAD_REQUEST).json({

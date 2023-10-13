@@ -28,7 +28,7 @@ account.get(ACCOUNT.AUTH_FAILURE_LOCAL, handleFailure);
 account.get(ACCOUNT.SOCIAL_REGISTRATION_FAILURE, socialRegFailure);
 account.get(ACCOUNT.SOCIAL_AUTH_FAILURE, socialLoginFailure);
 account.get(ACCOUNT.GET_AUTH_ACCOUNT, isAuthenticated, authenticatedUser);
-account.get(ACCOUNT.LOGOUT, handleLogout);
+account.get(ACCOUNT.LOGOUT, isAuthenticated, handleLogout);
 account.post(ACCOUNT.VERIFY_ACCOUNT, isAuthenticated, accountVerification);
 account.put(
 	ACCOUNT.PASSWORD_RESET,

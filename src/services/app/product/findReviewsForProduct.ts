@@ -21,6 +21,7 @@ export const findProductReviewsById = async (
 				  }
 				: false,
 		},
+		orderBy: { updatedAt: 'desc' },
 	});
 
 	return review;

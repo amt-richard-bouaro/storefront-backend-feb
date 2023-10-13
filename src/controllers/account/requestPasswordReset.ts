@@ -7,11 +7,12 @@ import { STATUS } from '../../config/statusCode';
 import { jwtGenerator, shortCodeGenerator } from '../../helpers';
 import { updateResetStatus } from '../../services/app/account/updateResetStatus';
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
-import emailVerification from '../../views/templates/emailVerification';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import { ERROR_MSG } from '../../constants/api/messages';
 import logger from '../../middlewares/logger';
+import ejs from 'ejs';
+import path from 'path';
 
 export const requestPasswordReset = async (
 	req: Request,
@@ -40,7 +41,7 @@ export const requestPasswordReset = async (
 			});
 		}
 
-		const code = await shortCodeGenerator(6);
+		const code = (await shortCodeGenerator(6)).replaceAll(/\W/, '0');
 
 		const resetToken = jwtGenerator({ email, code });
 
@@ -50,11 +51,20 @@ export const requestPasswordReset = async (
 			user.type === 'Business'
 				? user.business!.businessName
 				: user.customer!.firstName;
+
+		const verificationData = await ejs.renderFile(
+			path.resolve('src/views/templates/resetPassword.ejs'),
+			{
+				name,
+				code,
+			}
+		);
+
 		await sendMail(
 			mailOptions({
 				to: email,
 				subject: 'Reset Password Request',
-				html: emailVerification(name, code),
+				html: verificationData,
 			}),
 			(err) => {
 				if (err) {

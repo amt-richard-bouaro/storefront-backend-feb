@@ -20,6 +20,7 @@ export const reviewProduct = async (req: Request, res: Response<RESPONSE>) => {
 		const order = await findOrderById(orderID, {
 			items: true,
 			customerOrder: true,
+			reviews: true,
 		});
 
 		if (!order) {
@@ -41,6 +42,18 @@ export const reviewProduct = async (req: Request, res: Response<RESPONSE>) => {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: REVIEW_MSG.DENIED.CODE,
 				message: REVIEW_MSG.DENIED.MESSAGE,
+				type: 'error',
+			});
+		}
+
+		const alreadyReviewed =
+			order.reviews &&
+			order.reviews.find((review) => review.customer === order.customer);
+
+		if (alreadyReviewed) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: REVIEW_MSG.ALREADY_EXISTS.CODE,
+				message: REVIEW_MSG.ALREADY_EXISTS.MESSAGE,
 				type: 'error',
 			});
 		}

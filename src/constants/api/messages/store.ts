@@ -1,8 +1,4 @@
 export const STORE_MSG = {
-	CREATED: {
-		CODE: 'STORE_NOT_CREATED',
-		MESSAGE: 'Failed to create store.',
-	},
 	STORE_INFORMATION_RETRIEVED: {
 		CODE: 'STORE_INFORMATION_RETRIEVED',
 		MESSAGE: 'Store information retrieved successfully.',
@@ -13,7 +9,7 @@ export const STORE_MSG = {
 	},
 	NOT_FOUND: {
 		CODE: 'STORE_NOT_FOUND',
-		MESSAGE: 'Store could not found. Make sure that the store ID is correct',
+		MESSAGE: 'Store could not be found. Make sure that the store ID is correct',
 	},
 	NOT_UPDATED: {
 		CODE: 'STORE_NOT_UPDATED',
@@ -36,11 +32,6 @@ export const STORE_MSG = {
 		MESSAGE: 'Your store has been created successfully.',
 	},
 
-	DELETION_FAILED: {
-		CODE: 'STORE_DELETION_FAILED',
-		MESSAGE: 'Failed to delete store.',
-	},
-
 	PRODUCT_NOT_FOUND: {
 		CODE: 'STORE_PRODUCT_NOT_FOUND',
 		MESSAGE:
@@ -49,6 +40,10 @@ export const STORE_MSG = {
 	PRODUCT_FOUND: {
 		CODE: 'STORE_PRODUCT_FOUND',
 		MESSAGE: 'Store products found.',
+	},
+	NAME_ALREADY_EXISTS: {
+		CODE: 'STORE_NAME_ALREADY_EXISTS',
+		MESSAGE: 'A store with the same name already exists.',
 	},
 	PRODUCT_ALREADY_EXISTS: {
 		CODE: 'STORE_PRODUCT_ALREADY_EXISTS',
@@ -103,5 +98,57 @@ export const STORE_MSG = {
 	REPLY_SENT: {
 		CODE: 'REPLY_SENT',
 		MESSAGE: 'Your reply has been sent to the customer.',
+	},
+	PROMO_NOT_CREATED: {
+		CODE: 'PROMO_NOT_CREATED',
+		MESSAGE: 'Failed to create store promo.',
+	},
+	PROMO_CREATED: {
+		CODE: 'PROMO_CREATED',
+		MESSAGE: 'Promotion add to store. Your add product to this promo.',
+	},
+	PROMO_NOT_FOUND: {
+		CODE: 'PROMO_NOT_FOUND',
+		MESSAGE: 'Promotion not found',
+	},
+	PROMO_FOUND: {
+		CODE: 'PROMO_FOUND',
+		MESSAGE: 'Promotion found',
+	},
+	PROMO_PRODUCT_REMOVED: {
+		CODE: 'PROMO_PRODUCT_REMOVED',
+		MESSAGE: 'Promotion products removed',
+	},
+	PROMO_PRODUCT_NOT_REMOVED: {
+		CODE: 'PROMO_PRODUCT_NOT_REMOVED',
+		MESSAGE: 'Promotion products not removed',
+	},
+	PROMO_PRODUCT_ADDED: {
+		CODE: 'PROMO_PRODUCT_ADDED',
+		MESSAGE: 'Promotion products added',
+	},
+	PROMO_ENDED: {
+		CODE: 'PROMO_ENDED',
+		MESSAGE: 'Promotion has ended',
+	},
+	PAYMENT_INFO_NOT_FOUND: {
+		CODE: 'PAYMENT_INFO_NOT_FOUND',
+		MESSAGE: 'Payment information not found',
+	},
+	PAYMENT_INFO_FOUND: {
+		CODE: 'PAYMENT_INFO_FOUND',
+		MESSAGE: 'Payment information found',
+	},
+	PAYMENT_INFO_ADDED: {
+		CODE: 'PAYMENT_INFO_ADDED',
+		MESSAGE: 'Payment information added.',
+	},
+	PAYMENT_ALREAD_EXIST: {
+		CODE: 'PAYMENT_INFO_ALREAD_EXIST',
+		MESSAGE: 'Payment information already exists',
+	},
+	PAYMENT_INFO_NOT_ADDED: {
+		CODE: 'PAYMENT_INFO_NOT_ADDED',
+		MESSAGE: 'Payment information could not be added.',
 	},
 };

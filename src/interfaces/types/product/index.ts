@@ -1,7 +1,7 @@
 import { SAVED_ITEM } from '../customer';
 import { ORDER_ITEM } from '../order';
 import { REVIEW } from '../review';
-import { STORE } from '../store';
+import { PROMOTION, STORE } from '../store';
 
 type PRODUCT = {
 	id: string;
@@ -14,7 +14,8 @@ type PRODUCT = {
 	category: string;
 	price: number;
 	discount: number;
-	promotionProduct: boolean;
+	promotion?: string | null;
+	promotionProduct?: PROMOTION;
 	variations?: VARIATION[];
 	reviews?: REVIEW[];
 	customerSaves?: SAVED_ITEM[];
@@ -49,5 +50,17 @@ type VARIATION = {
 	orders?: ORDER_ITEM[];
 };
 
+type LIKED_PRODUCT = {
+	id: string;
+	name: string;
+	quantity: number;
+	category: string;
+	price: number;
+	discount: number;
+	isActive: boolean;
+	images: { url: string }[];
+	variations: { type: string; value: string }[];
+	storeProducts: { storeName: string };
+};
 
-export {VARIATION, PRODUCT, CATEGORY, IMAGE,}
+export { VARIATION, PRODUCT, CATEGORY, IMAGE, LIKED_PRODUCT };
