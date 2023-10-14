@@ -43,7 +43,7 @@
   "scripts": {
     "dev": "nodemon -L src/app.ts",
     "build": "tsc -p .",
-    "start": "node dist/app.js",
+    "start": "node dist/src/app.js",
     "postinstall": "husky install",
     "lint": "npx eslint --ext .ts src",
     "lint:fix": "npx eslint --ext .ts src --fix",
