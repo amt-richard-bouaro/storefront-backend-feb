@@ -24,6 +24,28 @@ export const findWallets = async (
 
 	return wallets;
 };
+export const findSingleWallet = async (
+	cusOrStoreID: string,
+	method: 'Paypal' | 'Card'
+): Promise<WALLET | null> => {
+	const wallet = await Database.wallet.findFirst({
+		where: {
+			OR: [{ store: cusOrStoreID }, { customer: cusOrStoreID }],
+			AND: { method },
+		},
+		select: {
+			id: true,
+			name: true,
+			method: true,
+			walletId: true,
+			secret: true,
+			createdAt: true,
+			updatedAt: true,
+		},
+	});
+
+	return wallet;
+};
 
 export const createWallet = async (
 	type: 'Store' | 'Customer',
@@ -49,6 +71,37 @@ export const createWallet = async (
 			...data,
 			store: type === 'Store' && data.store ? data.store : null,
 			customer: type === 'Customer' && data.customer ? data.customer : null,
+		},
+	});
+
+	return wallets;
+};
+export const updateWallet = async (
+	walletID: string,
+	type: 'Store' | 'Customer',
+	data: {
+		method: 'Card' | 'Paypal';
+		walletId: string;
+		secret?: string;
+		name: string;
+		customer?: string;
+		store?: string;
+	}
+): Promise<WALLET | null> => {
+	if (type === 'Store' && !data.store) {
+		return null;
+	}
+
+	if (type === 'Customer' && !data.customer) {
+		return null;
+	}
+
+	const wallets = await Database.wallet.update({
+		where: {
+			id: walletID,
+		},
+		data: {
+			...data,
 		},
 	});
 

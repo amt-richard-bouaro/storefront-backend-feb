@@ -14,6 +14,7 @@ export const STORE = {
 
 	ADD_WALLET: '/add-wallet/:store_id',
 	GET_STORE_WALLETS: '/get-wallets/:store_id',
+	GET_STORE_WALLET: '/get-wallet/:store_id',
 
 	SAVE_TEMPLATE_DRAFT: '/save-template-draft/:store_id',
 	PUBLISH_TEMPLATE: '/publish-template/:store_id',

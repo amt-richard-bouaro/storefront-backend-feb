@@ -139,9 +139,13 @@ export const STORE_MSG = {
 		CODE: 'PAYMENT_INFO_FOUND',
 		MESSAGE: 'Payment information found',
 	},
+	PAYMENT_INFO_CAPTURED: {
+		CODE: 'PAYMENT_INFO_CAPTURED',
+		MESSAGE: 'Payment information has be captured.',
+	},
 	PAYMENT_INFO_ADDED: {
 		CODE: 'PAYMENT_INFO_ADDED',
-		MESSAGE: 'Payment information added.',
+		MESSAGE: 'Payment information has be added.',
 	},
 	PAYMENT_ALREAD_EXIST: {
 		CODE: 'PAYMENT_INFO_ALREAD_EXIST',

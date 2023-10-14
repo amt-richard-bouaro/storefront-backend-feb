@@ -5,7 +5,10 @@ import { STATUS } from '../../config/statusCode';
 import { findStoreById } from '../../services/app/store/findStore';
 import { ERROR_MSG, STORE_MSG } from '../../constants/api/messages';
 import { NEW_WALLET } from '../../validations/wallet';
-import { createWallet } from '../../services/app/wallet/storeWallet';
+import {
+	createWallet,
+	updateWallet,
+} from '../../services/app/wallet/storeWallet';
 
 export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -28,15 +31,29 @@ export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
 		}
 
 		const walletExist = storeWithWallets.wallets?.find((wallet) => {
-			if (wallet.walletId === body.walletId && wallet.method === body.method) {
+			if (wallet.method === body.method) {
 				return wallet;
 			}
 		});
 
 		if (walletExist) {
-			return res.status(STATUS.BAD_REQUEST).json({
-				code: STORE_MSG.PAYMENT_ALREAD_EXIST.CODE,
-				message: STORE_MSG.PAYMENT_ALREAD_EXIST.MESSAGE,
+			const updatedWallet = await updateWallet(walletExist.id, 'Store', {
+				...body,
+				store: storeWithWallets.id,
+			});
+
+			if (updatedWallet) {
+				return res.status(STATUS.OK).json({
+					code: STORE_MSG.PAYMENT_INFO_CAPTURED.CODE,
+					message: STORE_MSG.PAYMENT_INFO_CAPTURED.MESSAGE,
+					type: 'success',
+					data: updatedWallet,
+				});
+			}
+
+			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
+				code: ERROR_MSG.INTERNAL_SERVER_ERROR.CODE,
+				message: ERROR_MSG.INTERNAL_SERVER_ERROR.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -57,8 +74,8 @@ export const addStoreWallet = async (req: Request, res: Response<RESPONSE>) => {
 		storeWithWallets.wallets?.push(createdStoreWallet);
 
 		return res.status(STATUS.OK).json({
-			code: STORE_MSG.PAYMENT_INFO_ADDED.CODE,
-			message: STORE_MSG.PAYMENT_INFO_ADDED.MESSAGE,
+			code: STORE_MSG.PAYMENT_INFO_CAPTURED.CODE,
+			message: STORE_MSG.PAYMENT_INFO_CAPTURED.MESSAGE,
 			type: 'success',
 			data: createdStoreWallet,
 		});

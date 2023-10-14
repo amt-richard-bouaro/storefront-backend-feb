@@ -123,3 +123,32 @@ export const setDiscount = (discount: number, promo: PROMOTION): number => {
 
 	return promo.discount;
 };
+
+export const validateCreditCard = (cardNumber: string): boolean => {
+	const cleanedCardNumber = cardNumber.replace(/\D/g, '');
+
+	if (!/^\d{13,19}$/.test(cleanedCardNumber)) {
+		return false;
+	}
+
+	const digits = cleanedCardNumber.split('').map(Number);
+
+	let sum = 0;
+	let isAlternate = false;
+
+	for (let i = digits.length - 1; i >= 0; i--) {
+		let digit = digits[i];
+
+		if (isAlternate) {
+			digit *= 2;
+			if (digit > 9) {
+				digit -= 9;
+			}
+		}
+
+		sum += digit;
+		isAlternate = !isAlternate;
+	}
+
+	return sum % 10 === 0;
+};
