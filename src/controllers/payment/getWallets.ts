@@ -28,6 +28,7 @@ export const getWallets = async (req: Request, res: Response<RESPONSE>) => {
 		}
 
 		cachResult('my-all-wallets' + custORStoreID, Wallets);
+
 		return res.status(STATUS.OK).json({
 			code: STORE_MSG.PAYMENT_INFO_FOUND.CODE,
 			message: STORE_MSG.PAYMENT_INFO_FOUND.MESSAGE,

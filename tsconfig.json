@@ -8,14 +8,14 @@
 		"module": "CommonJS",
 		"moduleResolution": "node",
 		"esModuleInterop": true,
-		"rootDir": "src",
+		"rootDirs": ["src", "test"],
 		"outDir": "dist",
 		"allowJs": true,
 		"checkJs": false,
 		"resolveJsonModule": true,
 		"forceConsistentCasingInFileNames": true
 	},
-	"include": ["src/**/*", "src/**/*.json"],
+	"include": ["src/**/*", "src/**/*.json", "test/***/*", "./jest.config.ts"],
 	"exclude": ["node_modules"],
 	"typeRoots": ["./global.d.ts", "./node_modules/@types"]
 }

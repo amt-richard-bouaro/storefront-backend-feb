@@ -27,6 +27,7 @@ import { getAllStores } from '../../controllers/store/allStores';
 import { getStoreReviews } from '../../controllers/store/getStoreReviews';
 import { replyCustomerReview } from '../../controllers/store/replyCustomerReview';
 import { getStorePayouts } from '../../controllers/store/getStorePayouts';
+import { getSingleWallet } from '../../controllers/payment/getSingleWallet';
 
 const store = express.Router();
 
@@ -114,6 +115,13 @@ store.get(
 	isAuthenticated,
 	restrictedTo(['Business']),
 	getWallets
+);
+
+store.get(
+	STORE.GET_STORE_WALLET,
+	isAuthenticated,
+	restrictedTo(['Business']),
+	getSingleWallet
 );
 store.delete(
 	STORE.DELETE_STORE_CATEGORY,

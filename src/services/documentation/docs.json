@@ -9,7 +9,8 @@
       "email": "richard.bouaro@amalitech.org"
     }
   },
-  "servers": [
+ 
+ "servers": [
         {
       "url": "https://storefrontsmes-aug-api.amalitech-dev.net/",
       "description": "Store Front API"
@@ -106,34 +107,6 @@
           }
         }
       },
-      "Store_Response": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "storeName": {
-            "type": "string"
-          },
-          "storeType": {
-            "type": "string"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "business": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "Business_Address_Response": {
         "type": "object",
         "properties": {
@@ -180,7 +153,7 @@
           }
         }
       },
-      "Account": {
+      "Account_Response": {
         "type": "object",
         "properties": {
           "id": {
@@ -220,12 +193,333 @@
           }
         }
       },
-      "Accounts": {
-        "type": "array",
-        "items": {
+  "Store_Response": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "storeName": {
+        "type": "string"
+      },
+      "storeType": {
+        "type": "string"
+      },
+       "currency": {
+        "type": "string"
+      }
+    }
+  },
+
+  "Wallet_Response":{
+      "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "method": {
+        "type": "string"
+      },
+      "walletId": {
+        "type": "string"
+      },
+       "secret": {
+        "type": "string"
+      }
+    }
+  },
+  "Review_Response":
+  {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "comment": {
+        "type": "string"
+      },
+      "rating": {
+        "type": "number"
+      },
+      "remarks": {
+        "type": "string"
+      },
+       "customer": {
+        "type": "string"
+      }
+    } 
+  },
+
+  "Promotion_Response": { 
           "type": "object",
           "properties": {
-             "id": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "statement": {
+              "type": "string"
+            },
+            "discount": {
+              "type": "number"
+            },
+            "start": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end": {
+              "type": "string",
+              "format": "date-time"
+            }
+    }
+  },
+  "Product_Response": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "images": {
+              "type": "array",
+              "items": {
+                  "$ref": "#/components/schemas/Image_Response"
+              }
+            },
+            "description": {
+              "type": "string"
+            },
+            "isActive": {
+              "type": "boolean"
+            },
+            "quantity": {
+              "type": "number"
+            },
+            "reStockLevel": {
+              "type": "number"
+            },
+            "category": {
+              "type": "string"
+            },
+            "price": {
+              "type": "number"
+            },
+            "discount": {
+              "type": "number"
+            },
+            "promotion": {
+              "type": "string"
+            }
+        }
+      },
+      "Template_Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          }
+        }
+      },
+      "Temp_Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "options": {
+            "type": "string"
+          },
+          "template":{
+            "type": "string"
+          }
+        }
+      },
+      "Category_Response": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+      
+      },
+      "Image_Response": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  }
+                }
+            
+      },
+      "SiteImage_Response": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "key": {
+              "type": "string"
+            }
+          }
+
+      },
+      "Payout_response": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "commission": {
+              "type": "number"
+            },
+            "amount": {
+              "type": "number"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "payoutId": {
+              "type": "string"
+            }
+        }
+      },
+      "Reply_Response": {  
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "comment": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string",
+              "enum": ["Business", "Customer"]
+            }
+        }
+      },
+
+      "Replies_Response": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Reply_Response"
+        }
+      },
+    "Saved_Item_Response": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "product": {
+        "type": "string"
+      },
+      "liked": {
+        "type": "boolean"
+      }
+    }
+     },
+    "Order_Response": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "amount": {
+        "type": "number"
+      },
+      "paid": {
+        "type": "boolean"
+      },
+      "orderId": {
+        "type": "string"
+      },
+      "referenceId": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "Pending_Payment",
+          "Delivered",
+          "On_Hold",
+          "Refunded",
+          "Returned",
+          "Cancelled",
+          "Shipped",
+          "Processing",
+          "Completed",
+          "Failed"
+        ]
+      }
+    }
+  },
+  "Shipping_Response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "streetAddress": {
+            "type": "string"
+          },
+          "apartmentNo": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "customer": {
+            "type": "string"
+          }
+         
+        }
+    }, 
+      "ACCOUNT": {
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string"
           },
           "businessName": {
@@ -260,9 +554,8 @@
           "updatedAt": {
             "type": "string"
           }
-          }
         }
-      },
+      },    
       "STORE": {
         "type": "object",
         "properties": {
@@ -1171,6 +1464,11 @@
       "bearerAuth": []
     }
   ],
+
+
+
+
+
   "paths": {
     "/api/account/register/local": {
       "post": {
@@ -1237,7 +1535,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/Account"
+                      "$ref": "#/components/schemas/Account_Response"
                     }
                   }
                 }
@@ -1328,7 +1626,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/Account"
+                      "$ref": "#/components/schemas/Account_Response"
                     }
                   }
                 }
@@ -1410,7 +1708,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/Account"
+                      "$ref": "#/components/schemas/Account_Response"
                     }
                   }
                 }
@@ -1575,9 +1873,6 @@
                     "type": {
                       "type": "string",
                       "default": "success"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/Account"
                     }
                   }
                 }
@@ -1657,9 +1952,6 @@
                     "type": {
                       "type": "string",
                       "default": "success"
-                    },
-                    "data": {
-                      "$ref": "#/components/schemas/Account"
                     }
                   }
                 }
@@ -1722,7 +2014,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/Account"
+                      "$ref": "#/components/schemas/Account_Response"
                     }
                   }
                 }
@@ -1868,7 +2160,7 @@
         },
         "responses": {
           "200": {
-            "description": "BUSINESS_INFORMATION_UPDATED_SUCCESSFULLY",
+            "description": "BUSINESS_INFORMATION_UPDATED",
             "content": {
               "application/json": {
                 "schema": {
@@ -1885,7 +2177,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/BUSINESS"
+                      "$ref": "#/components/schemas/Business_Response"
                     }
                   }
                 }
@@ -2050,7 +2342,11 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/STORE"
+                      "type":"array",
+                      "items":{
+                        "$ref": "#/components/schemas/Store_Response"
+                      }
+                      
                     }
                   }
                 }
@@ -2113,7 +2409,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/BUSINESS"
+                      "$ref": "#/components/schemas/Business_Response"
                     }
                   }
                 }
@@ -2126,6 +2422,16 @@
               "application/json": {
                 "schema": {
                 "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -2176,7 +2482,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/CUSTOMER"
+                      "$ref": "#/components/schemas/Customer_Response"
                     }
                   }
                 }
@@ -2185,6 +2491,16 @@
           },
           "400": {
             "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
             "content": {
               "application/json": {
                 "schema": {
@@ -2288,7 +2604,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/SHIPPING"
+                      "$ref": "#/components/schemas/Shipping_Response"
                     }
                   }
                 }
@@ -2301,6 +2617,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -2364,7 +2690,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/SHIPPING"
+                        "$ref": "#/components/schemas/Shipping_Response"
                       }
                     }
                   }
@@ -2378,6 +2704,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -2441,7 +2777,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/ORDER"
+                        "$ref": "#/components/schemas/Order_Response"
                       }
                     }
                   }
@@ -2455,6 +2791,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -2536,6 +2882,16 @@
               }
             }
           },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
           "404": {
             "description": "UNAUTHORIZED",
             "content": {
@@ -2593,7 +2949,7 @@
                     "enum": ["Disappointing", "Outstanding", "Satisfactory"]
                   },
                   "comment": {
-                    "type": ["string", "null"]
+                    "type": "string"
                   }
                 },
                 "required": ["product", "rating", "remarks"]
@@ -2620,7 +2976,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/REVIEW"
+                      "$ref": "#/components/schemas/Review_Response"
                     }
                   }
                 }
@@ -2633,6 +2989,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -2714,7 +3080,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/REPLY"
+                      "$ref": "#/components/schemas/Reply_Response"
                     }
                   }
                 }
@@ -2727,6 +3093,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -2815,7 +3191,7 @@
                       "default": "success"
                     },
                     "data": {
-                      "$ref": "#/components/schemas/WALLET"
+                      "$ref": "#/components/schemas/Wallet_Response"
                     }
                   }
                 }
@@ -2891,7 +3267,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/WALLET"
+                        "$ref": "#/components/schemas/Wallet_Response"
                       }
                     }
                   }
@@ -3000,6 +3376,16 @@
               }
             }
           },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
           "404": {
             "description": "UNAUTHORIZED",
             "content": {
@@ -3091,6 +3477,16 @@
               }
             }
           },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
           "404": {
             "description": "UNAUTHORIZED",
             "content": {
@@ -3171,6 +3567,16 @@
               }
             }
           },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
           "404": {
             "description": "UNAUTHORIZED",
             "content": {
@@ -3215,7 +3621,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SAVED_ITEM"
+                  "$ref": "#/components/schemas/Saved_Item_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -3326,6 +3742,7 @@
                       "type": "string",
                       "default": "success"
                     }
+                   
                   }
                 }
               }
@@ -3337,6 +3754,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Validation_Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -3686,6 +4113,16 @@
           }
         }
       },
+        "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
       "404": {
         "description": "ORDER_NOT_FOUND",
         "content": {
@@ -3730,7 +4167,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ORDER"
+                  "$ref": "#/components/schemas/Order_Response"
                 }
               }
             }
@@ -3801,6 +4238,26 @@
                       "default": "success"
                     }
                   }
+                }
+              }
+            }
+          },
+            "400": {
+            "description": "BAD REQUEST",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -3978,8 +4435,21 @@
                     "type": {
                       "type": "string",
                       "default": "success"
+                    },
+                    "data":{
+                      "$ref": "#/components/schemas/Product_Response"
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4050,6 +4520,16 @@
                       "default": "success"
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4149,8 +4629,21 @@
                     "type": {
                       "type": "string",
                       "default": "success"
+                    },
+                    "data":{
+                      "$ref":"#/components/schemas/Product_Response"
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4288,12 +4781,12 @@
                       "type": "object",
                       "properties": {
                         "product": {
-                          "$ref": "#/components/schemas/PRODUCT"
+                          "$ref": "#/components/schemas/Product_Response"
                         },
                         "reviews": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/REVIEW"
+                            "$ref": "#/components/schemas/Review_Response"
                           }
                         }
                       }
@@ -4309,6 +4802,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4362,10 +4865,20 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/PRODUCT"
+                        "$ref": "#/components/schemas/Product_Response"
                       }
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4414,7 +4927,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PRODUCT"
+                  "$ref": "#/components/schemas/Product_Response"
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4486,7 +5009,7 @@
         },
         "responses": {
           "200": {
-            "description": "Products and categories added to the promotion successfully",
+            "description": "Products added to the promotion successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -4589,8 +5112,30 @@
                     "type": {
                       "type": "string",
                       "default": "success"
+                    },
+                    "data":{
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "default": "success"
+                    }
+                      }
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4667,6 +5212,16 @@
                       }
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -4763,6 +5318,16 @@
               }
             }
           },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
           "404": {
             "description": "STORE_NOT_FOUND",
             "content": {
@@ -4844,6 +5409,16 @@
               }
             }
           },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
           "404": {
             "description": "PROMOTION_NOT_FOUND",
             "content": {
@@ -4901,6 +5476,16 @@
                       "default": "success"
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -5011,6 +5596,16 @@
               }
             }
           },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Promotion not found",
             "content": {
@@ -5070,10 +5665,20 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/PROMOTION"
+                        "$ref": "#/components/schemas/Promotion_Response"
                       }
                     }
                   }
+                }
+              }
+            }
+          },
+            "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
                 }
               }
             }
@@ -5137,7 +5742,7 @@
                 "data": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/PRODUCT"
+                    "$ref": "#/components/schemas/Product_Response"
                   }
                 }
               }
@@ -5231,7 +5836,7 @@
                 "data": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WALLET"
+                    "$ref": "#/components/schemas/Wallet_Response"
                   }
                 }
               }
@@ -5296,7 +5901,86 @@
                   "default": "success"
                 },
                 "data": {
-                  "$ref": "#/components/schemas/WALLET"
+                  "type": "object",
+                  "items":{
+                    "$ref": "#/components/schemas/Wallet_Response"
+                  }
+                  
+                }
+              }
+            }
+          }
+        }
+      }
+      ,
+        "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
+      "404": {
+        "description": "NOT_FOUND",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "INTERNAL_SERVER_ERROR",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error_Response"
+            }
+          }
+        }
+      }
+    }
+  }
+},
+"/api/store/get-wallet/{store_id}": {
+  "get": {
+    "tags": ["Store"],
+    "summary": "Get single payment details for a store",
+    "parameters": [
+      {
+        "name": "store_id",
+        "in": "path",
+        "description": "ID of the store",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "WALLET_FETCHED",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "default": "success"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/Wallet_Response"
                 }
               }
             }
@@ -5533,6 +6217,16 @@
           }
         }
       },
+        "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
       "404": {
         "description": "NOT FOUND",
         "content": {
@@ -5594,6 +6288,16 @@
           }
         }
       },
+        "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
       "404": {
         "description": "NOT FOUND",
         "content": {
@@ -5795,7 +6499,11 @@
                   "default": "success"
                 },
                 "data": {
-                  "$ref": "#/components/schemas/ORDER"
+                  "type":"array",
+                  "items": {
+                    "$ref": "#/components/schemas/Order_Response"
+                  }
+                  
                 }
               }
             }
@@ -5859,7 +6567,7 @@
                   "default": "success"
                 },
                 "data": {
-                  "$ref": "#/components/schemas/STORE"
+                  "$ref": "#/components/schemas/Store_Response"
                 }
               }
             }
@@ -5914,7 +6622,7 @@
                 "data": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/STORE"
+                    "$ref": "#/components/schemas/Store_Response"
                   }
                 }
               }
@@ -5991,7 +6699,7 @@
                 "data": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/REVIEW"
+                    "$ref": "#/components/schemas/Review_Response"
                   }
                 }
               }
@@ -6099,7 +6807,7 @@
                   "default": "success"
                 },
                 "data": {
-                  "$ref": "#/components/schemas/REPLY"
+                  "$ref": "#/components/schemas/Reply_Response"
                 }
               }
             }
@@ -6448,7 +7156,7 @@
     ],
     "responses": {
       "200": {
-        "description": "SHIPPING_PAYOUTS_FOUND",
+        "description": "ORDER_PAYOUTS_FOUND",
         "content": {
           "application/json": {
             "schema": {
@@ -6456,18 +7164,18 @@
               "properties": {
                 "code": {
                   "type": "string",
-                  "default": "SHIPPING_PAYOUTS_FOUND"
+                  "default": "ORDER_PAYOUTS_FOUND"
                 },
                 "message": {
                   "type": "string",
                   "default": "Payouts retrieved successfully"
                 },
-                "payouts": {
+                "data": {
                   "type": "array",
                   "items": {
                     "type": "object",
                     "properties": {
-                      "transactionId": {
+                      "payoutId": {
                         "type": "string",
                         "default": "12345"
                       },
@@ -6476,7 +7184,18 @@
                         "format": "float",
                         "default": 100.00
                       },
-                      "date": {
+                      "referenceId": {
+                        "type": "string"
+                      },
+                      "orderId": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "format": "date",
+                        "default": "2023-10-12"
+                      },
+                      "updatedAt": {
                         "type": "string",
                         "format": "date",
                         "default": "2023-10-12"
@@ -6489,6 +7208,16 @@
           }
         }
       },
+        "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                "$ref": "#/components/schemas/Error_Response"
+                }
+              }
+            }
+          },
       "404": {
         "description": "NOT_FOUND",
         "content": {

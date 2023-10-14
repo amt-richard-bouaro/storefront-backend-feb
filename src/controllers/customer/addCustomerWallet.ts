@@ -67,8 +67,8 @@ export const addCustomerWallet = async (
 		cachResult('my-all-wallets' + customerID, customerWallets);
 
 		return res.status(STATUS.OK).json({
-			code: STORE_MSG.PAYMENT_INFO_ADDED.CODE,
-			message: STORE_MSG.PAYMENT_INFO_ADDED.MESSAGE,
+			code: STORE_MSG.PAYMENT_INFO_CAPTURED.CODE,
+			message: STORE_MSG.PAYMENT_INFO_CAPTURED.MESSAGE,
 			type: 'success',
 			data: createdWallet,
 		});

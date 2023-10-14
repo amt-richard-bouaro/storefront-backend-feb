@@ -52,12 +52,13 @@
     "db:generate": "npx prisma generate",
     "db:migrate": "npx prisma migrate dev",
     "db:push": "npx prisma db push",
-    "db:seed": "npx prisma db seed"
+    "db:seed": "npx prisma db seed",
+    "test": "jest --setupFiles dotenv/config"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AmaliTech-Training-Academy/storefrontsmes-backend-aug.git"
-  },
+  }, 
   "author": "Amali-Tech Training Academy",
   "license": "MIT",
   "bugs": {
