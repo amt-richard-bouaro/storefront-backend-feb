@@ -89,7 +89,7 @@ account.get(
 
 // Authentication - Google provider
 account.get(
-	ACCOUNT.GET_AUTH_ACCOUNT,
+	ACCOUNT.AUTH_ACCOUNT_GOOGLE,
 	passport.authenticate('google-auth', { scope: ['profile', 'email'] })
 );
 
