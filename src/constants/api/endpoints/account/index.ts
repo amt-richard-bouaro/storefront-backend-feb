@@ -35,4 +35,4 @@ export const ACCOUNT = {
 
 	GOOGLE_AUTH_CALLBACK: '/google/auth/callback',
 	FACEBOOK_AUTH_CALLBACK: '/facebook/auth/callback',
-};
+} as const;

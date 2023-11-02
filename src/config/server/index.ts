@@ -9,8 +9,8 @@ const SERVER_CONFIG_SCHEMA = z.object({
 	JWT_SECRET: z.string().trim().min(1),
 	SESSION_SECRET: z.string().trim().min(1),
 	CLIENT_ORIGIN: z.string().url(),
-	ORIGIN: z.string().url(),
-	ALLOWED_ORIGINS: z.array(z.string().url()),
+	ORIGINS: z.string(),
+	ALLOWED_ORIGINS: z.array(z.string()),
 	EMAIL_ADDRESS: z.string().email().trim(),
 	EMAIL_PASSWORD: z.string().trim(),
 	EMAIL_SERVICE: z.string().trim(),
@@ -19,6 +19,8 @@ const SERVER_CONFIG_SCHEMA = z.object({
 	REDIS_URL: z.string().url(),
 });
 
+const ORIGINS: string[] = JSON.parse(process.env.ORIGINS || '');
+
 const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	PORT: parseInt(process.env.PORT!),
 	NODE_ENV: process.env.NODE_ENV,
@@ -26,8 +28,12 @@ const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	JWT_SECRET: process.env.JWT_SECRET!,
 	SESSION_SECRET: process.env.SESSION_SECRET!,
 	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN!,
-	ORIGIN: process.env.ORIGIN!,
-	ALLOWED_ORIGINS: [process.env.CLIENT_ORIGIN!, process.env.ORIGIN!],
+	ORIGINS: process.env.ORIGINS!,
+	ALLOWED_ORIGINS: [
+		...ORIGINS,
+		'http://localhost:5173',
+		process.env.CLIENT_ORIGIN!,
+	],
 	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS!,
 	EMAIL_PASSWORD: process.env.EMAIL_PASSWORD!,
 	EMAIL_SERVICE: process.env.EMAIL_SERVICE!,
