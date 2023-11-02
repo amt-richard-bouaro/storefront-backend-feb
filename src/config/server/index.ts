@@ -9,7 +9,7 @@ const SERVER_CONFIG_SCHEMA = z.object({
 	JWT_SECRET: z.string().trim().min(1),
 	SESSION_SECRET: z.string().trim().min(1),
 	CLIENT_ORIGIN: z.string().url(),
-	ORIGINS: z.string(),
+	ORIGINS: z.string().optional(),
 	ALLOWED_ORIGINS: z.array(z.string()),
 	EMAIL_ADDRESS: z.string().email().trim(),
 	EMAIL_PASSWORD: z.string().trim(),
@@ -19,7 +19,7 @@ const SERVER_CONFIG_SCHEMA = z.object({
 	REDIS_URL: z.string().url(),
 });
 
-const ORIGINS: string[] = JSON.parse(process.env.ORIGINS || '');
+const ORIGINS: string[] = JSON.parse(process.env.ORIGINS || '[]');
 
 const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	PORT: parseInt(process.env.PORT!),
