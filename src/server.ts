@@ -58,19 +58,19 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	app.set('trustProxy', true);
-
 	app.use(
 		session({
 			store: redisStore,
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
+			proxy:true,
 			cookie: {
 				secure: true,
 				// secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
 				sameSite: 'lax',
+				httpOnly:true
 			},
 		})
 	);
