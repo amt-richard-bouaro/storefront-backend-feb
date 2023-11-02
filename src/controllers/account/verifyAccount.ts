@@ -58,7 +58,7 @@ export const accountVerification = async (
 				: verifiedUser.customer!.firstName;
 
 		const verifiedInfo = await ejs.renderFile(
-			path.resolve('src/views/templates/resetPassword.ejs'),
+			path.resolve('src/views/templates/emailVerified.ejs'),
 			{
 				name: user,
 			}
