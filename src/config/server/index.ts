@@ -33,6 +33,7 @@ const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 		...ORIGINS,
 		'https://localhost:5173',
 		'https://localhost',
+		'http://localhost:5173',
 		'http://localhost',
 		process.env.CLIENT_ORIGIN!,
 	],

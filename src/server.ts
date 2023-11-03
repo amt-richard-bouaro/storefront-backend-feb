@@ -24,6 +24,7 @@ import { userSerialization } from './interfaces';
 export const redisClient = createClient({
 	url: SERVER_CONFIG.REDIS_URL,
 });
+
 function server() {
 	const app = express();
 
@@ -62,6 +63,8 @@ function server() {
 		app.enable('trust proxy');
 	}
 
+	app.enable('trust proxy');
+
 	app.use(
 		session({
 			store: redisStore,
@@ -70,9 +73,9 @@ function server() {
 			saveUninitialized: false,
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
-				maxAge: 1000 * 60 * 60 * 12,
-				sameSite: SERVER_CONFIG.NODE_ENV ? 'none' : 'lax',
-				//httpOnly: true,
+				maxAge: 1000 * 60 * 60 * 24,
+				sameSite: SERVER_CONFIG.NODE_ENV === 'production' ? 'none' : 'lax',
+				httpOnly: true,
 			},
 		})
 	);
