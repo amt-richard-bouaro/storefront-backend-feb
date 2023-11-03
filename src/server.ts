@@ -62,6 +62,8 @@ function server() {
 		app.enable('trust proxy');
 	}
 
+	// app.enable('trust proxy');
+
 	app.use(
 		session({
 			store: redisStore,
@@ -69,13 +71,18 @@ function server() {
 			resave: false,
 			saveUninitialized: false,
 			cookie: {
-				secure: SERVER_CONFIG.NODE_ENV === 'production',
-				maxAge: 1000 * 60 * 60 * 12,
-				sameSite: SERVER_CONFIG.NODE_ENV === 'production' ? 'none' : 'lax',
-				//httpOnly: true,
+				secure: true,  
+        		maxAge: 1000 * 60 * 60 * 24,
+        		sameSite: "none",
+				httpOnly:true
 			},
 		})
 	);
+
+	// app.use(function (req, res, next) {
+	// 	res.setHeader('Access-Control-Allow-Origin', 'https://localhost:5173');
+	// 	next();
+	// });
 
 	app.use(flash());
 
