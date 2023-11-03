@@ -19,7 +19,7 @@ const SERVER_CONFIG_SCHEMA = z.object({
 	REDIS_URL: z.string().url(),
 });
 
-const ORIGINS: string[] = JSON.parse(process.env.ORIGINS || '[]');
+//const ORIGINS: string[] = JSON.parse(process.env.ORIGINS || '[]');
 
 const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	PORT: parseInt(process.env.PORT!),
@@ -30,10 +30,10 @@ const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	CLIENT_ORIGIN: process.env.CLIENT_ORIGIN!,
 	ORIGINS: process.env.ORIGINS!,
 	ALLOWED_ORIGINS: [
-		...ORIGINS,
-		'https://localhost:5173',
-		'https://localhost',
-		'http://localhost',
+		// ...ORIGINS,
+		// 'https://localhost:5173',
+		// 'https://localhost',
+		// 'http://localhost',
 		process.env.CLIENT_ORIGIN!,
 	],
 	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS!,
