@@ -24,6 +24,7 @@ import { userSerialization } from './interfaces';
 export const redisClient = createClient({
 	url: SERVER_CONFIG.REDIS_URL,
 });
+
 function server() {
 	const app = express();
 
@@ -59,25 +60,27 @@ function server() {
 	});
 
 	app.enable('trust proxy');
-	
+
 	app.use(
 		session({
 			store: redisStore,
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
+
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: 'lax',
+				sameSite: SERVER_CONFIG.NODE_ENV === 'production' ? 'none' : 'lax',
+				httpOnly: true,
 			},
 		})
 	);
 
-	// app.use(function (req, res, next) {
-	// 	res.setHeader('Access-Control-Allow-Origin', 'https://storefrontsmes-aug.amalitech-dev.net');
-	// 	next();
-	// });
+	app.use(function (req, res, next) {
+		res.setHeader('Access-Control-Allow-Credentials', 'true');
+		next();
+	});
 
 	app.use(flash());
 
