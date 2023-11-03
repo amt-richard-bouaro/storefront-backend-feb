@@ -58,12 +58,6 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	// if (SERVER_CONFIG.NODE_ENV === 'production') {
-	// 	app.enable('trust proxy');
-	// }
-
-	// app.enable('trust proxy');
-
 	app.use(
 		session({
 			store: redisStore,
@@ -71,18 +65,12 @@ function server() {
 			resave: false,
 			saveUninitialized: false,
 			cookie: {
-				secure: true,  
-        		maxAge: 1000 * 60 * 60 * 24,
-        		sameSite: "lax",
-				httpOnly:true
+				secure: SERVER_CONFIG.NODE_ENV === 'production',
+				maxAge: 1000 * 60 * 60 * 24,
+				sameSite: 'lax',
 			},
 		})
 	);
-
-	// app.use(function (req, res, next) {
-	// 	res.setHeader('Access-Control-Allow-Origin', 'https://localhost:5173');
-	// 	next();
-	// });
 
 	app.use(flash());
 
