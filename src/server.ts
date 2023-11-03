@@ -58,7 +58,7 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	//app.enable('trust proxy');
+	app.enable('trust proxy');
 
 	app.use(
 		session({
@@ -70,7 +70,7 @@ function server() {
 				secure: true,
 				// secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: 'none',
+				sameSite: 'lax',
 				httpOnly: true,
 			},
 		})
