@@ -58,7 +58,7 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	app.enable('trust proxy');
+	//app.enable('trust proxy');
 
 	app.use(
 		session({
