@@ -59,10 +59,6 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	if (SERVER_CONFIG.NODE_ENV === 'production') {
-		app.enable('trust proxy');
-	}
-
 	app.enable('trust proxy');
 
 	app.use(
@@ -71,6 +67,7 @@ function server() {
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
+
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
@@ -79,6 +76,11 @@ function server() {
 			},
 		})
 	);
+
+	app.use(function (req, res, next) {
+		res.setHeader('Access-Control-Allow-Credentials', 'true');
+		next();
+	});
 
 	app.use(flash());
 
