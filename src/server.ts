@@ -67,8 +67,8 @@ function server() {
 			resave: false,
 			saveUninitialized: false,
 			cookie: {
-				secure: true,
-				// secure: SERVER_CONFIG.NODE_ENV === 'production',
+				// secure: true,
+				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
 				sameSite: 'lax',
 			},
