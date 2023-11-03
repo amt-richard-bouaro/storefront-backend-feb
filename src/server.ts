@@ -75,6 +75,11 @@ function server() {
 		})
 	);
 
+	app.use(function (req, res, next) {
+		res.setHeader('Access-Control-Allow-Origin', 'https://storefrontsmes-aug.amalitech-dev.net');
+		next();
+	});
+
 	app.use(flash());
 
 	app.use(passport.initialize());
