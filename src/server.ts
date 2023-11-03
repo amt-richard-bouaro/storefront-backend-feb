@@ -58,9 +58,9 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	if (SERVER_CONFIG.NODE_ENV === 'production') {
-		app.enable('trust proxy');
-	}
+	// if (SERVER_CONFIG.NODE_ENV === 'production') {
+	// 	app.enable('trust proxy');
+	// }
 
 	// app.enable('trust proxy');
 
@@ -73,7 +73,7 @@ function server() {
 			cookie: {
 				secure: true,  
         		maxAge: 1000 * 60 * 60 * 24,
-        		sameSite: "none",
+        		sameSite: "lax",
 				httpOnly:true
 			},
 		})
