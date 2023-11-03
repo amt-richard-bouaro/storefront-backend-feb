@@ -67,18 +67,17 @@ function server() {
 			resave: false,
 			saveUninitialized: false,
 			cookie: {
-				secure: 'auto',
-				// secure: SERVER_CONFIG.NODE_ENV === 'production',
+				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: 'none',
+				sameSite: 'lax',
 			},
 		})
 	);
 
-	app.use(function (req, res, next) {
-		res.setHeader('Access-Control-Allow-Origin', 'https://storefrontsmes-aug.amalitech-dev.net');
-		next();
-	});
+	// app.use(function (req, res, next) {
+	// 	res.setHeader('Access-Control-Allow-Origin', 'https://storefrontsmes-aug.amalitech-dev.net');
+	// 	next();
+	// });
 
 	app.use(flash());
 
