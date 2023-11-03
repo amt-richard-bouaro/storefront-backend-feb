@@ -22,7 +22,8 @@ import routes from './routes';
 import { userSerialization } from './interfaces';
 
 export const redisClient = createClient({
-	url: SERVER_CONFIG.REDIS_URL,
+	// url: SERVER_CONFIG.REDIS_URL,
+	url:'redis://default:946fb3f931e048f8831ba90c6cff9b49@wired-mongrel-31308.upstash.io:31308'
 });
 function server() {
 	const app = express();
