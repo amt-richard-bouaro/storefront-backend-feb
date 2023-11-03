@@ -71,7 +71,7 @@ function server() {
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 12,
-				sameSite: SERVER_CONFIG.NODE_ENV ? 'none' : 'lax',
+				sameSite: SERVER_CONFIG.NODE_ENV === 'production' ? 'none' : 'lax',
 				//httpOnly: true,
 			},
 		})
