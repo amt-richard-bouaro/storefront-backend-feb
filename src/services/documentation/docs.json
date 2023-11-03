@@ -2108,10 +2108,136 @@
 				}
 			}
 		},
+		"/api/account/google/business": {
+			"get": {
+				"tags": ["Account"],
+				"summary": "This endpoint allows users to create business account using google.",
+				
+				"responses": {
+					"200": {
+						"description": "LOGGED_IN",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/account/google/customer": {
+			"get": {
+				"tags": ["Account"],
+				"summary": "This endpoint allows users to create customer account using google.",
+				
+				"responses": {
+					"200": {
+						"description": "LOGGED_IN",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/account/facebook/business": {
+			"get": {
+				"tags": ["Account"],
+				"summary": "This endpoint allows users to create business account using facebook.",
+				
+				"responses": {
+					"200": {
+						"description": "LOGGED_IN",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/account/facebook/customer": {
+			"get": {
+				"tags": ["Account"],
+				"summary": "This endpoint allows users to create customer account using facebook.",
+				
+				"responses": {
+					"200": {
+						"description": "LOGGED_IN",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/account/google/auth": {
+			"get": {
+				"tags": ["Account"],
+				"summary": "This endpoint allows users to log into their account using google.",
+				
+				"responses": {
+					"200": {
+						"description": "LOGGED_IN",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/account/facebook/auth": {
+			"get": {
+				"tags": ["Account"],
+				"summary": "This endpoint allows users to log into their account using facebook.",
+				
+				"responses": {
+					"200": {
+						"description": "LOGGED_IN",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+
 		"/api/business/set-business-type/{business_id}": {
 			"patch": {
 				"tags": ["Business"],
 				"summary": "",
+				"parameters": [
+					{
+						"name": "business_id",
+						"in": "path",
+						"description": "ID of the business to retrieve",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -2192,6 +2318,17 @@
 			"post": {
 				"tags": ["Business"],
 				"summary": "",
+				"parameters": [
+					{
+						"name": "business_id",
+						"in": "path",
+						"description": "ID of the business to retrieve",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -2290,6 +2427,17 @@
 			"get": {
 				"tags": ["Business"],
 				"summary": "",
+				"parameters": [
+					{
+						"name": "business_id",
+						"in": "path",
+						"description": "ID of the business to retrieve",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
 				"responses": {
 					"200": {
 						"description": "BUSINESS_STORES_FOUND",
