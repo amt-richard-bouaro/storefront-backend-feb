@@ -66,6 +66,7 @@ function server() {
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
+			proxy: true,
 			cookie: {
 				secure: true,
 				// secure: SERVER_CONFIG.NODE_ENV === 'production',

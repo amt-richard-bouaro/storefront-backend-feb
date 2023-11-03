@@ -29,9 +29,12 @@ export const resendVerificationCode = async (
 			});
 		}
 
-		const code = (await shortCodeGenerator(6)).replaceAll(/\W/, '0');
+		const code = await shortCodeGenerator(6);
 
-		const token = jwtGenerator({ email: user.email, code });
+		const token = jwtGenerator({
+			email: user.email,
+			code: code.replace(/\W/g, '0'),
+		});
 
 		const updatedUser = await updateVerificationCode(id, token);
 
