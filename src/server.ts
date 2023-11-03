@@ -48,7 +48,7 @@ function server() {
 	app.use(express.json());
 	app.use(bodyParser.json());
 
-	// app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
+	app.use(cookieParser());
 
 	app.set('view engine', 'ejs');
 
@@ -59,9 +59,6 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	// if (SERVER_CONFIG.NODE_ENV === 'production') {
-	// 	app.set('trust proxy', 1);
-	// }
 
 	app.use(
 		session({
@@ -70,15 +67,18 @@ function server() {
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
-
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: 'none',
+				sameSite: 'lax',
 				httpOnly: true,
 			},
 		})
 	);
+
+	// if (SERVER_CONFIG.NODE_ENV === 'production') {
+	// 	app.set('trust proxy', 1);
+	// }
 
 	// app.use(function (req, res, next) {
 	// 	res.setHeader('Access-Control-Allow-Credentials', 'true');
