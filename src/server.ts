@@ -65,7 +65,7 @@ function server() {
 			store: redisStore,
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
-			saveUninitialized: true,
+			saveUninitialized: false,
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
