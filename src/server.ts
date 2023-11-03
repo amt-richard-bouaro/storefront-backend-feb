@@ -5,7 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
-import cookieParser from 'cookie-parser';
+// import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import flash from 'connect-flash';
@@ -48,7 +48,7 @@ function server() {
 	app.use(express.json());
 	app.use(bodyParser.json());
 
-	app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
+	// app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 
 	app.set('view engine', 'ejs');
 
@@ -59,10 +59,13 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	app.enable('trust proxy');
+	if (SERVER_CONFIG.NODE_ENV === 'production') {
+		app.set('trust proxy', 1);
+	}
 
 	app.use(
 		session({
+			name: 'capstone-storefront',
 			store: redisStore,
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
@@ -71,7 +74,7 @@ function server() {
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: SERVER_CONFIG.NODE_ENV === 'production' ? 'none' : 'lax',
+				sameSite: false,
 				httpOnly: true,
 			},
 		})
