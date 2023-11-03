@@ -66,15 +66,12 @@ function server() {
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
-			proxy: true,
 			cookie: {
-				secure: true,
-				// secure: SERVER_CONFIG.NODE_ENV === 'production',
+				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: 'lax',
+				sameSite: 'none',
 				httpOnly: true,
 			},
-			proxy: true,
 		})
 	);
 
