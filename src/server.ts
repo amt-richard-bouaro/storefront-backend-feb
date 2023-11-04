@@ -60,7 +60,7 @@ function server() {
 	});
 
 	if (SERVER_CONFIG.NODE_ENV === 'production') {
-		app.set('trust proxy', 1);
+		app.enable('trust proxy');
 	}
 
 	app.use(
@@ -70,20 +70,14 @@ function server() {
 			secret: SERVER_CONFIG.SESSION_SECRET,
 			resave: false,
 			saveUninitialized: false,
-
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: false,
+				sameSite: 'none',
 				httpOnly: true,
 			},
 		})
 	);
-
-	app.use(function (req, res, next) {
-		res.setHeader('Access-Control-Allow-Credentials', 'true');
-		next();
-	});
 
 	app.use(flash());
 
