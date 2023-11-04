@@ -5,7 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import flash from 'connect-flash';
@@ -59,6 +59,9 @@ function server() {
 		prefix: 'storefront',
 	});
 
+	if (SERVER_CONFIG.NODE_ENV === 'production') {
+		app.enable('trust proxy');
+	}
 
 	app.use(
 		session({
@@ -70,20 +73,11 @@ function server() {
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: 'lax',
+				sameSite: 'none',
 				httpOnly: true,
 			},
 		})
 	);
-
-	// if (SERVER_CONFIG.NODE_ENV === 'production') {
-	// 	app.set('trust proxy', 1);
-	// }
-
-	// app.use(function (req, res, next) {
-	// 	res.setHeader('Access-Control-Allow-Credentials', 'true');
-	// 	next();
-	// });
 
 	app.use(flash());
 
