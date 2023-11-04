@@ -48,7 +48,7 @@ function server() {
 	app.use(express.json());
 	app.use(bodyParser.json());
 
-	// app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
+	app.use(cookieParser());
 
 	app.set('view engine', 'ejs');
 
