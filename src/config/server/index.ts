@@ -19,7 +19,7 @@ const SERVER_CONFIG_SCHEMA = z.object({
 	REDIS_URL: z.string().url(),
 });
 
-// const ORIGINS: string[] = JSON.parse(process.env.ORIGINS || '[]');
+const ORIGINS: string[] = JSON.parse(process.env.ORIGINS || '[]');
 
 const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	PORT: parseInt(process.env.PORT!),
