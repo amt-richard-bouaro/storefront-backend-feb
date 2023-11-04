@@ -5,7 +5,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { createClient } from 'redis';
 import RedisStore from 'connect-redis';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import flash from 'connect-flash';
