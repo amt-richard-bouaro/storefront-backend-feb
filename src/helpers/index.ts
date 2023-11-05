@@ -25,9 +25,12 @@ export const passwordValidator = async (
 	return isValid;
 };
 
-export const shortCodeGenerator = async (length: number): Promise<string> => {
+export const shortCodeGenerator = async (
+	length: number,
+	includeSpecialChar: boolean = false
+): Promise<string> => {
 	const code = uuid(length).toUpperCase();
-	return code;
+	return !includeSpecialChar ? code.replace(/\W/g, '0') : code;
 };
 
 interface JWT_PAYLOAD extends JwtPayload {
