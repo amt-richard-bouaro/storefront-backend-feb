@@ -43,6 +43,11 @@ pipeline {
     }
 
 		stage('Build') {
+			when {
+        anyOf {
+          branch 'develop';
+        }
+      }
         steps {
             sh 'yarn build'
         }
@@ -55,6 +60,11 @@ pipeline {
     // }
 
     stage('Prepare to Deploy') {
+			when {
+        anyOf {
+          branch 'develop';
+        }
+      }
        steps {
          withAWS(region:'eu-west-1',credentials:'aws-cred') {
            script {
@@ -73,6 +83,11 @@ pipeline {
        }
      }
     stage('Deploy to Development') {
+			when {
+        anyOf {
+          branch 'develop';
+        }
+      }
        steps {
          withAWS(region:'eu-west-1',credentials:'aws-cred') {
            script {
