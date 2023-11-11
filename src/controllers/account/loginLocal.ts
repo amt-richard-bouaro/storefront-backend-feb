@@ -10,20 +10,20 @@ export const localLogin = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const user: USER = req.user as USER;
 
-		await activateAccount(user.id);
+		const updatedUser = await activateAccount(user.id);
 
 		const data = {
-			id: user.id,
-			email: user.email,
-			type: user.type,
-			verified: user.verified,
-			isActive: user.isActive,
-			mustChangePassword: user.mustChangePassword,
-			canResetPassword: user.canResetPassword,
-			createdAt: user.createdAt,
-			updatedAt: user.updatedAt,
-			customer: user.customer && user.customer.id,
-			business: user.business && user.business.id,
+			id: updatedUser.id,
+			email: updatedUser.email,
+			type: updatedUser.type,
+			verified: updatedUser.verified,
+			isActive: updatedUser.isActive,
+			mustChangePassword: updatedUser.mustChangePassword,
+			canResetPassword: updatedUser.canResetPassword,
+			createdAt: updatedUser.createdAt,
+			updatedAt: updatedUser.updatedAt,
+			customer: updatedUser.customer && updatedUser.customer.id,
+			business: updatedUser.business && updatedUser.business.id,
 		};
 
 		return res.status(STATUS.OK).json({

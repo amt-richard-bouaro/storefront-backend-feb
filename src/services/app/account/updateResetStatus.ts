@@ -17,6 +17,22 @@ export const updateResetStatus = async (email: string, token: string) => {
 			canResetPassword: false,
 			password,
 		},
+		include: {
+			customer: {
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+				},
+			},
+			business: {
+				select: {
+					id: true,
+					businessName: true,
+					businessType: true,
+				},
+			},
+		},
 	});
 
 	return user;
