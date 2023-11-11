@@ -1,8 +1,7 @@
-def appname = 'storefrontsmes'
-def deploy_group = 'storefrontsmes-backend-aug-dev'
-def deploy_group_prod = 'pc-aug-backend-prod'
-def s3_bucket = 'training-storefront-media'
-def s3_filename = 'dev-aug/storefront-aug-src-backend'
+def appname = 'storefront'
+def deploy_group = 'storefront-aug-backend'
+def s3_bucket = 'capstone-gh-codedeploy'
+def s3_filename = 'storefront-aug-backend-src'
 
 //Slack Notification Integration
 def gitName = env.GIT_BRANCH
@@ -18,23 +17,23 @@ environment {
 
 // Successful Build
 def buildSuccess = [
-  [text: "StorefrontSMES-Aug Backend Build Successful on ${branchName}",
-  fallback: "StorefrontSMES-Aug Backend Build Successful on ${branchName}",
+  [text: "StoreFront-Backend-Aug Build Successful on ${branchName} :white_check_mark:",
+  fallback: "StoreFront-Backend-Aug Build Successful on ${branchName} :white_check_mark:",
   color: "#00FF00"
   ]
 ]
 
 // Failed Build
 def buildError = [
-  [text: "StorefrontSMES-Aug Backend Build Failed on ${branchName}",
-  fallback: "StorefrontSMES-Aug Backend Build Failed on ${branchName}",
-  color: "#FF0000"
+  [text: "StoreFront-Backend-Aug Build Failed on ${branchName} :x:",
+  fallback: "StoreFront-Backend-Aug Build Failed on ${branchName} :x:",
+  color: "#FF0000",
   ]
 ]
 
 pipeline {
   agent any
-  tools {nodejs "nodejs"}
+  tools {nodejs "nodejs18"}
 
   stages {
     stage('Install Dependencies') {
@@ -42,32 +41,30 @@ pipeline {
             sh 'yarn install'
         }
     }
-    // stage('Run Linters') {
-    //     steps {
-    //         sh 'yarn lint'
-    //     }
-    // }
 
-    stage('Build') {
-        when {
+		stage('Build') {
+			when {
         anyOf {
-            branch 'staging';
-            branch 'develop';
-            }
+          branch 'develop';
         }
+      }
         steps {
             sh 'yarn build'
         }
     }
 
-     stage('Prepare to Deploy') {
-         when {
-             anyOf {
-                 branch 'staging';
-                 branch 'develop';
-             }
-         }
+    // stage('Unit Testing') {
+    //     steps {
+    //         sh 'yarn test'
+    //     }
+    // }
 
+    stage('Prepare to Deploy') {
+			when {
+        anyOf {
+          branch 'develop';
+        }
+      }
        steps {
          withAWS(region:'eu-west-1',credentials:'aws-cred') {
            script {
@@ -85,10 +82,12 @@ pipeline {
          }
        }
      }
-	 stage('Deploy to Development') {
-         when {
-             branch 'develop'
-         }
+    stage('Deploy to Development') {
+			when {
+        anyOf {
+          branch 'develop';
+        }
+      }
        steps {
          withAWS(region:'eu-west-1',credentials:'aws-cred') {
            script {
@@ -104,25 +103,7 @@ pipeline {
          }
 	   }
 	 }
-    stage('Deploy To Production') {
-      when {
-        branch 'staging'
-      }
-      steps {
-        withAWS(region:'eu-west-1',credentials:'aws-cred') {
-          script {
-            sh """
-                aws deploy create-deployment \
-                --application-name ${appname} \
-                --deployment-config-name CodeDeployDefault.OneAtATime \
-                --deployment-group-name ${deploy_group_prod} \
-                --file-exists-behavior OVERWRITE \
-                --s3-location bucket=${s3_bucket},key=${s3_filename}.zip,bundleType=zip
-              """
-          }
-        }
-      }
-    }
+
     stage('Clean WS') {
       steps {
         cleanWs()
@@ -136,22 +117,19 @@ pipeline {
     }
     success {
       script {
-        if (BRANCH_NAME in main_branch) {
-            slackSend(channel:"store-front-aug", attachments: buildSuccess)
-          }
+        //  slackSend(channel:"jenkins-test", attachments: buildSuccess)
+         echo "I am successful"
       }
-        echo 'I passed successfully'
+
     }
     unstable {
       echo 'I am unstable :/'
     }
     failure {
     script {
-      if (BRANCH_NAME in main_branch) {
-          slackSend(channel:"store-front-aug", attachments: buildError)
-          }
+          // slackSend(channel:"jenkins-test", attachments: buildError)
+        echo "I failed"
     }
-        echo 'I have failed'
     }
     changed {
       echo 'Things were different before...'
