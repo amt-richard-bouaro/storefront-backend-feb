@@ -32,6 +32,7 @@ const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	ALLOWED_ORIGINS: [
 		...ORIGINS,
 		'http://localhost:5173',
+		'https://localhost:5173',
 		process.env.CLIENT_ORIGIN!,
 	],
 	EMAIL_ADDRESS: process.env.EMAIL_ADDRESS!,
