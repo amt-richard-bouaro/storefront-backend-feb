@@ -48,7 +48,7 @@ export const requestPasswordReset = async (
 			code: code.replace(/\W/g, '0'),
 		});
 
-		await updateResetStatus(email, resetToken);
+		const updatedUser = await updateResetStatus(email, resetToken);
 
 		const name =
 			user.type === 'Business'
@@ -84,6 +84,19 @@ export const requestPasswordReset = async (
 				code: AUTH_MSG.REQUEST_CODE_CREATED.CODE,
 				message: AUTH_MSG.REQUEST_CODE_CREATED.MESSAGE,
 				type: 'success',
+				data: {
+					id: updatedUser.id,
+					email: updatedUser.email,
+					type: updatedUser.type,
+					verified: updatedUser.verified,
+					isActive: updatedUser.isActive,
+					mustChangePassword: updatedUser.mustChangePassword,
+					canResetPassword: updatedUser.canResetPassword,
+					createdAt: updatedUser.createdAt,
+					updatedAt: updatedUser.updatedAt,
+					customer: updatedUser.customer && updatedUser.customer.id,
+					business: updatedUser.business && updatedUser.business.id,
+				},
 			});
 		});
 	} catch (error) {
