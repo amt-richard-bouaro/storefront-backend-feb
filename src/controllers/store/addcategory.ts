@@ -3,25 +3,22 @@ import { NEW_CATEGORY } from '../../validations/business';
 import { RESPONSE } from '../../interfaces';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { STATUS } from '../../config/statusCode';
-import { cachResult, getCachedResult } from '../../extensions/redis';
 import { findStoreById } from '../../services/app/store/findStore';
-import { STORE } from '../../interfaces/types';
 import { CATEGORY_MSG, STORE_MSG } from '../../constants/api/messages';
 import { createStoreCategory } from '../../services/app/store/category';
+import { Database } from '../../extensions/dbClient';
 
 export const addCategory = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const requestBody = <NEW_CATEGORY>req.body;
 
-		NEW_CATEGORY.parse(requestBody);
+		const { names } = NEW_CATEGORY.parse(requestBody);
 
 		const storeID = req.params.store_id;
 
-		const cachedStore = await getCachedResult('with-category' + storeID);
+		// const cachedStore = await getCachedResult('with-category' + storeID);
 
-		const store = cachedStore
-			? (cachedStore as STORE)
-			: await findStoreById(storeID, { categories: true });
+		const store = await findStoreById(storeID, { categories: true });
 
 		if (!store) {
 			return res.status(STATUS.BAD_REQUEST).json({
@@ -31,39 +28,34 @@ export const addCategory = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const categoriesToSave: { name: string; store: string }[] = [];
+		const categorySet = new Set(names);
 
-		if (store && store.categories) {
-			const categoriesExist = store.categories.filter((category) => {
-				for (const name of requestBody.names) {
-					if (!requestBody.names.includes(category.name)) {
-						categoriesToSave.push({ name, store: store.id });
-					}
-				}
+		store.categories &&
+			store.categories.map((category) => {
+				categorySet.has(category.name) && categorySet.delete(category.name);
 			});
 
-			if (
-				categoriesExist &&
-				categoriesExist.length === requestBody.names.length
-			) {
-				return res.status(STATUS.BAD_REQUEST).json({
-					code: CATEGORY_MSG.ALREADY_EXISTS.CODE,
-					message: CATEGORY_MSG.ALREADY_EXISTS.MESSAGE,
-					type: 'error',
-					error: { categories: categoriesExist },
-				});
-			}
-		}
+		const categoriesToSave: { name: string; store: string }[] = Array.from(
+			categorySet
+		).map((el) => ({ name: el, store: store.id }));
 
-		const category = await createStoreCategory(categoriesToSave);
+		const createCount = await createStoreCategory(categoriesToSave);
 
-		cachResult('with-category' + storeID, store);
+		const storeCategories = await Database.category.findMany({
+			where: {
+				store: storeID,
+			},
+			select: {
+				id: true,
+				name: true,
+			},
+		});
 
 		return res.status(STATUS.OK).json({
 			code: CATEGORY_MSG.CREATED.CODE,
 			message: CATEGORY_MSG.CREATED.MESSAGE,
 			type: 'success',
-			data: category,
+			data: { count: createCount?.count, categories: storeCategories },
 		});
 	} catch (error) {
 		const err = error as Error;

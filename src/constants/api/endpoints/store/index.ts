@@ -21,6 +21,7 @@ export const STORE = {
 
 	ADD_STORE_CATEGORY: '/add-category/:store_id',
 	DELETE_STORE_CATEGORY: '/delete-store-category/:category_id',
+	GET_STORE_CATEGORIES: '/get-categories/:store_id',
 
 	GET_TEMPLATE_DRAFT: '/get-temp/:store_id',
 	GET_PUBLISHED_TEMPLATE: '/get-published-template/:store_id',
