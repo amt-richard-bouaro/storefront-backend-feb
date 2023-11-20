@@ -151,8 +151,8 @@ export const getProducts = async (req: Request, res: Response<RESPONSE>) => {
 		});
 
 		const pages = Math.ceil(
-			(totalCount < 1 ? 1 : totalCount) /
-				(query.take > storeProducts.length ? query.take : storeProducts.length)
+			(totalCount === 0 ? 1 : totalCount) /
+				(storeProducts.length === 0 ? 1 : storeProducts.length)
 		);
 
 		return res.status(STATUS.OK).json({
