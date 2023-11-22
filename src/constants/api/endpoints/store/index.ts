@@ -28,6 +28,7 @@ export const STORE = {
 
 	GET_STORE_ORDERS: '/get-all-orders/:store_id',
 	GET_STORE: '/get-store/:store_id',
+	GET_STORE_PRODUCTS: '/get-store-products/:store_id',
 	GET_STORES: '/get-all',
 
 	GET_PAYOUTS: '/get-payouts/:store_id',

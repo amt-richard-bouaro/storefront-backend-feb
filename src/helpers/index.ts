@@ -119,7 +119,10 @@ export const getTotalRating = (reviews: rating[]): number => {
 		: 0;
 };
 
-export const setDiscount = (discount: number, promo: PROMOTION): number => {
+export const setDiscount = (
+	discount: number,
+	promo: Pick<PROMOTION, 'name' | 'discount' | 'end' | 'start'>
+): number => {
 	if (!promo || promo.end < new Date()) {
 		return discount;
 	}
