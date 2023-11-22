@@ -218,3 +218,82 @@ export const deleteStoreSiteImages = async (
 
 	return deleted;
 };
+
+export const findStoreProducts = async (
+	store_id: string,
+	includes: { reviews?: boolean; reply?: boolean }
+) => {
+	const store = await Database.product.findMany({
+		where: {
+			store: store_id,
+			deleted: false,
+			isActive: true,
+		},
+		include: {
+			variations: true,
+			images: {
+				select: {
+					url: true,
+					key: false,
+					id: true,
+					product: false,
+				},
+			},
+			reviews: includes.reviews
+				? {
+						select: {
+							rating: true,
+							remarks: true,
+							comment: true,
+							createdAt: true,
+							customerReview: {
+								select: {
+									firstName: true,
+									lastName: true,
+								},
+							},
+							replies: includes.reply
+								? {
+										select: {
+											comment: true,
+											from: true,
+											createdAt: true,
+											customerReply: {
+												select: {
+													firstName: true,
+													lastName: true,
+												},
+											},
+											storeReply: {
+												select: {
+													storeName: true,
+												},
+											},
+										},
+										orderBy: {
+											updatedAt: 'desc',
+										},
+								  }
+								: false,
+						},
+						orderBy: {
+							updatedAt: 'desc',
+						},
+				  }
+				: false,
+			promotionProduct: {
+				select: {
+					discount: true,
+					start: true,
+					end: true,
+					name: true,
+				},
+			},
+		},
+		orderBy: {
+			createdAt: 'desc',
+		},
+	});
+
+	return store;
+};
