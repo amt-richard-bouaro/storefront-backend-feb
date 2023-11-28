@@ -31,9 +31,7 @@ type UPDATE_DESTINATION = z.infer<typeof UPDATE_DESTINATION>;
 const PROMOTION = z
 	.object({
 		name: z.string().nonempty('Please provide a name for this promotion'),
-		statement: z
-			.string()
-			.nonempty('Please provide brief note on the promotion'),
+		statement: z.string().default('Special offers and best deals'),
 		discount: z
 			.number()
 			.min(0, 'Promotion discount must be greater than 0')
