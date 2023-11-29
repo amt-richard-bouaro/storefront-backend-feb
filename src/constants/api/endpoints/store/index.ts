@@ -30,6 +30,8 @@ export const STORE = {
 	GET_STORE: '/get-store/:store_id',
 	GET_STORE_PRODUCTS: '/get-store-products/:store_id',
 	GET_STORES: '/get-all',
+	GET_STORE_CUSTOMERS: '/get-all-customers/:store_id',
+	GET_STORE_CUSTOMER: '/:store_id/get-customer/:customer_id',
 
 	GET_PAYOUTS: '/get-payouts/:store_id',
 

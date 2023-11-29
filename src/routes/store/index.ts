@@ -30,6 +30,8 @@ import { getStorePayouts } from '../../controllers/store/getStorePayouts';
 import { getSingleWallet } from '../../controllers/payment/getSingleWallet';
 import { getStoreCategories } from '../../controllers/store/getCategories';
 import { getStoreProducts } from '../../controllers/store/getStoreProducts';
+import { getStoreCustomers } from '../../controllers/store/getCustomers';
+import { getStoreCustomer } from '../../controllers/store/getStoreCustomer';
 
 const store = express.Router();
 
@@ -57,6 +59,18 @@ store.get(
 	isAuthenticated,
 	restrictedTo(['Customer']),
 	getStoreProducts
+);
+store.get(
+	STORE.GET_STORE_CUSTOMERS,
+	isAuthenticated,
+	restrictedTo(['Business']),
+	getStoreCustomers
+);
+store.get(
+	STORE.GET_STORE_CUSTOMER,
+	isAuthenticated,
+	restrictedTo(['Business']),
+	getStoreCustomer
 );
 store.get(
 	STORE.GET_TEMPLATE_DRAFT,
