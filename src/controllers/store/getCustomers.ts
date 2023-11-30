@@ -17,7 +17,7 @@ export const getStoreCustomers = async (
 		const cachedCustomers = await getCachedResult('store-customers' + storeID);
 
 		const customerIDs = await Database.order.groupBy({
-			by: ['customer'],
+			by: ['customer', 'updatedAt'],
 			where: {
 				store: storeID,
 			},
