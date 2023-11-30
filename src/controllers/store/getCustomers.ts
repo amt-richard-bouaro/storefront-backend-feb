@@ -37,12 +37,30 @@ export const getStoreCustomers = async (
 						email: true,
 					},
 				},
+				orders: {
+					where: {
+						store: storeID,
+					},
+					select: {
+						updatedAt: true,
+					},
+					orderBy: {
+						updatedAt: 'desc',
+					},
+				},
 			},
 		});
 
 		const customers = cachedCustomers
 			? (cachedCustomers as CUSTOMER[])
-			: customerDetails.map((customer) => flatNestedObject(customer));
+			: customerDetails.map((customer) => {
+					const { orders, ...rest } = customer;
+					return {
+						...flatNestedObject(rest),
+						orders: orders.length,
+						lastOrderDate: orders[0].updatedAt,
+					};
+			  });
 
 		cachResult('store-customers' + storeID, customers);
 

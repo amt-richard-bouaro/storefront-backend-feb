@@ -46,6 +46,9 @@ export const getStoreCustomer = async (
 							},
 						},
 					},
+					orderBy: {
+						updatedAt: 'desc',
+					},
 				},
 			},
 		});
