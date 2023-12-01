@@ -10,13 +10,40 @@ const NEW_WALLET = z
 			.string()
 			.min(3, 'Invalid CVV length')
 			.max(3, 'Invalid CVV length')
-			.default('N/A'),
+			.optional(),
 	})
-	.refine((val) => {
-		if (val.method === 'Card' && !validateCreditCard(val.walletId)) {
-			return false;
+	.refine(
+		(val) => {
+			if (val.method === 'Card' && !val.secret) {
+				return false;
+			}
+
+			if (val.secret && !/[0-9]{3}/.test(val.secret)) {
+				return false;
+			}
+
+			return true;
+		},
+		{
+			message:
+				'Card fail validation. Please check your card cvv validity and try again. E.g. 923',
+			path: ['secret'],
 		}
-	}, 'Card fail validation. Please check your card validity and try again.E.g 4111 1111 1111 1111');
+	)
+	.refine(
+		(val) => {
+			if (val.method === 'Card' && !validateCreditCard(val.walletId)) {
+				return false;
+			}
+
+			return true;
+		},
+		{
+			message:
+				'Card fail validation. Please check your card validity and try again.E.g 4111 1111 1111 1111',
+			path: ['walletId'],
+		}
+	);
 
 type NEW_WALLET = z.infer<typeof NEW_WALLET>;
 
