@@ -74,6 +74,6 @@ export const CUSTOMER_MSG = {
 	},
 	PRODUCT_SAVES_UPDATED: {
 		CODE: 'PRODUCT_SAVES_UPDATED',
-		MESSAGE: 'Your saves has been updated',
+		MESSAGE: 'Your saves have been updated',
 	},
 };
