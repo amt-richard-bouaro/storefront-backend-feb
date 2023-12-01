@@ -52,11 +52,10 @@ export const setLikedProduct = async (
 			);
 
 			if (alreadySavedProduct) {
-				const liked = alreadySavedProduct.liked === false ? true : false;
 				await setProductAsLiked({
 					customerID: customer.id,
 					product,
-					liked,
+					liked: true,
 				});
 			} else {
 				availableProduct &&

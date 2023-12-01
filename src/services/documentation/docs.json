@@ -2112,7 +2112,7 @@
 			"get": {
 				"tags": ["Account"],
 				"summary": "This endpoint allows users to create business account using google.",
-				
+
 				"responses": {
 					"200": {
 						"description": "LOGGED_IN",
@@ -2131,7 +2131,7 @@
 			"get": {
 				"tags": ["Account"],
 				"summary": "This endpoint allows users to create customer account using google.",
-				
+
 				"responses": {
 					"200": {
 						"description": "LOGGED_IN",
@@ -2150,7 +2150,7 @@
 			"get": {
 				"tags": ["Account"],
 				"summary": "This endpoint allows users to create business account using facebook.",
-				
+
 				"responses": {
 					"200": {
 						"description": "LOGGED_IN",
@@ -2169,7 +2169,7 @@
 			"get": {
 				"tags": ["Account"],
 				"summary": "This endpoint allows users to create customer account using facebook.",
-				
+
 				"responses": {
 					"200": {
 						"description": "LOGGED_IN",
@@ -2188,7 +2188,7 @@
 			"get": {
 				"tags": ["Account"],
 				"summary": "This endpoint allows users to log into their account using google.",
-				
+
 				"responses": {
 					"200": {
 						"description": "LOGGED_IN",
@@ -2207,7 +2207,7 @@
 			"get": {
 				"tags": ["Account"],
 				"summary": "This endpoint allows users to log into their account using facebook.",
-				
+
 				"responses": {
 					"200": {
 						"description": "LOGGED_IN",
@@ -3554,8 +3554,8 @@
 				}
 			}
 		},
-		"/api/customer/add-to-favorites/{customer_id}": {
-			"patch": {
+		"/api/customer/add-products-to-favorites/{customer_id}": {
+			"post": {
 				"tags": ["Customer"],
 				"summary": "Add products to a customer's favorites",
 				"parameters": [
@@ -3655,20 +3655,11 @@
 				}
 			}
 		},
-		"/api/customer/remove/{product_id}/from-favorite/{customer_id}": {
+		"/api/customer/remove-products-from-favorites/{customer_id}": {
 			"patch": {
 				"tags": ["Customer"],
 				"summary": "Remove a product from a customer's favorites",
 				"parameters": [
-					{
-						"name": "product_id",
-						"in": "path",
-						"description": "ID of the product to remove from favorites",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
 					{
 						"name": "customer_id",
 						"in": "path",
@@ -3679,6 +3670,26 @@
 						}
 					}
 				],
+				"requestBody": {
+					"description": "Product IDs to romove from favorites",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"products": {
+										"type": "array",
+										"items": {
+											"type": "string"
+										}
+									}
+								},
+								"required": ["products"]
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "PRODUCT_REMOVED_FROM_FAVORITES",

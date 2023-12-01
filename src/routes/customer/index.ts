@@ -16,7 +16,7 @@ import { addToViews } from '../../controllers/customer/addToviews';
 import { setLikedProduct } from '../../controllers/customer/setFavoriteProduct';
 import { getWallets } from '../../controllers/payment/getWallets';
 import { addCustomerWallet } from '../../controllers/customer/addCustomerWallet';
-import { unsetLikedProduct } from '../../controllers/customer/unsetFavProduct';
+import { removeLikedProduct } from '../../controllers/customer/unsetFavProduct';
 
 const customer = express.Router();
 
@@ -89,7 +89,7 @@ customer.patch(
 	CUSTOMER.UNSET_FAVORITE_PRODUCT,
 	isAuthenticated,
 	restrictedTo(['Customer']),
-	unsetLikedProduct
+	removeLikedProduct
 );
 customer.get(
 	CUSTOMER.GET_SAVED_PRODUCTS,
