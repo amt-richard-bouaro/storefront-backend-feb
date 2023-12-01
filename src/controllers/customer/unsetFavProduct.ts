@@ -5,9 +5,12 @@ import { VIEW_PRODUCTS } from '../../validations/customer';
 import { findCustomerById } from '../../services/app/customer/findCustomer';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
-import { setProductAsLiked } from '../../services/app/customer/viewedProducts';
+import {
+	findCustomerSavedProducts,
+	setProductAsLiked,
+} from '../../services/app/customer/viewedProducts';
 
-export const unsetLikedProduct = async (
+export const removeLikedProduct = async (
 	req: Request,
 	res: Response<RESPONSE>
 ) => {
@@ -17,7 +20,8 @@ export const unsetLikedProduct = async (
 		VIEW_PRODUCTS.parse(requestBody);
 
 		const customerID = req.params.customer_id;
-		const productID = req.params.product_id;
+
+		const customerProducts = <VIEW_PRODUCTS>requestBody;
 
 		const customer = await findCustomerById(customerID, {});
 
@@ -29,23 +33,34 @@ export const unsetLikedProduct = async (
 			});
 		}
 
-		const unliked = await setProductAsLiked({
-			customerID,
-			product: productID,
-			liked: true,
-		});
+		const savedProducts = await findCustomerSavedProducts(customer.id);
 
-		if (!unliked) {
-			return res.status(STATUS.BAD_REQUEST).json({
-				code: CUSTOMER_MSG.INFORMATION_UPDATE_FAILED.CODE,
-				message: CUSTOMER_MSG.INFORMATION_UPDATE_FAILED.MESSAGE,
-				type: 'error',
-			});
+		let updateCount = 0;
+
+		for (const product of customerProducts.products) {
+			const alreadySavedProduct = savedProducts.find(
+				(item) => item.savedProduct.id === product
+			);
+
+			if (alreadySavedProduct) {
+				const updated = await setProductAsLiked({
+					customerID: customer.id,
+					product,
+					liked: false,
+				});
+
+				if (updated && updated.count > 0) {
+					updateCount = updateCount + 1;
+				}
+			}
 		}
 
 		return res.status(STATUS.OK).json({
-			code: CUSTOMER_MSG.INFORMATION_UPDATED_SUCCESSFULLY.CODE,
-			message: CUSTOMER_MSG.INFORMATION_UPDATED_SUCCESSFULLY.MESSAGE,
+			code: 'PRODUCT_REMOVED',
+			message:
+				updateCount > 0
+					? 'Products removed successfully'
+					: '0 products were removed',
 			type: 'success',
 		});
 	} catch (error) {

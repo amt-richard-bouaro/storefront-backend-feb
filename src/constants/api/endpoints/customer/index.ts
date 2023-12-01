@@ -14,8 +14,8 @@ export const CUSTOMER = {
 	GET_WALLETS: '/get-wallets/:customer_id',
 
 	ADD_VIEW_PRODUCTS: '/add-to-views/:customer_id',
-	ADD_FAVORITE_PRODUCTS: '/add-to-favorites/:customer_id',
-	UNSET_FAVORITE_PRODUCT: '/remove/:product_id/from-favorite/:customer_id',
+	ADD_FAVORITE_PRODUCTS: '/add-products-to-favorites/:customer_id',
+	UNSET_FAVORITE_PRODUCT: '/remove-products-from-favorites/:customer_id',
 
 	GET_SAVED_PRODUCTS: '/get-saved-products/:customer_id',
 };

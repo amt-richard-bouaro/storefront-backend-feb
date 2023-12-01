@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { Database } from '../../../extensions/dbClient';
 import { SITE_IMAGE, STORE } from '../../../interfaces/types';
 
@@ -221,14 +222,29 @@ export const deleteStoreSiteImages = async (
 
 export const findStoreProducts = async (
 	store_id: string,
-	includes: { reviews?: boolean; reply?: boolean }
+	includes: { reviews?: boolean; reply?: boolean; category?: string }
 ) => {
+	const whereClause: Prisma.ProductWhereInput = includes.category
+		? {
+				store: store_id,
+				deleted: false,
+				isActive: true,
+				AND: [
+					{
+						category: {
+							contains: includes.category,
+							mode: 'insensitive',
+						},
+					},
+				],
+		  }
+		: {
+				store: store_id,
+				deleted: false,
+				isActive: true,
+		  };
 	const store = await Database.product.findMany({
-		where: {
-			store: store_id,
-			deleted: false,
-			isActive: true,
-		},
+		where: whereClause,
 		include: {
 			variations: true,
 			images: {

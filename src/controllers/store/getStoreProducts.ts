@@ -18,6 +18,8 @@ export const getStoreProducts = async (
 	try {
 		const storeID = req.params.store_id;
 
+		const categoryQuery = req.query.category?.toString();
+
 		const store = findStoreById(storeID, {});
 
 		if (!store) {
@@ -29,13 +31,14 @@ export const getStoreProducts = async (
 		}
 
 		const cachedResult = await getCachedResult(
-			'store-products-on-sale' + storeID
+			'store-product-on-sale' + storeID
 		);
 
 		const products = cachedResult
 			? (cachedResult as PRODUCT[])
 			: await findStoreProducts(storeID, {
 					reviews: true,
+					category: categoryQuery,
 			  });
 
 		const storeProducts = products
@@ -51,7 +54,7 @@ export const getStoreProducts = async (
 			  })
 			: [];
 
-		cachResult('store-products-on-sale' + storeID, products);
+		cachResult('store-product-on-sale' + storeID, products);
 
 		return res.status(STATUS.OK).json({
 			code: 'STORE PRODUCTS FECTED',
