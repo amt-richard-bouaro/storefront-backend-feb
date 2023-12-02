@@ -36,7 +36,7 @@ export const getPromoProducts = async (
 			code: STORE_MSG.STORE_INFORMATION_RETRIEVED.CODE,
 			message: STORE_MSG.STORE_INFORMATION_RETRIEVED.MESSAGE,
 			type: 'success',
-			data: promoInfo.products,
+			data: promoInfo,
 		});
 	} catch (error) {
 		const err = error as Error;
