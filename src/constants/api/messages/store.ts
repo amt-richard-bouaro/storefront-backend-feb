@@ -115,6 +115,10 @@ export const STORE_MSG = {
 		CODE: 'PROMO_DELETED',
 		MESSAGE: 'Promotion has been deleted',
 	},
+	PROMO_NOT_DELETED: {
+		CODE: 'PROMO_NOT_DELETED',
+		MESSAGE: 'Promotion could not be deleted',
+	},
 	PROMO_NOT_UPDATED: {
 		CODE: 'PROMO_NOT_UPDATED',
 		MESSAGE: 'Promotion could not be updated',
