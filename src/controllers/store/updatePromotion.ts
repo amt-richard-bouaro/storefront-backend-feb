@@ -16,7 +16,13 @@ export const updatedPromotion = async (
 	try {
 		const requestBody = req.body;
 
-		PROMOTION.parse(requestBody);
+		PROMOTION.parse({
+			name: requestBody.name,
+			statement: requestBody.statement,
+			discount: requestBody.discount,
+			start: new Date(requestBody.start),
+			end: new Date(requestBody.end),
+		});
 
 		const body = <PROMOTION>requestBody;
 
