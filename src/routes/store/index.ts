@@ -120,6 +120,12 @@ store.patch(
 	restrictedTo(['Business']),
 	updatedPromotion
 );
+store.delete(
+	STORE.DELETE_PROMOTION,
+	isAuthenticated,
+	restrictedTo(['Business']),
+	deletePromotion
+);
 store.post(
 	STORE.ADD_STORE_CATEGORY,
 	isAuthenticated,
@@ -183,11 +189,6 @@ store.patch(
 	STORE.REMOVE_PROMOTION_ITEM,
 	restrictedTo(['Business']),
 	removePromoItem
-);
-store.patch(
-	STORE.UPDATE_SHIPPING_DESTINATION,
-	restrictedTo(['Business']),
-	deletePromotion
 );
 store.patch(
 	STORE.ADD_SITE_IMAGE,
