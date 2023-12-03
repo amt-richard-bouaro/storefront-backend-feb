@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
-import { ORDER_MSG } from '../../constants/api/messages';
+import { ORDER_MSG, STORE_MSG } from '../../constants/api/messages';
 import {
 	deletePromo,
 	findPromotionById,
@@ -19,8 +19,8 @@ export const deletePromotion = async (
 
 		if (!promotion) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: ORDER_MSG.NOT_RETURNED.CODE,
-				message: ORDER_MSG.NOT_RETURNED.MESSAGE,
+				code: STORE_MSG.PROMO_NOT_DELETED.CODE,
+				message: STORE_MSG.PROMO_NOT_DELETED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -29,8 +29,8 @@ export const deletePromotion = async (
 
 		if (!deletedPromo) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: ORDER_MSG.NOT_RETURNED.CODE,
-				message: ORDER_MSG.NOT_RETURNED.MESSAGE,
+				code: STORE_MSG.PROMO_DELETED.CODE,
+				message: STORE_MSG.PROMO_DELETED.MESSAGE,
 				type: 'error',
 			});
 		}
