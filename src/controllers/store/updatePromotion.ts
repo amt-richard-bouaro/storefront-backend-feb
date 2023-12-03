@@ -42,15 +42,15 @@ export const updatedPromotion = async (
 
 		if (!updatePromo) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: STORE_MSG.PROMO_NOT_CREATED.CODE,
-				message: STORE_MSG.PROMO_NOT_CREATED.MESSAGE,
+				code: STORE_MSG.PROMO_NOT_UPDATED.CODE,
+				message: STORE_MSG.PROMO_NOT_UPDATED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		return res.status(STATUS.OK).json({
-			code: STORE_MSG.PROMO_CREATED.CODE,
-			message: STORE_MSG.PROMO_CREATED.MESSAGE,
+			code: STORE_MSG.PROMO_UPDATED.CODE,
+			message: STORE_MSG.PROMO_UPDATED.MESSAGE,
 			type: 'success',
 			data: updatePromo,
 		});

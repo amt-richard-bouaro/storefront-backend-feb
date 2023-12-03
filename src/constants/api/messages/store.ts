@@ -111,6 +111,18 @@ export const STORE_MSG = {
 		CODE: 'PROMO_NOT_FOUND',
 		MESSAGE: 'Promotion not found',
 	},
+	PROMO_DELETED: {
+		CODE: 'PROMO_DELETED',
+		MESSAGE: 'Promotion has been deleted',
+	},
+	PROMO_NOT_UPDATED: {
+		CODE: 'PROMO_NOT_UPDATED',
+		MESSAGE: 'Promotion could not be updated',
+	},
+	PROMO_UPDATED: {
+		CODE: 'PROMO_UPDATED',
+		MESSAGE: 'Promotion has updated successfully',
+	},
 	PROMO_FOUND: {
 		CODE: 'PROMO_FOUND',
 		MESSAGE: 'Promotion found',
