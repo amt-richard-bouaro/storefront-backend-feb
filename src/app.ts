@@ -9,15 +9,17 @@ const appServer = server();
 
 const PORT = SERVER_CONFIG.PORT;
 
-const app = appServer.listen(PORT, () => {
+appServer.listen(PORT, () => {
 	logger.info(`app listening on port ${PORT}`);
 });
 
-process.on('SIGTERM', () => {
-	logger.info('SIGTERM signal received.');
-	logger.info('Closing http server.');
-	app.close((err) => {
-		logger.info('Http server closed.');
-		process.exit(err ? 1 : 0);
-	});
-});
+export default appServer;
+
+// process.on('SIGTERM', () => {
+// 	logger.info('SIGTERM signal received.');
+// 	logger.info('Closing http server.');
+// 	app.close((err) => {
+// 		logger.info('Http server closed.');
+// 		process.exit(err ? 1 : 0);
+// 	});
+// });
