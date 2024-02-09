@@ -13,8 +13,9 @@ import { setOrderStatus } from '../../services/app/order/setOrderStatus';
 import { savePayout } from '../../services/app/order/payouts';
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
 import logger from '../../middlewares/logger';
-import ejs from 'ejs';
-import path from 'path';
+// import ejs from 'ejs';
+// import path from 'path';
+import { emailInvoices } from '../../views/emailTemplates';
 
 export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -108,9 +109,9 @@ export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 		const payer =
 			paymentInfo.status === 200
 				? {
-						email: paymentInfo.json.payer.email_address,
-						givenName: paymentInfo.json.payer.name.given_name,
-						surname: paymentInfo.json.payer.name.surname,
+						email: paymentInfo.json.payer.email_address as string,
+						givenName: paymentInfo.json.payer.name.given_name as string,
+						surname: paymentInfo.json.payer.name.surname as string,
 				  }
 				: null;
 
@@ -130,12 +131,7 @@ export const orderDelivered = async (req: Request, res: Response<RESPONSE>) => {
 			: null;
 
 		if (invoice) {
-			const invoiceData = await ejs.renderFile(
-				path.resolve('src/views/templates/invoice.ejs'),
-				{
-					data: invoice,
-				}
-			);
+			const invoiceData = emailInvoices(invoice);
 
 			await sendMail(
 				mailOptions({

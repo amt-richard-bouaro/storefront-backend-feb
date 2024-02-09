@@ -23,8 +23,8 @@ import { userSerialization } from './interfaces';
 
 export const redisClient = createClient({
 	url: SERVER_CONFIG.REDIS_URL,
+	// url: 'redis://default:R0tYDzHCTONa0hffzTTC7GFaRWlmO2m3@redis-14343.c274.us-east-1-3.ec2.cloud.redislabs.com:14343',
 });
-
 function server() {
 	const app = express();
 
@@ -48,7 +48,7 @@ function server() {
 	app.use(express.json());
 	app.use(bodyParser.json());
 
-	app.use(cookieParser());
+	app.use(cookieParser(SERVER_CONFIG.SESSION_SECRET));
 
 	app.set('view engine', 'ejs');
 
@@ -59,9 +59,9 @@ function server() {
 		prefix: 'storefront',
 	});
 
-	// if (SERVER_CONFIG.NODE_ENV === 'production') {
-	// 	app.enable('trust proxy');
-	// }
+	if (SERVER_CONFIG.NODE_ENV === 'production') {
+		app.enable('trust proxy');
+	}
 
 	app.use(
 		session({
@@ -73,7 +73,7 @@ function server() {
 			cookie: {
 				secure: SERVER_CONFIG.NODE_ENV === 'production',
 				maxAge: 1000 * 60 * 60 * 24,
-				sameSite: 'lax',
+				sameSite: SERVER_CONFIG.NODE_ENV === 'production' ? 'none' : 'lax',
 				httpOnly: true,
 			},
 		})

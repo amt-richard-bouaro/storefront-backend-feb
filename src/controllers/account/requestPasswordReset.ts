@@ -11,8 +11,9 @@ import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import { ERROR_MSG } from '../../constants/api/messages';
 import logger from '../../middlewares/logger';
-import ejs from 'ejs';
-import path from 'path';
+// import ejs from 'ejs';
+// import path from 'path';
+import { resetPassword } from '../../views/emailTemplates';
 
 export const requestPasswordReset = async (
 	req: Request,
@@ -55,13 +56,7 @@ export const requestPasswordReset = async (
 				? user.business!.businessName
 				: user.customer!.firstName;
 
-		const verificationData = await ejs.renderFile(
-			path.resolve('src/views/templates/resetPassword.ejs'),
-			{
-				name,
-				code,
-			}
-		);
+		const verificationData = resetPassword(name || 'dear', code);
 
 		await sendMail(
 			mailOptions({

@@ -3,17 +3,21 @@ dotenv.config();
 
 import { SERVER_CONFIG } from './config';
 import server from './server';
-import logger from './middlewares/logger';
+// import logger from './middlewares/logger';
 
-const appServer = server();
+const app = server();
 
 const PORT = SERVER_CONFIG.PORT;
 
-appServer.listen(PORT, () => {
-	logger.info(`app listening on port ${PORT}`);
+app.listen(PORT, () => {
+	console.log('listening on port ' + PORT);
 });
 
-export default appServer;
+export default app;
+
+// export const app = appServer.listen(PORT, () => {
+// 	logger.info(`app listening on port ${PORT}`);
+// });
 
 // process.on('SIGTERM', () => {
 // 	logger.info('SIGTERM signal received.');

@@ -9,8 +9,9 @@ import { findAccountById } from '../../services/app/account/findAccount';
 import { updateVerificationCode } from '../../services/app/account/updateVerificationCode';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import logger from '../../middlewares/logger';
-import path from 'path';
-import ejs from 'ejs';
+// import path from 'path';
+// import ejs from 'ejs';
+import { resendCode } from '../../views/emailTemplates';
 
 export const resendVerificationCode = async (
 	req: Request,
@@ -43,13 +44,7 @@ export const resendVerificationCode = async (
 				? updatedUser.business!.businessName
 				: updatedUser.customer!.firstName;
 
-		const verificationData = await ejs.renderFile(
-			path.resolve('src/views/templates/resendCode.ejs'),
-			{
-				name,
-				code,
-			}
-		);
+		const verificationData = resendCode(name || 'dear', code);
 
 		await sendMail(
 			mailOptions({

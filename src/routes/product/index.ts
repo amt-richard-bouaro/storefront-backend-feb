@@ -3,7 +3,7 @@ import {
 	isAuthenticated,
 	restrictedTo,
 } from '../../middlewares/authentication/authenticate';
-import { imageUpload } from '../../middlewares/uploader';
+import { incomingFile } from '../../middlewares/uploader';
 import { addProduct } from '../../controllers/product/addProduct';
 import { deleteProduct } from '../../controllers/product/deleteProducts';
 import { deleteProductImages } from '../../controllers/product/deleteProductImages';
@@ -20,7 +20,7 @@ const product = express.Router();
 product.post(
 	PRODUCT.ADD_PRODUCT,
 	isAuthenticated,
-	imageUpload.array('images', 4),
+	incomingFile.array('images', 4),
 	restrictedTo(['Business']),
 	addProduct
 );

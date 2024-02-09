@@ -5,7 +5,7 @@ import {
 } from '../../middlewares/authentication/authenticate';
 import { addSiteImage } from '../../controllers/store/addSiteImage';
 import { getStore } from '../../controllers/store/getStore';
-import { imageUpload } from '../../middlewares/uploader';
+import { incomingFile } from '../../middlewares/uploader';
 import { saveTemplate } from '../../controllers/store/saveTemplateChanges';
 import { publishTemplate } from '../../controllers/store/publishTemplateChanges';
 import { getTemp } from '../../controllers/store/getStoreTemp';
@@ -37,7 +37,7 @@ const store = express.Router();
 
 store.post(
 	STORE.ADD_SITE_IMAGE,
-	imageUpload.single('image'),
+	incomingFile.single('image'),
 	isAuthenticated,
 	addSiteImage
 );
@@ -190,13 +190,7 @@ store.patch(
 	restrictedTo(['Business']),
 	removePromoItem
 );
-store.patch(
-	STORE.ADD_SITE_IMAGE,
-	isAuthenticated,
-	imageUpload.single('image'),
-	restrictedTo(['Business']),
-	addSiteImage
-);
+
 store.get(
 	STORE.GET_PAYOUTS,
 	isAuthenticated,

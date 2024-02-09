@@ -4,15 +4,16 @@ import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { STORE_MSG } from '../../constants/api/messages';
 import { mailOptions, sendMail } from '../../services/email/mailingConfig';
-import path from 'path';
-import ejs from 'ejs';
+// import path from 'path';
+// import ejs from 'ejs';
 import { getCapturedOrder } from '../../services/Paypal/payPalApi';
+import { emailInvoices } from '../../views/emailTemplates';
 
 export const sendInvoice = async (req: Request, res: Response<RESPONSE>) => {
 	try {
 		const invoice = {
 			customerName: 'Caleb Yankah',
-			customerEmail: 'aMA@example.com',
+			customerEmail: 'ghetrich370@gmail.com',
 			items: [
 				{
 					id: 'd35a168e-8642-4b42-bbb1-b422def858dd',
@@ -56,15 +57,16 @@ export const sendInvoice = async (req: Request, res: Response<RESPONSE>) => {
 			paid: true,
 			currency: 'USD',
 			orderID: 'KSU6722GSY382323',
+
+			payer: {
+				givenName: 'payer 1',
+				surname: 'Loaner',
+				email: 'email@example.com',
+			},
 		};
 
 		if (invoice) {
-			const invoiceData = await ejs.renderFile(
-				path.resolve('src/views/templates/invoice.ejs'),
-				{
-					data: invoice,
-				}
-			);
+			const invoiceData = emailInvoices(invoice);
 
 			await sendMail(
 				mailOptions({

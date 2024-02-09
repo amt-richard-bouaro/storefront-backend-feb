@@ -5,6 +5,7 @@ import { NEW_PRODUCT } from '../../validations/product';
 import { STATUS } from '../../config/statusCode';
 import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
+import { sendFileToS3 } from '../../services/aws/s3Config';
 
 export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -37,12 +38,33 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 
 		const files = req.files as Express.MulterS3.File[];
 
-		const images = files.map((file) => {
-			return {
-				url: file.location,
-				key: file.key,
-			};
-		});
+		const loadImage = async (
+			files: Express.MulterS3.File[]
+		): Promise<{ url: string; key: string }[]> => {
+			const images: { url: string; key: string }[] = [];
+
+			for (const file of files) {
+				const uploadedFile = await sendFileToS3(file);
+				if (uploadedFile.key && uploadedFile.location) {
+					images.push({
+						url: uploadedFile.location!,
+						key: uploadedFile.key!,
+					});
+				}
+			}
+
+			return images;
+		};
+
+		const images = await loadImage(files);
+
+		if (images.length === 0) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: PRODUCT_MSG.IMAGES_NOT_RECEIVED.CODE,
+				message: PRODUCT_MSG.IMAGES_NOT_RECEIVED.MESSAGE,
+				type: 'error',
+			});
+		}
 
 		const variations = body.variations
 			? body.variations.map((variation) => {

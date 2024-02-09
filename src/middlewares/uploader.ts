@@ -1,7 +1,9 @@
 import multer from 'multer';
 import multerS3 from 'multer-s3';
+
 import { S3_BUCKET } from '../config';
 import { S3Client } from '@aws-sdk/client-s3';
+import { Request } from 'express';
 
 const s3 = new S3Client({
 	region: S3_BUCKET.REGION,
@@ -18,23 +20,36 @@ const storage = multerS3({
 	metadata: function (req, file, cb) {
 		cb(null, { fieldName: file.fieldname });
 	},
-	key: function (req, file, callback) {
-		const uniquePrefix = 'STRFRNTSMES-' + Math.round(Math.random() * 100000);
 
+	key: function (req, file, callback) {
+		const uniquePrefix = 'STRFRNTSMES-' + Date.now();
 		callback(null, uniquePrefix + '-' + file.originalname);
 	},
 });
 
+const fileFilter = (
+	req: Request,
+	file: Express.Multer.File,
+	callback: multer.FileFilterCallback
+) => {
+	if (file.mimetype.split('/')[0] !== 'image') {
+		callback(new Error('Unsupported file type'));
+	} else {
+		callback(null, true);
+	}
+};
+
 export const imageUpload = multer({
 	storage: storage,
 	limits: {
-		fileSize: 8 * 1024 * 1024,
+		fileSize: 3 * 1024 * 1024,
 	},
-	fileFilter: (req, file, callback) => {
-		if (file.mimetype.split('/')[0] !== 'image') {
-			callback(new Error('Unsupported file type'));
-		} else {
-			callback(null, true);
-		}
+	fileFilter,
+});
+
+export const incomingFile = multer({
+	limits: {
+		fileSize: 4194304,
 	},
+	fileFilter,
 });

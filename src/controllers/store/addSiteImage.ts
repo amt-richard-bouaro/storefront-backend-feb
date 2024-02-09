@@ -6,7 +6,7 @@ import { Database } from '../../extensions/dbClient';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { STORE_MSG } from '../../constants/api/messages';
 import { ADD_SITE_IMAGE } from '../../validations/store';
-import { deleteObject } from '../../services/aws/s3Config';
+import { deleteObject, sendFileToS3 } from '../../services/aws/s3Config';
 
 export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -38,9 +38,19 @@ export const addSiteImage = async (req: Request, res: Response<RESPONSE>) => {
 
 		const file = req.file as Express.MulterS3.File;
 
+		const uploadedFile = await sendFileToS3(file);
+
+		if (!uploadedFile.location || !uploadedFile.key) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: STORE_MSG.IMAGE_NOT_UPLOADED.CODE,
+				message: STORE_MSG.IMAGE_NOT_UPLOADED.MESSAGE,
+				type: 'error',
+			});
+		}
+
 		const image = {
-			url: file.location,
-			key: file.key,
+			url: uploadedFile.location,
+			key: uploadedFile.key,
 			name,
 			store: storeID,
 		};
