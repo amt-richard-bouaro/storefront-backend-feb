@@ -37,6 +37,15 @@ export const errorHandler = <T extends Error>(
 		});
 	}
 
+	if (err instanceof MulterError) {
+		return res.status(STATUS.BAD_REQUEST).json({
+			code: 'FILE_UPLOAD_ERROR',
+			message: err.message,
+			type: 'error',
+			error: err.cause,
+		});
+	}
+
 	if (err.name === 'TokenExpiredError') {
 		status = STATUS.UNAUTHORIZED;
 		errorResponse = {

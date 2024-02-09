@@ -19,8 +19,8 @@ export const deletePromotion = async (
 
 		if (!promotion) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: STORE_MSG.PROMO_NOT_DELETED.CODE,
-				message: STORE_MSG.PROMO_NOT_DELETED.MESSAGE,
+				code: ORDER_MSG.NOT_RETURNED.CODE,
+				message: ORDER_MSG.NOT_RETURNED.MESSAGE,
 				type: 'error',
 			});
 		}
@@ -29,15 +29,15 @@ export const deletePromotion = async (
 
 		if (!deletedPromo) {
 			return res.status(STATUS.BAD_REQUEST).json({
-				code: STORE_MSG.PROMO_DELETED.CODE,
-				message: STORE_MSG.PROMO_DELETED.MESSAGE,
+				code: STORE_MSG.PROMO_NOT_DELETED.CODE,
+				message: STORE_MSG.PROMO_NOT_DELETED.MESSAGE,
 				type: 'error',
 			});
 		}
 
 		return res.status(STATUS.OK).json({
-			code: ORDER_MSG.ORDERS_FOUND.CODE,
-			message: ORDER_MSG.ORDERS_FOUND.MESSAGE,
+			code: STORE_MSG.PROMO_DELETED.CODE,
+			message: STORE_MSG.PROMO_DELETED.MESSAGE,
 			type: 'success',
 		});
 	} catch (error) {

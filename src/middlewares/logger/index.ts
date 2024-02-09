@@ -6,11 +6,11 @@ const logger = createLogger({
 	format: format.json(),
 	defaultMeta: { timestamp: new Date() },
 	transports: [
-		new transports.File({ filename: 'logs/error.log', level: 'error' }),
-		new transports.File({ filename: 'logs/status.log' }),
-		new transports.File({ filename: 'logs/transactions.log', level: 'info' }),
+		// new transports.File({ filename: 'logs/error.log', level: 'error' }),
+		// new transports.File({ filename: 'logs/status.log' }),
+		// new transports.File({ filename: 'logs/transactions.log', level: 'info' }),
 	],
-	exceptionHandlers: [new transports.File({ filename: 'logs/exceptions.log' })],
+	// exceptionHandlers: [new transports.File({ filename: 'logs/exceptions.log' })],
 });
 
 if (SERVER_CONFIG.NODE_ENV !== 'production') {

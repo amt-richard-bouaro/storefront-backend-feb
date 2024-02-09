@@ -65,6 +65,10 @@ export const STORE_MSG = {
 		CODE: 'IMAGE_UPLOADED',
 		MESSAGE: 'Image uploaded.',
 	},
+	IMAGE_NOT_UPLOADED: {
+		CODE: 'IMAGE_NOT_UPLOADED',
+		MESSAGE: 'Image not uploaded. try again later.',
+	},
 	IMAGES_NOT_RECEIVED: {
 		CODE: 'IMAGE_NOT_RECEIVED',
 		MESSAGE: 'Images not received.',
@@ -111,22 +115,6 @@ export const STORE_MSG = {
 		CODE: 'PROMO_NOT_FOUND',
 		MESSAGE: 'Promotion not found',
 	},
-	PROMO_DELETED: {
-		CODE: 'PROMO_DELETED',
-		MESSAGE: 'Promotion has been deleted',
-	},
-	PROMO_NOT_DELETED: {
-		CODE: 'PROMO_NOT_DELETED',
-		MESSAGE: 'Promotion could not be deleted',
-	},
-	PROMO_NOT_UPDATED: {
-		CODE: 'PROMO_NOT_UPDATED',
-		MESSAGE: 'Promotion could not be updated',
-	},
-	PROMO_UPDATED: {
-		CODE: 'PROMO_UPDATED',
-		MESSAGE: 'Promotion has updated successfully',
-	},
 	PROMO_FOUND: {
 		CODE: 'PROMO_FOUND',
 		MESSAGE: 'Promotion found',
@@ -146,6 +134,22 @@ export const STORE_MSG = {
 	PROMO_ENDED: {
 		CODE: 'PROMO_ENDED',
 		MESSAGE: 'Promotion has ended',
+	},
+	PROMO_DELETED: {
+		CODE: 'PROMO_DELETED',
+		MESSAGE: 'Promotion has been deleted',
+	},
+	PROMO_NOT_DELETED: {
+		CODE: 'PROMO_NOT_DELETED',
+		MESSAGE: 'Promotion could not be deleted',
+	},
+	PROMO_UPDATED: {
+		CODE: 'PROMO_UPDATED',
+		MESSAGE: 'Promotion has updated successfully',
+	},
+	PROMO_NOT_UPDATED: {
+		CODE: 'PROMO_NOT_UPDATED',
+		MESSAGE: 'Promotion could not be updated',
 	},
 	PAYMENT_INFO_NOT_FOUND: {
 		CODE: 'PAYMENT_INFO_NOT_FOUND',

@@ -12,7 +12,7 @@ import { getOrder } from '../../controllers/order/getOrder';
 import { changeOrderShipping } from '../../controllers/order/changeOrderShipping';
 import { ORDER } from '../../constants/api/endpoints';
 import { orderDelivered } from '../../controllers/order/orderDelivered';
-import { sendInvoice } from '../../controllers/payment/invoice';
+// import { sendInvoice } from '../../controllers/payment/invoice';
 import { orderShipped } from '../../controllers/order/orderShipped';
 
 const order = express.Router();
@@ -61,6 +61,7 @@ order.patch(
 	restrictedTo(['Customer']),
 	changeOrderShipping
 );
-order.get('/invoice', sendInvoice);
+
+// order.get('/invoice', sendInvoice);
 
 export default order;

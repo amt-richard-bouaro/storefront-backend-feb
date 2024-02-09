@@ -51,7 +51,7 @@ account.get(
 account.post(
 	ACCOUNT.AUTH_ACCOUNT_LOCAL,
 	passport.authenticate('local-auth', {
-		failureRedirect: '/api/account/login/failure',
+		failureRedirect: ACCOUNT.BASE_ROUTE + ACCOUNT.AUTH_FAILURE_LOCAL,
 		failureFlash: true,
 	}),
 	localLogin

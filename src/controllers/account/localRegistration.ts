@@ -10,8 +10,9 @@ import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import { ERROR_MSG } from '../../constants/api/messages';
 import logger from '../../middlewares/logger';
-import ejs from 'ejs';
-import path from 'path';
+// import ejs from 'ejs';
+// import path from 'path';
+import { emailVerification } from '../../views/emailTemplates';
 
 export const localRegistration = async (
 	req: Request,
@@ -57,14 +58,8 @@ export const localRegistration = async (
 
 		const name = data.businessName ? data.businessName : data.firstName;
 
-		const verificationData = await ejs.renderFile(
-			path.resolve('src/views/templates/emailverification.ejs'),
-			{
-				name,
-				code,
-			}
-		);
-		sendMail(
+		const verificationData = emailVerification(name || 'dear', code);
+		await sendMail(
 			mailOptions({
 				to: email,
 				subject: 'Email Verification',

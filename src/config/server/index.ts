@@ -16,6 +16,7 @@ const SERVER_CONFIG_SCHEMA = z.object({
 	EMAIL_HOST: z.string().trim().min(1),
 	EMAIL_PORT: z.number().default(435),
 	REDIS_URL: z.string(),
+	TINIFY_API_KEY: z.string().trim(),
 });
 
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS
@@ -36,6 +37,7 @@ const serverConfig = SERVER_CONFIG_SCHEMA.safeParse({
 	EMAIL_HOST: process.env.EMAIL_HOST!,
 	EMAIL_PORT: parseInt(process.env.EMAIL_PORT!),
 	REDIS_URL: process.env.REDIS_URL!,
+	TINIFY_API_KEY: process.env.TINIFY_API_KEY!,
 });
 
 if (!serverConfig.success) {

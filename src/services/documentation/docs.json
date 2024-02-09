@@ -5,14 +5,14 @@
 		"version": "1.0.0",
 		"contact": {
 			"name": "Store Front API",
-			"url": "https://storefront-backend-february.vercel.app/",
+			"url": "https://storefrontsmes-aug-api.amalitech-dev.net/",
 			"email": "richard.bouaro@amalitech.org"
 		}
 	},
 
 	"servers": [
 		{
-			"url": "https://storefront-backend-february.vercel.app/",
+			"url": "https://storefrontsmes-aug-api.amalitech-dev.net/",
 			"description": "Store Front API"
 		},
 		{

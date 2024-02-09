@@ -9,8 +9,9 @@ import { extractJwtPayload } from '../../helpers';
 import { verifyAccount } from '../../services/app/account/verifyAccount';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
 import logger from '../../middlewares/logger';
-import ejs from 'ejs';
-import path from 'path';
+// import ejs from 'ejs';
+// import path from 'path';
+import { emailVerified } from '../../views/emailTemplates';
 export const accountVerification = async (
 	req: Request,
 	res: Response<RESPONSE>
@@ -42,6 +43,8 @@ export const accountVerification = async (
 
 		const userVerificationToken = extractJwtPayload(User.verificationToken!);
 
+		console.log({ store: userVerificationToken.code, code });
+
 		if (userVerificationToken.code !== code) {
 			return res.status(STATUS.BAD_REQUEST).json({
 				code: AUTH_MSG.EMAIL_VERIFICATION_FAILED.CODE,
@@ -57,12 +60,7 @@ export const accountVerification = async (
 				? verifiedUser.business!.businessName
 				: verifiedUser.customer!.firstName;
 
-		const verifiedInfo = await ejs.renderFile(
-			path.resolve('src/views/templates/emailVerified.ejs'),
-			{
-				name: user,
-			}
-		);
+		const verifiedInfo = emailVerified(user || 'dear');
 
 		await sendMail(
 			mailOptions({

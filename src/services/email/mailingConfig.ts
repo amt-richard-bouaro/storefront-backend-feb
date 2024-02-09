@@ -5,7 +5,7 @@ import nodemailer, { SentMessageInfo } from 'nodemailer';
 import { ERROR_MSG } from '../../constants/api/messages';
 
 const transport = nodemailer.createTransport({
-	service: SERVER_CONFIG.EMAIL_SERVICE,
+	service: 'gmail',
 	host: SERVER_CONFIG.EMAIL_HOST,
 	port: Number(SERVER_CONFIG.EMAIL_PORT),
 	secure: true,
@@ -34,9 +34,37 @@ export const sendMail = async (
 	callback?: (err: Error | null, info: SentMessageInfo) => void
 ) => {
 	try {
-		callback
-			? transport.sendMail(mailOptions, callback)
-			: transport.sendMail(mailOptions);
+		await new Promise((resolve, reject) => {
+			// verify connection configuration
+			transport.verify(function (error, success) {
+				if (error) {
+					console.log(error);
+					reject(error);
+				} else {
+					console.log('Server is ready to take our messages');
+					resolve(success);
+				}
+			});
+		});
+
+		await new Promise((resolve, reject) => {
+			// send mail
+			transport.sendMail(mailOptions, (err, info) => {
+				if (err) {
+					console.error(err);
+					reject(err);
+				} else {
+					// console.log(info);
+					resolve(info);
+				}
+			});
+		});
+
+		callback && console.log('callback called');
+
+		// callback
+		// 	? transport.sendMail(mailOptions, callback)
+		// 	: transport.sendMail(mailOptions);
 	} catch (error) {
 		const err = error as Error;
 		if (err.name === 'ENOTFOUND') {
