@@ -44,6 +44,7 @@
     "dev": "nodemon -L src/app.ts",
     "build": "tsc -p .",
     "start": "node dist/src/app.js",
+    "vercel-build": "prisma generate",
     "postinstall": "husky install",
     "lint": "npx eslint --ext .ts src",
     "lint:fix": "npx eslint --ext .ts src --fix",
