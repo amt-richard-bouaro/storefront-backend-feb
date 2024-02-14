@@ -20,7 +20,6 @@ import { SERVER_CONFIG } from './config/index';
 import { findAccountByProviderId } from './services/app/account/findAccount';
 import routes from './routes';
 import { userSerialization } from './interfaces';
-import { cachResult, getCachedResult } from './extensions/redis';
 
 export const redisClient = createClient({
 	url: SERVER_CONFIG.REDIS_URL,
@@ -33,10 +32,6 @@ function server() {
 		cors({
 			origin: async function (origin, callback) {
 				if (origin && SERVER_CONFIG.ALLOWED_ORIGINS.includes(origin)) {
-					await cachResult('client-origin', { origin });
-
-					console.log('CORS =', await getCachedResult('client-origin'));
-
 					callback(null, true);
 				} else {
 					callback(null, false);
