@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"target": "ESNext",
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"sourceMap": true,
+		"module": "CommonJS",
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"rootDirs": ["src", "test"],
+		"outDir": "dist",
+		"allowJs": true,
+		"checkJs": false,
+		"resolveJsonModule": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": ["src/**/*", "src/**/*.json", "test/***/*", "./jest.config.ts"],
+	"exclude": ["node_modules"],
+	"typeRoots": ["./global.d.ts", "./node_modules/@types"]
+}

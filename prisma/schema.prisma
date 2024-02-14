@@ -1,0 +1,364 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Type {
+  Business
+  Customer
+  Admin
+}
+
+enum Provider {
+  local
+  google
+  facebook
+}
+
+model Currency {
+  id   String @id @default(uuid())
+  name String
+  code String
+}
+
+model Destination {
+  id       String @id @default(uuid())
+  name     String
+  code     String
+  duration Int
+  cost     Int
+}
+
+model Account {
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  password           String
+  type               Type
+  provider           Provider
+  providerId         String    @default(uuid())
+  verificationToken  String?
+  verified           Boolean   @default(false)
+  isActive           Boolean   @default(false)
+  mustChangePassword Boolean   @default(false)
+  canResetPassword   Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  customer           Customer? @relation("customerAccount")
+  business           Business? @relation("businessAccount")
+}
+
+model Customer {
+  id              String      @id @default(uuid())
+  firstName       String
+  lastName        String
+  phone           String?
+  reviews         Review[]    @relation("customerReviews")
+  Replies         Reply[]     @relation("customerReply")
+  orders          Order[]     @relation("customerOrder")
+  savedProduct    SavedItem[] @relation("customerSavedProduct")
+  wallets         Wallet[]    @relation("customerWallet")
+  shipping        Shipping[]  @relation("customerShipping")
+  account         String      @unique
+  customerAccount Account     @relation("customerAccount", fields: [account], references: [id], onDelete: Cascade)
+}
+
+model Shipping {
+  id               String   @id @default(uuid())
+  countryCode      String
+  postalCode       String
+  name             String
+  streetAddress    String
+  apartmentNo      String   @default("N/A")
+  city             String
+  phone            String
+  orders           Order[]  @relation("orderShipping")
+  isActive         Boolean  @default(true)
+  customer         String
+  customerShipping Customer @relation("customerShipping", fields: [customer], references: [id], onDelete: Cascade)
+}
+
+model Business {
+  id              String            @id @default(uuid())
+  businessName    String
+  businessType    String?
+  stores          Store[]           @relation("businessStores")
+  addresses       BusinessAddress[] @relation("businessAddress")
+  account         String            @unique
+  businessAccount Account           @relation("businessAccount", fields: [account], references: [id], onDelete: Cascade)
+}
+
+model BusinessAddress {
+  id              String   @id @default(uuid())
+  country         String
+  streetAddress   String
+  appartmentNo    String   @default("N/A")
+  city            String
+  phone           String
+  business        String
+  businessAddress Business @relation("businessAddress", fields: [business], references: [id], onDelete: Cascade)
+}
+
+model Store {
+  id            String                @id @default(uuid())
+  storeName     String                @default("Default")
+  storeType     String
+  currency      String                @default("USD")
+  products      Product[]             @relation("storeProducts")
+  categories    Category[]            @relation("storeCategories")
+  template      Template?             @relation("storeTemplate")
+  orders        Order[]               @relation("storeOrder")
+  wallets       Wallet[]              @relation("storeWallet")
+  savedProducts SavedItem[]           @relation("storerSavedProduct")
+  payments      Payout[]              @relation("storePayout")
+  Replies       Reply[]               @relation("storeReply")
+  siteImages    SiteImage[]           @relation("storeImages")
+  reviews       Review[]              @relation("storeReviews")
+  shipping      ShippingDestination[] @relation("shippingDestinations")
+  promotions    Promotion[]           @relation("storePromotion")
+  business      String
+  businessStore Business              @relation("businessStores", fields: [business], references: [id], onDelete: Cascade)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+}
+
+model Promotion {
+  id             String    @id @default(uuid())
+  name           String
+  statement      String    @default("Special offers and great deals")
+  discount       Int       @default(0)
+  start          DateTime
+  end            DateTime
+  store          String
+  storePromotion Store     @relation("storePromotion", fields: [store], references: [id], onDelete: Cascade)
+  products       Product[] @relation("promotionProducts")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model ShippingDestination {
+  id                   String   @id @default(uuid())
+  name                 String
+  code                 String
+  duration             Int
+  cost                 Int
+  store                String
+  shippingDestinations Store    @relation("shippingDestinations", fields: [store], references: [id], onDelete: Cascade)
+  // orders               Order[]  @relation("orderDestination")
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model SiteImage {
+  id         String @id @default(uuid())
+  url        String
+  name       String
+  key        String
+  store      String
+  storeImage Store  @relation("storeImages", fields: [store], references: [id], onDelete: Cascade)
+}
+
+model Template {
+  id            String @id @default(uuid())
+  options       String
+  store         String @unique
+  temp          Temp?  @relation("temporaryTemplate")
+  storeTemplate Store  @relation("storeTemplate", fields: [store], references: [id], onDelete: Cascade)
+}
+
+model Temp {
+  id           String   @id @default(uuid())
+  options      String
+  template     String   @unique
+  tempTemplate Template @relation("temporaryTemplate", fields: [template], references: [id], onDelete: Cascade)
+}
+
+model Product {
+  id               String      @id @default(uuid())
+  name             String
+  images           Image[]     @relation("productImages")
+  description      String
+  isActive         Boolean     @default(true)
+  quantity         Int         @default(0)
+  reStockLevel     Int         @default(0)
+  category         String      @default("All")
+  price            Float       @default(0.00)
+  discount         Int         @default(0)
+  promotion        String?
+  promotionProduct Promotion?  @relation("promotionProducts", fields: [promotion], references: [id])
+  variations       Variation[] @relation("productVariations")
+  reviews          Review[]    @relation("productReviews")
+  customerSaves    SavedItem[] @relation("savedProduct")
+  deleted          Boolean     @default(false)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  store            String
+  storeProducts    Store       @relation("storeProducts", fields: [store], references: [id], onDelete: Cascade)
+  orders           OrderItem[] @relation("productOrdered")
+}
+
+model Category {
+  id              String @id @default(uuid())
+  name            String
+  store           String
+  storeCategories Store  @relation("storeCategories", fields: [store], references: [id], onDelete: Cascade)
+}
+
+model Image {
+  id           String  @id @default(uuid())
+  url          String
+  key          String
+  product      String
+  productImage Product @relation("productImages", fields: [product], references: [id], onDelete: Cascade)
+}
+
+model Variation {
+  id                String      @id @default(uuid())
+  type              String
+  value             String
+  product           String
+  productVariations Product     @relation("productVariations", fields: [product], references: [id], onDelete: Cascade)
+  orders            OrderItem[] @relation("variationsOrdered")
+}
+
+enum Remarks {
+  Disappointing
+  Outstanding
+  Satisfactory
+}
+
+model Review {
+  id             String   @id @default(uuid())
+  product        String
+  rating         Int
+  remarks        Remarks
+  comment        String?
+  order          String
+  orderReview    Order    @relation("orderReviews", fields: [order], references: [id], onDelete: Cascade)
+  store          String
+  storeReviews   Store    @relation("storeReviews", fields: [store], references: [id], onDelete: Cascade)
+  customer       String
+  replies        Reply[]  @relation("reviewReply")
+  productReview  Product  @relation("productReviews", fields: [product], references: [id], onDelete: Cascade)
+  customerReview Customer @relation("customerReviews", fields: [customer], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Reply {
+  id            String    @id @default(uuid())
+  comment       String
+  from          Type
+  customer      String?
+  customerReply Customer? @relation("customerReply", fields: [customer], references: [id], onDelete: Cascade)
+  store         String?
+  storeReply    Store?    @relation("storeReply", fields: [store], references: [id], onDelete: Cascade)
+  review        String
+  reviewReply   Review    @relation("reviewReply", fields: [review], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum Status {
+  Pending_Payment
+  Delivered
+  On_Hold
+  Refunded
+  Returned
+  Cancelled
+  Shipped
+  Processing
+  Completed
+  Failed
+}
+
+model Order {
+  id               String              @id @default(uuid())
+  amount           Float
+  paid             Boolean             @default(false)
+  currency         String
+  orderId          String              @unique
+  referenceId      String
+  status           Status              @default(Pending_Payment)
+  store            String
+  storeOrder       Store               @relation("storeOrder", fields: [store], references: [id], onDelete: Cascade)
+  customer         String
+  customerOrder    Customer            @relation("customerOrder", fields: [customer], references: [id])
+  items            OrderItem[]         @relation("OrderItems")
+  disbursement     Payout?             @relation("orderPayout")
+  reviews          Review[]            @relation("orderReviews")
+  shipping         String
+  orderShipping    Shipping            @relation("orderShipping", fields: [shipping], references: [id])
+  // destination      String
+  // orderDestination ShippingDestination @relation("orderDestination", fields: [destination], references: [id])
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+}
+
+model OrderItem {
+  id             String      @id @default(uuid())
+  quantity       Int         @default(1)
+  price          Float       @default(0.00)
+  discount       Int         @default(0)
+  total          Float       @default(0.00)
+  name           String
+  image          String
+  variations     Variation[] @relation("variationsOrdered")
+  product        String
+  productOrdered Product     @relation("productOrdered", fields: [product], references: [id])
+  order          String
+  OrderItem      Order       @relation("OrderItems", fields: [order], references: [id], onDelete: Cascade)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model SavedItem {
+  id                  String   @id @default(uuid())
+  product             String
+  savedProduct        Product  @relation("savedProduct", fields: [product], references: [id])
+  customer            String
+  liked               Boolean  @default(false)
+  customrSavedProduct Customer @relation("customerSavedProduct", fields: [customer], references: [id], onDelete: Cascade)
+  store               String
+  storerSavedProduct  Store    @relation("storerSavedProduct", fields: [store], references: [id], onDelete: Cascade)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+enum Method {
+  Card
+  Paypal
+}
+
+model Wallet {
+  id             String    @id @default(uuid())
+  method         Method
+  walletId       String
+  name           String
+  secret         String    @default("not required")
+  store          String?
+  storeWallet    Store?    @relation("storeWallet", fields: [store], references: [id])
+  customer       String?
+  customerWallet Customer? @relation("customerWallet", fields: [customer], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Payout {
+  id          String   @id @default(uuid())
+  commission  Float
+  payoutId    String
+  amount      Float
+  currency    String
+  wallet      String
+  order       String   @unique
+  orderPayout Order    @relation("orderPayout", fields: [order], references: [id])
+  store       String
+  storePayout Store    @relation("storePayout", fields: [store], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

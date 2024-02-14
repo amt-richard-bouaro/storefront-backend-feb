@@ -1,0 +1,50 @@
+version: '3'
+services:
+  database:
+    image: postgres:14.0
+    # volumes:
+      # - ./postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: storefront
+      POSTGRES_PASSWORD: superadmin
+      POSTGRES_DB: storefront_db
+    ports:
+      - "5435:5432"
+    restart: on-failure
+
+  # storefront-api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: storefront-api
+  #   ports:
+  #     - "4455:4455"
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #   depends_on:
+  #     - database
+  #     - storefront-redis
+  #   restart: on-failure
+  #   env_file:
+  #     - .env
+      
+  storefront-redis:
+    image: 'bitnami/redis:latest'
+    container_name: storefront-redis
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - storefront-redis-data:/data
+    ports:
+      - '6380:6380'
+    environment:
+      - REDIS_PORT_NUMBER=6380
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=storefront
+
+volumes:
+  storefront-redis-data:
+    driver: local
+
+  
