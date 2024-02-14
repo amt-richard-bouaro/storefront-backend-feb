@@ -822,13 +822,13 @@ If you have any problems resetting your password, please contact us at support@a
       `;
 };
 
-interface PaymentInfo {
+export interface PaymentInfo {
 	email: string;
 	givenName: string;
 	surname: string;
 }
 
-interface OrderDetails {
+export interface OrderDetails {
 	customerName: string;
 	customerEmail: string | undefined;
 	items?: ORDER_ITEM[];
@@ -848,26 +848,42 @@ export const emailInvoices = (options: OrderDetails) => {
 		options.items.forEach((item) => {
 			items =
 				items +
-				`<div class="frame-10000049262">
-                <div class="table-cell3">
-                  <div class="underline2"></div>
-                  <div class="content2">
-                    <div class="user">
-                      <img
-                        class="frame-1000004824"
-                        src=${item.image}
-                      />
-                      <div class="text4">
-                        <div class="channel-hat">${item.name}</div>
-                        <div class="hat">Quantity: ${item.quantity}</div>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="_100">${options.currency} ${item.total}</div><br/>
-               
-              </div>`;
+				`
+           <div>
+        <tr>
+          <td
+            style="
+              color: #455468;
+              font-size: 14px;
+              font-family: Inter;
+              font-weight: 500;
+              line-height: 24px;
+              display: flex;
+              margin-top: 10px;
+            "
+          >
+            <div style="width: 150px">
+              <img
+                style="border-radius: 4px; width: 56px;
+  height: 56px;"
+                src=${item.image}
+                alt=""
+              />
+            </div>
+            <span
+              style="padding-left: 10px; display: flex; flex-direction: column"
+              ><p style="font-weight: 600; font-size: 12px">${item.name}</p><b/>
+              <p style="margin-top: -15px; font-size: 10px">Quantity: ${item.quantity}</p></span
+            >
+          </td>
+          <td style="height: 50px">
+            <span style="font-family: inter; font-size: 12px; font-weight: 500"
+              >${options.currency} ${item.total}</span
+            >
+          </td>
+        </tr>
+      </div>
+        `;
 		});
 	}
 
@@ -898,601 +914,232 @@ export const emailInvoices = (options: OrderDetails) => {
 	let shipping = ` <div class="channel-hat">Missing Shipping Info</div>`;
 
 	if (options.shipping) {
-		shipping = `<div class="frame-1000004926">
-                <div class="table-cell2">
-                  <div class="underline2"></div>
-                  <div class="content2">
-                    <div class="user">
-                      <div class="text4">
-                        <div class="ghana">${options.shipping.streetAddress}</div>
-                        <div class="anaji-ssnit">${options.shipping.city}, ${options.shipping.countryCode}</div>
-                        <div class="_233502456097">${options.shipping.name}</div>
-                        <div class="_233502456097">${options.shipping.phone}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>`;
+		shipping = `
+    
+      <td
+          style="
+            height: 5px;
+            color: #455468;
+            font-size: 14px;
+            font-family: Inter;
+            font-weight: 500;
+            word-wrap: break-word;
+            padding-left: 15px;
+          "
+        >
+          <span
+            style="
+              width: 100%;
+              color: #455468;
+              font-size: 14px;
+              font-family: Inter;
+              font-weight: 700;
+              word-wrap: break-word;
+            "
+          >
+           ${options.shipping.streetAddress}
+            <br />
+           ${options.shipping.city}, ${options.shipping.countryCode}<br />
+           ${options.shipping.name}<br />
+          </span>
+          <p style="margin-top: -2px">${options.shipping.phone}</p>
+        </td>
+
+    `;
 	}
 
 	return `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      a,
-      button,
-      input,
-      select,
-      h1,
-      h2,
-      h3,
-      h4,
-      h5,
-      * {
-        margin: 0;
-        padding: 0;
-        border: none;
-        text-decoration: none;
-        appearance: none;
-        background: none;
-      }
-      .modal,
-.modal * {
-  box-sizing: border-box;
-}
-.modal {
-  background: var(--base-white, #ffffff);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  align-items: center;
-  justify-content: flex-start;
-  width: 479px;
-  
-  position: relative;
-}
-.text {
-  color: var(--gray-900, #101828);
-  text-align: left;
-  font: var(--paragraph-3-medium, 500 18px/30px "Inter", sans-serif);
-  position: relative;
-  align-self: stretch;
-}
-.text2 {
-  color: var(--gray-900, #101828);
-  text-align: left;
-  font: var(--paragraph-2-bold, 700 20px/32px "Inter", sans-serif);
-  position: relative;
-  align-self: stretch;
-}
-.content {
-  border-radius: 16px;
-  flex-shrink: 0;
-  width: 443px;
-  height: 201px;
-  position: relative;
-}
-.frame-1000004851 {
-  width: 440px;
-  height: 178px;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-}
-.frame-1000004928 {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  position: absolute;
-  left: 0px;
-  top: 0px;
-}
-.frame-10000048512 {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 439px;
-  height: 185px;
-  position: relative;
-}
-.table-cell {
-  flex-shrink: 0;
-  width: 440px;
-  height: 66px;
-  position: relative;
-}
-.underline {
-  border-style: solid;
-  border-color: var(--colors-primary-slate-100, #e9eff6);
-  border-width: 1px 0 0 0;
-  height: 0px;
-  position: absolute;
-  right: 0px;
-  left: 0px;
-  bottom: 0px;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(1, 1);
-}
-.text3 {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 420px;
-  height: 59px;
-  position: absolute;
-  left: 20px;
-  top: calc(50% - 29px);
-}
-.frame-1000004849 {
-  display: flex;
-  flex-direction: row;
-  gap: 80px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.shipping-address {
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-4-bold, 700 16px/28px "Inter", sans-serif);
-  position: relative;
-  width: 241px;
-}
-.frame-1000004926 {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  height: 104px;
-  position: relative;
-}
-.table-cell2 {
-  flex-shrink: 0;
-  width: 277px;
-  height: 142px;
-  position: relative;
-}
-.underline2 {
-  height: 0px;
-  position: absolute;
-  right: 0px;
-  left: 0px;
-  bottom: 0px;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(1, 1);
-}
-.content2 {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
-  justify-content: flex-start;
-  width: 194px;
-  position: absolute;
-  left: 20px;
-  top: 20px;
-}
-.user {
-  display: flex;
-  flex-direction: row;
-  gap: 14px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.text4 {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.ghana {
-  color: var(--colors-primary-slate-600, #455468);
-  text-align: left;
-  font: var(--paragraph-4-medium, 500 16px/28px "Inter", sans-serif);
-  position: relative;
-  width: 187px;
-}
-.anaji-ssnit {
-  margin: -2px 0 0 0;
-  color: var(--colors-primary-slate-600, #455468);
-  text-align: left;
-  font: var(--paragraph-5-medium, 500 14px/24px "Inter", sans-serif);
-  position: relative;
-  width: 187px;
-}
-.c-k-mann-road-19 {
-  margin: -2px 0 0 0;
-  color: var(--colors-primary-slate-600, #455468);
-  text-align: left;
-  font: var(--paragraph-5-medium, 500 14px/24px "Inter", sans-serif);
-  position: relative;
-  width: 187px;
-}
-._233502456097 {
-  margin: -2px 0 0 0;
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-6-regular, 400 12px/20px "Inter", sans-serif);
-  position: relative;
-  width: 187px;
-}
-.frame-1000004850 {
-  border-radius: 12px;
-  border-style: solid;
-  border-color: var(--colors-primary-slate-100, #e9eff6);
-  border-width: 1px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 439px;
-  height: auto ;
-  position: relative;
-}
-.purchased-items {
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-4-bold, 700 16px/28px "Inter", sans-serif);
-  position: relative;
-  width: 241px;
-}
-.frame-1000004927 {
-  display: flex;
-  flex-direction: row;
-  gap: 34px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
-}
-.i-am-incredibly-disappointed-with-the-quality-of-your-product-it-falls-far-short-of-what-i-expected-and-i-am-unhappy-with-the-whole-experience-this-is-not-what-i-was-expecting-when-i-purchased-it-and-it-s-especially-disappointing-because-of-how-much-i-paid-for-it-i-hope-you-take-this-feedback-into-consideration-and-work-to-improve-the-quality-of-your-product {
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-6-regular, 400 12px/20px "Inter", sans-serif);
-  position: relative;
-  width: 222px;
-  height: 27px;
-}
-.badges {
-  background: rgba(29, 180, 105, 0.12);
-  border-radius: 6px;
-  padding: 2px 8px 2px 8px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
-}
-.text5 {
-  color: var(--colors-primary-success-500, #11a75c);
-  text-align: left;
-  font: var(--paragraph-6-medium, 500 12px/20px "Inter", sans-serif);
-  position: relative;
-}
-.frame-10000049262 {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.table-cell3 {
-  flex-shrink: 0;
-  width: 277px;
-  height: 86px;
-  position: relative;
-}
-.frame-1000004824 {
-  background: linear-gradient(to left, #eef2f5, #eef2f5);
-  border-radius: 4px;
-  flex-shrink: 0;
-  width: 56px;
-  height: 56px;
-  position: relative;
-}
-.channel-hat {
-  color: var(--colors-primary-slate-600, #455468);
-  text-align: left;
-  font: var(--paragraph-4-medium, 500 16px/28px "Inter", sans-serif);
-  position: relative;
-  width: 187px;
-}
-.hat {
-  margin: -2px 0 0 0;
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-6-regular, 400 12px/20px "Inter", sans-serif);
-  position: relative;
-  width: 187px;
-}
-._100 {
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-6-regular, 400 12px/20px "Inter", sans-serif);
-  position: relative;
-  width: 151px;
-}
-.frame-1000004925 {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.frame-1000004924 {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.underline3 {
-  border-style: solid;
-  border-color: var(--colors-primary-slate-100, #e9eff6);
-  border-width: 1px 0 0 0;
-  height: 0px;
-  position: absolute;
-  right: 6px;
-  left: -6px;
-  bottom: 62px;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(1, 1);
-}
-.text6 {
-  display: flex;
-  flex-direction: row;
-  gap: 68px;
-  align-items: center;
-  justify-content: center;
-  width: 420px;
-  height: 41px;
-  position: absolute;
-  left: 20px;
-  top: calc(50% - 15px);
-}
-.frame-10000048492 {
-  display: flex;
-  flex-direction: row;
-  gap: 97px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 202px;
-  position: relative;
-}
-.total-price {
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-5-medium, 500 14px/24px "Inter", sans-serif);
-  position: relative;
-  width: 241px;
-}
-.i-am-incredibly-disappointed-with-the-quality-of-your-product-it-falls-far-short-of-what-i-expected-and-i-am-unhappy-with-the-whole-experience-this-is-not-what-i-was-expecting-when-i-purchased-it-and-it-s-especially-disappointing-because-of-how-much-i-paid-for-it-i-hope-you-take-this-feedback-into-consideration-and-work-to-improve-the-quality-of-your-product2 {
-  color: var(--colors-primary-slate-600, #455468);
-  text-align: left;
-  font: var(--paragraph-4-medium, 500 16px/28px "Inter", sans-serif);
-  position: relative;
-  width: 175px;
-  height: 20px;
-  font-size: 14px;
-}
-.frame-1000004852 {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 439px;
-  height: 192px;
-  position: relative;
-}
-.payment-method {
-  color: var(--colors-primary-slate-500, #5e718d);
-  text-align: left;
-  font: var(--paragraph-4-bold, 700 16px/28px "Inter", sans-serif);
-  position: relative;
-  width: 241px;
-}
-.content3 {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 440px;
-  height: 123px;
-  position: relative;
-}
-.payment-method-icon {
-  background: var(--base-white, #ffffff);
-  border-radius: 6px;
-  border-style: solid;
-  border-color: var(--gray-100, #f2f4f7);
-  border-width: 1px;
-  flex-shrink: 0;
-  width: 46px;
-  height: 32px;
-  position: relative;
-}
-.mastercard {
-  position: absolute;
-  left: 15px;
-  top: 6.71px;
-}
-.content4 {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex: 1;
-  position: relative;
-}
-.text-and-supporting-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  align-self: stretch;
-  flex-shrink: 0;
-  position: relative;
-}
-.text7 {
-  color: var(--gray-700, #344054);
-  text-align: left;
-  font: var(--paragraph-5-semi-bold, 600 14px/24px "Inter", sans-serif);
-  position: relative;
-  align-self: stretch;
-}
-.text8 {
-  color: var(--gray-700, #344054);
-  text-align: left;
-  font: var(--paragraph-5-medium, 500 14px/24px "Inter", sans-serif);
-  position: relative;
-  align-self: stretch;
-}
-.supporting-text {
-  color: var(--gray-500, #667085);
-  text-align: left;
-  font: var(--paragraph-5-regular, 400 14px/24px "Inter", sans-serif);
-  position: relative;
-  align-self: stretch;
-}
-.button-close-x {
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  flex-direction: row;
-  gap: 0px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: absolute;
-  right: 16px;
-  top: 16px;
-}
-.x-close {
-  flex-shrink: 0;
-  position: relative;
-}
-    </style>
-    <title>StoreFront</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;700&family=Poppins:wght@700&family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <title>Shipping</title>
   </head>
-  <body>
-    <div class="modal">
-        <div
-        class="header"
-        style="
-          color: var(--Primary, #0085ff);
-          text-align: center;
-          font-family: 'Poppins';
-          font-size: 1.5rem;
-          font-style: normal;
-          font-weight: 900;
-          line-height: normal;
-        "
-      >
-        Storefront
-      </div>
-      <div class="text">Order Details</div>
-      <div class="text2">${options.customerName}</div>
-      <div class="content">
-        <div class="frame-1000004851">
-          <div class="frame-1000004928">
-            <div class="frame-10000048512">
-              <div class="table-cell">
-                <div class="underline"></div>
-                <div class="text3">
-                  <div class="frame-1000004849">
-                    <div class="shipping-address">Shipping Address</div>
-                  </div>
-                </div>
-              </div>
-              ${shipping}
-            </div>
-            <div class="frame-1000004850">
-              <div class="table-cell">
-                <div class="underline"></div>
-                <div class="text3">
-                  <div class="frame-1000004849">
-                    <div class="purchased-items">Purchased Items</div>
-                  </div>
-                  <div class="frame-1000004927">
-                    <div
-                      class="i-am-incredibly-disappointed-with-the-quality-of-your-product-it-falls-far-short-of-what-i-expected-and-i-am-unhappy-with-the-whole-experience-this-is-not-what-i-was-expecting-when-i-purchased-it-and-it-s-especially-disappointing-because-of-how-much-i-paid-for-it-i-hope-you-take-this-feedback-into-consideration-and-work-to-improve-the-quality-of-your-product"
-                    >
-                      Order ID : # ${options.orderID}
-                    </div>
-                    <div class="badges">
-                      <div class="text5">${options.status}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-              ${items}
-              
-              <div class="table-cell">
-                <div class="underline3"></div>
-                <div class="text6">
-                  <div class="frame-10000048492">
-                    <div class="total-price">Total Amount</div>
-                  </div>
-                  <div
-                    class="i-am-incredibly-disappointed-with-the-quality-of-your-product-it-falls-far-short-of-what-i-expected-and-i-am-unhappy-with-the-whole-experience-this-is-not-what-i-was-expecting-when-i-purchased-it-and-it-s-especially-disappointing-because-of-how-much-i-paid-for-it-i-hope-you-take-this-feedback-into-consideration-and-work-to-improve-the-quality-of-your-product2"
-                  >
-                    ${options.currency} ${options.total}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="frame-1000004852">
-              <div class="table-cell">
-                <div class="underline"></div>
-                <div class="text3">
-                  <div class="frame-1000004849">
-                    <div class="payment-method">Payment Method</div>
-                  </div>
-                </div>
-              </div>
-                ${payer}
-            </div>
-          </div>
-        </div>
-      </div>
-    
-    </div>
+
+  <body style="width: 100%; height: full; margin: auto">
+    <table
+      style="
+        /* min-height: 100vh; */
+        width: 100%;
+        border-collapse: collapse;
+        padding: 24px;
+        background: white;
+        box-shadow: 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+        border-radius: 12px;
+        overflow: hidden;
+      "
+    >
+      <tr>
+        <td
+          style="
+            width: 100%;
+            height: 20px;
+            color: #101828;
+            font-size: 18px;
+            font-family: Inter;
+            font-weight: 500;
+            line-height: 30px;
+            word-wrap: break-word;
+          "
+        >
+          <span
+            style="
+              font-size: 24px;
+              margin-bottom: 10px;
+              font-family: poppins;
+              color: #0085ff;
+            "
+            >StoreFront</span
+          >
+          <br />
+          <span>Order Details</span>
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            color: #5e718d;
+            height: 20px;
+            font-size: 16px;
+            font-weight: bolder;
+            font-family: Inter;
+            font-weight: 700;
+            line-height: 28px;
+            word-wrap: break-word;
+          "
+        >
+         ${options.customerName}
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            width: 100%;
+            height: 20px;
+            color: #5e718d;
+            height: 50px;
+            font-size: 16px;
+            font-family: Inter;
+            font-weight: 700;
+            line-height: 28px;
+            padding-left: 15px;
+            word-wrap: break-word;
+          "
+        >
+          Shipping Address
+        </td>
+      </tr>
+      <tr>
+      ${shipping}
+      </tr>
+      <tr>
+        <td style="height: 50px">
+          <span
+            style="
+              color: #5e718d;
+              font-size: 16px;
+              font-family: Inter;
+              font-weight: 700;
+              line-height: 28px;
+              word-wrap: break-word;
+            "
+            >Purchased Items <br
+          /></span>
+          <span
+            style="
+              width: 100%;
+              height: 100%;
+              color: #5e718d;
+              font-size: 12px;
+              font-family: Inter;
+              font-weight: 400;
+
+              word-wrap: break-word;
+            "
+            >Order ID : # ${options.orderID}</span
+          >
+        </td>
+        <td
+          style="
+            background: rgba(29, 180, 105, 0.12);
+            border-radius: 6px;
+            justify-content: center;
+            align-items: center;
+            display: inline-flex;
+            margin-top: 30px;
+            color: #11a75c;
+            font-size: 12px;
+            font-family: Inter;
+            font-weight: 700;
+          "
+        >
+         ${options.status}
+        </td>
+      </tr>
+
+   ${items}
+
+      <tr>
+        <td
+          style="
+            color: #5e718d;
+            font-size: 14px;
+            font-family: Inter;
+            font-weight: 600;
+            word-wrap: break-word;
+          "
+        >
+          Total Price
+        </td>
+        <td
+          style="
+            color: #455468;
+            height: 20px;
+            font-size: 14px;
+            font-family: Inter;
+            font-weight: 600;
+            line-height: 28px;
+            word-wrap: break-word;
+          "
+        >
+         ${options.currency} ${options.total}
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            color: #5e718d;
+            height: 20px;
+            font-size: 16px;
+            font-family: Inter;
+            font-weight: 700;
+            word-wrap: break-word;
+          "
+        >
+          Payment Method
+        </td>
+      </tr>
+      <tr>
+        <td
+          style="
+            color: #455468;
+            height: 20px;
+            font-size: 14px;
+            font-family: Inter;
+            font-weight: 500;
+          "
+        >
+          ${payer}
+        </td>
+      </tr>
+    </table>
   </body>
-</html>`;
+</html>
+`;
 };

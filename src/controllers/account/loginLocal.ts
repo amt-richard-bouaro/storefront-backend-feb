@@ -12,6 +12,14 @@ export const localLogin = async (req: Request, res: Response<RESPONSE>) => {
 
 		const updatedUser = await activateAccount(user.id);
 
+		if (!updatedUser) {
+			return res.status(STATUS.BAD_REQUEST).json({
+				code: AUTH_MSG.LOGIN_FAILED.CODE,
+				message: AUTH_MSG.LOGIN_FAILED.MESSAGE,
+				type: 'error',
+			});
+		}
+
 		const data = {
 			id: updatedUser.id,
 			email: updatedUser.email,

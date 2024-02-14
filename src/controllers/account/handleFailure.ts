@@ -16,12 +16,12 @@ export const handleFailure = (req: Request, res: Response<RESPONSE>) => {
 
 	req.session.cookie.maxAge = 0;
 
-	res.cookie('capstone-storefront', '', {
+	res.cookie('connect.sid', '', {
 		httpOnly: true,
 		expires: new Date(0),
 	});
 
-	return res.status(STATUS.UNAUTHORIZED).json({
+	return res.status(STATUS.OK).json({
 		code: AUTH_MSG.LOGIN_FAILED.CODE,
 		message: `${AUTH_MSG.LOGIN_FAILED.MESSAGE} ${req.flash('error')[0]}`,
 		type: 'error',
