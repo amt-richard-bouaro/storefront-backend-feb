@@ -18,6 +18,8 @@ export const ACCOUNT = {
 	AUTH_FAILURE_LOCAL: '/login/failure',
 	SOCIAL_AUTH_FAILURE: '/social/login/failure',
 	SOCIAL_REGISTRATION_FAILURE: '/social/registration/failure',
+	SOCIAL_AUTH_SUCCESS: '/social/login/success',
+	SOCIAL_REGISTRATION_SUCCESS: '/social/registration/success',
 
 	CREATE_ACCOUNT_LOCAL: '/register/local',
 

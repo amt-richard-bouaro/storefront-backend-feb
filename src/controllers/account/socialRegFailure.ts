@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
-import { SERVER_CONFIG } from '../../config';
 import logger from '../../middlewares/logger';
+import { getCachedResult } from '../../extensions/redis';
 
-export const socialRegFailure = (req: Request, res: Response<RESPONSE>) => {
+export const socialRegFailure = async (
+	req: Request,
+	res: Response<RESPONSE>
+) => {
 	req.logout((err) => {
 		if (err) {
 			logger.error(err);
@@ -17,9 +20,11 @@ export const socialRegFailure = (req: Request, res: Response<RESPONSE>) => {
 		expires: new Date(0),
 	});
 
+	const CLIENT_ORIGIN = (await getCachedResult('client-origin')) as {
+		origin: string;
+	};
+
 	return res.redirect(
-		`${SERVER_CONFIG.CLIENT_ORIGIN}/signUp?storefront-connect=${
-			req.flash().error
-		}`
+		`${CLIENT_ORIGIN.origin}/signUp?storefront-connect=${req.flash().error}`
 	);
 };
