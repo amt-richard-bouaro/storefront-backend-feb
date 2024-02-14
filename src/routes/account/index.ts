@@ -18,8 +18,8 @@ import { verifyPasswordResetCode } from '../../controllers/account/verifyPasswor
 import { resendVerificationCode } from '../../controllers/account/resendVerificationCode';
 import { localLogin } from '../../controllers/account/loginLocal';
 
-import { SERVER_CONFIG } from '../../config';
 import { ACCOUNT } from '../../constants/api/endpoints';
+import { socialLoginSuccess } from '../../controllers/account/socialLoginSuccess';
 
 const account = express.Router();
 
@@ -27,6 +27,8 @@ account.post(ACCOUNT.CREATE_ACCOUNT_LOCAL, localRegistration);
 account.post(ACCOUNT.AUTH_FAILURE_LOCAL, handleFailure);
 account.get(ACCOUNT.SOCIAL_REGISTRATION_FAILURE, socialRegFailure);
 account.get(ACCOUNT.SOCIAL_AUTH_FAILURE, socialLoginFailure);
+account.get(ACCOUNT.SOCIAL_AUTH_SUCCESS, socialLoginSuccess);
+account.get(ACCOUNT.SOCIAL_REGISTRATION_SUCCESS, socialLoginFailure);
 account.get(ACCOUNT.GET_AUTH_ACCOUNT, isAuthenticated, authenticatedUser);
 account.get(ACCOUNT.LOGOUT, isAuthenticated, handleLogout);
 account.post(ACCOUNT.VERIFY_ACCOUNT, isAuthenticated, accountVerification);
@@ -66,7 +68,7 @@ account.get(
 account.get(
 	ACCOUNT.GOOGLE_CUSTOMER_CALLBACK,
 	passport.authenticate('google-customer', {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
+		successRedirect: '/api/account/social/registration/success',
 		failureRedirect: '/api/account/social/registration/failure',
 		failureFlash: true,
 	})
@@ -81,7 +83,7 @@ account.get(
 account.get(
 	ACCOUNT.GOOGLE_BUSINESS_CALLBACK,
 	passport.authenticate('google-business', {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
+		successRedirect: '/api/account/social/registration/success',
 		failureRedirect: '/api/account/social/registration/failure',
 		failureFlash: true,
 	})
@@ -96,7 +98,7 @@ account.get(
 account.get(
 	ACCOUNT.GOOGLE_AUTH_CALLBACK,
 	passport.authenticate('google-auth', {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
+		successRedirect: '/api/account/social/login/success',
 		failureRedirect: '/api/account/social/login/failure',
 		failureFlash: true,
 	})
@@ -111,7 +113,7 @@ account.get(
 account.get(
 	ACCOUNT.FACEBOOK_CUSTOMER_CALLBACK,
 	passport.authenticate('facebook-customer', {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
+		successRedirect: '/api/account/social/registration/success',
 		failureRedirect: '/api/account/social/registration/failure',
 		failureFlash: true,
 	})
@@ -126,7 +128,7 @@ account.get(
 account.get(
 	ACCOUNT.FACEBOOK_BUSINESS_CALLBACK,
 	passport.authenticate('facebook-business', {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
+		successRedirect: '/api/account/social/registration/success',
 		failureRedirect: '/api/account/social/registration/failure',
 		failureFlash: true,
 	})
@@ -141,7 +143,7 @@ account.get(
 account.get(
 	ACCOUNT.FACEBOOK_AUTH_CALLBACK,
 	passport.authenticate('facebook-auth', {
-		successRedirect: SERVER_CONFIG.CLIENT_ORIGIN.toString() + '/login',
+		successRedirect: '/api/account/social/login/success',
 		failureRedirect: '/api/account/social/login/failure',
 		failureFlash: true,
 	})
