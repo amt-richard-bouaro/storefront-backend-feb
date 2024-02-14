@@ -23,7 +23,7 @@ export const socialLoginFailure = async (
 	const CLIENT_ORIGIN = (await getCachedResult('client-origin')) as {
 		origin: string;
 	};
-	console.log(CLIENT_ORIGIN);
+	console.log('====' + CLIENT_ORIGIN);
 
 	return res.redirect(
 		`${CLIENT_ORIGIN.origin}/login?storefront-connect=${req.flash().error}`
