@@ -3,6 +3,7 @@ import { RESPONSE } from '../../interfaces';
 import { STATUS } from '../../config/statusCode';
 import { errorHandler } from '../../middlewares/errorhandlers/exceptions';
 import { AUTH_MSG } from '../../constants/api/messages/auth';
+import logger from '../../middlewares/logger';
 
 export const handleLogout = async (req: Request, res: Response<RESPONSE>) => {
 	try {
@@ -23,9 +24,18 @@ export const handleLogout = async (req: Request, res: Response<RESPONSE>) => {
 			}
 		});
 
+		res.clearCookie('capstone-storefront');
+
+		req.logout(function (err) {
+			logger.error(err);
+			req.session.destroy(function (err) {
+				logger.error(err);
+			});
+		});
+
 		req.session.cookie.maxAge = 0;
 
-		res.cookie('connect.sid', '', {
+		res.cookie('capstone-storefront', '', {
 			httpOnly: true,
 			expires: new Date(0),
 		});

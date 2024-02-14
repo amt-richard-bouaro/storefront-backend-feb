@@ -1,31 +1,28 @@
 import { Request, Response } from 'express';
 import { RESPONSE } from '../../interfaces';
+import { SERVER_CONFIG } from '../../config';
 import logger from '../../middlewares/logger';
-import { getCachedResult } from '../../extensions/redis';
 
-export const socialLoginFailure = async (
-	req: Request,
-	res: Response<RESPONSE>
-) => {
-	req.logout((err) => {
-		if (err) {
+export const socialLoginFailure = (req: Request, res: Response<RESPONSE>) => {
+	res.clearCookie('capstone-storefront');
+
+	req.logout(function (err) {
+		logger.error(err);
+		req.session.destroy(function (err) {
 			logger.error(err);
-		}
+		});
 	});
 
 	req.session.cookie.maxAge = 0;
 
-	res.cookie('connect.sid', '', {
+	res.cookie('capstone-storefront', '', {
 		httpOnly: true,
 		expires: new Date(0),
 	});
 
-	const CLIENT_ORIGIN = (await getCachedResult('client-origin')) as {
-		origin: string;
-	};
-	console.log('====' + CLIENT_ORIGIN);
-
 	return res.redirect(
-		`${CLIENT_ORIGIN.origin}/login?storefront-connect=${req.flash().error}`
+		`${SERVER_CONFIG.CLIENT_ORIGIN}/login?storefront-connect=${
+			req.flash().error
+		}`
 	);
 };

@@ -35,7 +35,7 @@ function server() {
 				if (origin && SERVER_CONFIG.ALLOWED_ORIGINS.includes(origin)) {
 					await cachResult('client-origin', { origin });
 
-					console.log(await getCachedResult('client-origin'));
+					console.log('CORS =', await getCachedResult('client-origin'));
 
 					callback(null, true);
 				} else {
