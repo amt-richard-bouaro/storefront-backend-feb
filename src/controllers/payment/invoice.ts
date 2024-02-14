@@ -70,7 +70,7 @@ export const sendInvoice = async (req: Request, res: Response<RESPONSE>) => {
 
 			await sendMail(
 				mailOptions({
-					to: 'ghetrich370@gmail.com',
+					to: 'francis.fuwaku@gmail.com',
 					subject: 'Order Notification',
 					html: invoiceData,
 				}),

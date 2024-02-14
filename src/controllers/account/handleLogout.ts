@@ -25,7 +25,7 @@ export const handleLogout = async (req: Request, res: Response<RESPONSE>) => {
 
 		req.session.cookie.maxAge = 0;
 
-		res.cookie('capstone-storefront', '', {
+		res.cookie('connect.sid', '', {
 			httpOnly: true,
 			expires: new Date(0),
 		});

@@ -1,18 +1,30 @@
-import { Database } from "../../../extensions/dbClient";
+import { Database } from '../../../extensions/dbClient';
+import { findAccountById } from './findAccount';
 
 export const activateAccount = async (id: string) => {
-	const user = await Database.account.update({
-		where: {
-			id,
-		},
-		data: {
-			isActive: true,
-		},
-		include: {
-			business: true,
-			customer: true,
-		},
-	});
+	try {
+		const user = await findAccountById(id);
 
-	return user;
+		if (user && user.verified) {
+			const updatedUser = await Database.account.update({
+				where: {
+					id,
+					verified: true,
+				},
+				data: {
+					isActive: true,
+				},
+				include: {
+					business: true,
+					customer: true,
+				},
+			});
+
+			return updatedUser;
+		}
+
+		return user;
+	} catch (error) {
+		throw new Error('Prisma Error');
+	}
 };
