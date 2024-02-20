@@ -25,6 +25,9 @@ const account = express.Router();
 
 account.post(ACCOUNT.CREATE_ACCOUNT_LOCAL, localRegistration);
 account.post(ACCOUNT.AUTH_FAILURE_LOCAL, handleFailure);
+//somtimes the get does not work
+account.get(ACCOUNT.AUTH_FAILURE_LOCAL, handleFailure);
+
 account.get(ACCOUNT.SOCIAL_REGISTRATION_FAILURE, socialRegFailure);
 account.get(ACCOUNT.SOCIAL_AUTH_FAILURE, socialLoginFailure);
 account.get(ACCOUNT.SOCIAL_AUTH_SUCCESS, socialLoginSuccess);
