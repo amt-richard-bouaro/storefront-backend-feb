@@ -18,7 +18,7 @@ export const getBusiness = async (req: Request, res: Response<RESPONSE>) => {
 			: await findBusinessById(businessID, { stores: true });
 
 		if (!business) {
-			return res.status(STATUS.OK).json({
+			return res.status(STATUS.NOT_FOUND).json({
 				code: BUSINESS_MSG.BUSINESS_NOT_FOUND.CODE,
 				message: BUSINESS_MSG.BUSINESS_NOT_FOUND.MESSAGE,
 				type: 'error',

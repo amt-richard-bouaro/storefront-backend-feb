@@ -23,7 +23,7 @@ import { userSerialization } from './interfaces';
 
 export const redisClient = createClient({
 	url: SERVER_CONFIG.REDIS_URL,
-	// url: 'redis://default:R0tYDzHCTONa0hffzTTC7GFaRWlmO2m3@redis-14343.c274.us-east-1-3.ec2.cloud.redislabs.com:14343',
+	// url: 'redis://default:7v0Q4deDHE5ezP16dGmIoiZ5ASxMBT2R@redis-14581.c274.us-east-1-3.ec2.cloud.redislabs.com:14581',
 });
 function server() {
 	const app = express();

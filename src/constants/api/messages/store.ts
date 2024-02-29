@@ -33,13 +33,17 @@ export const STORE_MSG = {
 	},
 
 	PRODUCT_NOT_FOUND: {
-		CODE: 'STORE_PRODUCT_NOT_FOUND',
+		CODE: 'PRODUCT_NOT_FOUND',
 		MESSAGE:
-			'Store product could not found. Make sure that the store product ID is correct',
+			'Product could not found. Make sure that the product ID is correct',
 	},
 	PRODUCT_FOUND: {
-		CODE: 'STORE_PRODUCT_FOUND',
-		MESSAGE: 'Store products found.',
+		CODE: 'PRODUCT_FOUND',
+		MESSAGE: 'Product found.',
+	},
+	PRODUCTS_FOUND: {
+		CODE: 'PRODUCTS_FOUND',
+		MESSAGE: 'Products found.',
 	},
 	NAME_ALREADY_EXISTS: {
 		CODE: 'STORE_NAME_ALREADY_EXISTS',
@@ -109,7 +113,8 @@ export const STORE_MSG = {
 	},
 	PROMO_CREATED: {
 		CODE: 'PROMO_CREATED',
-		MESSAGE: 'Promotion add to store. Your add product to this promo.',
+		MESSAGE:
+			'Promotion add to store. You can go ahead and add products to this promo.',
 	},
 	PROMO_NOT_FOUND: {
 		CODE: 'PROMO_NOT_FOUND',
