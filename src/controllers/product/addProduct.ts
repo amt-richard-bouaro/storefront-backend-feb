@@ -102,7 +102,7 @@ export const addProduct = async (req: Request, res: Response<RESPONSE>) => {
 			},
 		});
 
-		return res.status(STATUS.OK).json({
+		return res.status(STATUS.CREATED).json({
 			code: PRODUCT_MSG.PRODUCT_ADD_SUCCESSFUL.CODE,
 			message: PRODUCT_MSG.PRODUCT_ADD_SUCCESSFUL.MESSAGE,
 			type: 'success',

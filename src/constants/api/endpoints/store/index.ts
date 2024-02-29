@@ -20,7 +20,7 @@ export const STORE = {
 	PUBLISH_TEMPLATE: '/publish-template/:store_id',
 
 	ADD_STORE_CATEGORY: '/add-category/:store_id',
-	DELETE_STORE_CATEGORY: '/delete-store-category/:category_id',
+	DELETE_STORE_CATEGORY: '/delete-store-categories',
 	GET_STORE_CATEGORIES: '/get-categories/:store_id',
 
 	GET_TEMPLATE_DRAFT: '/get-temp/:store_id',

@@ -9,13 +9,9 @@ import { findProductById } from '../../services/app/product/findSingleProduct';
 
 export const updateProduct = async (req: Request, res: Response<RESPONSE>) => {
 	try {
-		const requestBody = req.body;
-
 		const productID = req.params.product_id;
 
-		const body: NEW_PRODUCT = JSON.parse(requestBody);
-
-		NEW_PRODUCT.parse(body);
+		const body: NEW_PRODUCT = NEW_PRODUCT.parse(req.body);
 
 		const product = await findProductById(productID, {});
 
@@ -27,7 +23,7 @@ export const updateProduct = async (req: Request, res: Response<RESPONSE>) => {
 			});
 		}
 
-		const updatedProduct = updateProductById(productID, {
+		const updatedProduct = await updateProductById(productID, {
 			name: body.name,
 			category: body.category,
 			price: body.price,
@@ -37,9 +33,17 @@ export const updateProduct = async (req: Request, res: Response<RESPONSE>) => {
 			discount: body.discount ?? product?.discount,
 		});
 
+		if (!updatedProduct) {
+			return res.status(STATUS.INTERNAL_SERVER_ERROR).json({
+				code: PRODUCT_MSG.PRODUCTS_NOT_UPDATED.CODE,
+				message: PRODUCT_MSG.PRODUCTS_NOT_UPDATED.MESSAGE,
+				type: 'error',
+			});
+		}
+
 		return res.status(STATUS.OK).json({
-			code: PRODUCT_MSG.PRODUCT_ADD_SUCCESSFUL.CODE,
-			message: PRODUCT_MSG.PRODUCT_ADD_SUCCESSFUL.MESSAGE,
+			code: PRODUCT_MSG.PRODUCT_UPDATED.CODE,
+			message: PRODUCT_MSG.PRODUCT_UPDATED.MESSAGE,
 			type: 'success',
 			data: updatedProduct,
 		});
