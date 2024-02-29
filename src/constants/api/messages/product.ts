@@ -41,6 +41,10 @@ export const PRODUCT_MSG = {
 		CODE: 'PRODUCTS_UPDATED',
 		MESSAGE: 'Products were updated successfully.',
 	},
+	PRODUCT_UPDATED: {
+		CODE: 'PRODUCT_UPDATED',
+		MESSAGE: 'Product updated successfully.',
+	},
 	IMAGE_NOT_UPLOADED: {
 		CODE: 'IMAGE_NOT_UPLOADED',
 		MESSAGE: 'Image not uploaded.',

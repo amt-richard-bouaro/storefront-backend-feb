@@ -12,13 +12,12 @@ export const deleteCategory = async (req: Request, res: Response<RESPONSE>) => {
 
 		DELETE_CATEGORIES.parse(requestBody);
 
-		const category = await deleteStoreCategory(requestBody.categories);
+		const deletedCategory = await deleteStoreCategory(requestBody.categories);
 
 		return res.status(STATUS.OK).json({
 			code: CATEGORY_MSG.DELETED.CODE,
-			message: CATEGORY_MSG.DELETED.MESSAGE,
+			message: `${deletedCategory?.count}  ${CATEGORY_MSG.DELETED.MESSAGE}`,
 			type: 'success',
-			data: category,
 		});
 	} catch (error) {
 		const err = error as Error;

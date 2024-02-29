@@ -57,7 +57,7 @@ store.get(
 store.get(
 	STORE.GET_STORE_PRODUCTS,
 	isAuthenticated,
-	restrictedTo(['Customer']),
+	restrictedTo(['Customer', 'Business']),
 	getStoreProducts
 );
 store.get(
